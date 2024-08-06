@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eceff1; /* Light gray background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333; /* Dark gray text */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .registration-form {
+            background-color: #ffffff; /* White background */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 360px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ddd; /* Light gray border */
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #55acee; /* Light blue border on focus */
+        }
+
+        input[type="submit"] {
+            background-color: #55acee; /* Light blue submit button */
+            color: #fff; /* White text */
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3c8dbc; /* Darker shade of blue on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            color: #2ecc71; /* Green color for success message */
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #3498db; /* Blue color for the login link */
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #2c7ebf; /* Darker shade of blue on hover */
+            text-decoration: underline;
+        }
+
+        .form-icon {
+            font-size: 50px;
+            color: #55acee;
+            margin-bottom: 20px;
+        }
+    </style>
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="registration-form">
+        <div class="form-icon"></div>
+        <h1>User Registration</h1>
+        <form action="/register" id="form" method="post">
+            <input type="text" name="name" placeholder="Enter name" required>
+            <div class="error" id="nameError" style="color: rgb(234, 34, 34);"></div>
+
+            <input type="email" name="email" placeholder="Enter email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required>
+            <div class="error" id="emailError" style="color: rgb(216, 54, 54);"></div> 
+
+            <input type="tel" name="mobile" maxlength="10" placeholder="Enter mobile" required pattern="^\d{10}$">
+            <div class="error" id="mobileError" style="color: red;"></div>
+
+            <input type="password" name="password" placeholder="Enter password" pattern=".{8,}" required>
+            <div class="error" id="passwordError" style="color: red;"></div>
+
+            <input type="submit" class="button" value="Register" onclick="return validateForm()">
+            <h3 class="text-center text-danger" id="loginErrorMessage"></h3>
+        </form>
+        <a href="/">Already have an account? Login</a>
+        <% if (typeof message !== 'undefined') { %>
+            <p><%= message %></p>
+        <% } %>
+    </div>
+    </body>
+    <script>
+    function validateForm() {
+        var name = document.getElementById("name").value;
+        var password = document.getElementById("password").value;
+        
+        var alphabeticWithSpacesRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
+        var passwordRegex = /^.{8,}$/; 
+        var isValid = true;
+
+          // Reset error messages
+        document.getElementById("nameError").innerText = "";
+        document.getElementById("passwordError").innerText = "";
+         // Validate name
+         if (!alphabeticWithSpacesRegex.test(name)) {
+            document.getElementById("nameError").innerText = "Type alphabetic characters with spaces only between alphabetic characters.";
+            isValid = false;
+          }
+        // Validate password
+         if (!passwordRegex.test(password)) {
+        document.getElementById("passwordError").innerText = "Password must be at least 8 characters long.";
+        isValid = false;
+          }
+          // Clear error messages after 5 seconds
+       setTimeout(() => {
+            document.getElementById("nameError").innerText = "";
+            document.getElementById("passwordError").innerText = "";
+           
+        }, 5000);
+
+        return isValid;
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <%if(locals.emailExists){%>
+    <script>
+      Swal.fire({
+        icon: 'warning',
+        title: 'Email already exists!',
+        timer: 10000,
+      })
+    </script>
+    <%}%>
+
+      <script>
+        window.onload = () => {
+          console.log('inside');
+
+          let res = document.getElementById("loginErrorMessage").innerText;
+          if (res) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!",
+              timer:10000,
+              footer: '<a href="#">You have entered wrong OTP</a>',
+            });
+          }
+        };
+
+      </script>
+</html>

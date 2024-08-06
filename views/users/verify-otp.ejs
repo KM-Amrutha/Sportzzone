@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OTP Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #333333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    form {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .message {
+      margin-top: 20px;
+      color: red;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+  <form action="/verify-otp" method="POST">
+    <% if (typeof message !== 'undefined' && message) { %>
+      <div class="message"><%= message %></div>
+      <% } %>
+    <h2>Verify OTP</h2>
+    <label for="otp">Enter OTP</label>
+   
+    <input type="number" id="otp" name="otp" maxlength="6" minlength="6" required>
+
+    <input type="hidden" name="email" value="<%= email %>">
+    <button type="submit">Verify</button>
+    
+    <div id="timer">Resend OTP in: <span id="countdown">60</span> seconds</div>
+    <button type="button" id="resendBtn" disabled>Resend OTP</button>
+    
+  </form>
+
+  <script>
+    let countdown = 60;
+    const countdownElement = document.getElementById('countdown');
+    const resendBtn = document.getElementById('resendBtn');
+
+    const interval = setInterval(() => {
+      countdown--;
+      countdownElement.textContent = countdown;
+      if (countdown === 0) {
+        clearInterval(interval);
+        resendBtn.disabled = false;
+      }
+    }, 1000);
+
+    resendBtn.addEventListener('click', async () => {
+      try {
+        const response = await fetch('/resend-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: "<%= email %>" }),
+        });
+        const data = await response.json();
+        if (data.message) {
+          alert(data.message);
+        }
+        countdown = 60;
+        countdownElement.textContent = countdown;
+        resendBtn.disabled = true;
+
+        const newInterval = setInterval(() => {
+          countdown--;
+          countdownElement.textContent = countdown;
+          if (countdown === 0) {
+            clearInterval(newInterval);
+            resendBtn.disabled = false;
+          }
+        }, 1000);
+      } catch (error) {
+        console.error('Error resending OTP:', error);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('otp-form');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        const otp = document.getElementById('otp').value;
+        const email = "<%= email %>";
+
+        try {
+          const response = await fetch('/verify-otp', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ otp, email }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            Swal.fire({
+              title: 'Registration Successful!',
+              icon: 'success',
+              background: '#f9f9f9',
+              color: '#333',
+              iconColor: '#007BFF',
+              customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+                content: 'custom-swal-content',
+                icon: 'custom-swal-icon'
+              },
+              timer: 5000,
+              showConfirmButton: false
+            }).then(() => {
+              window.location.href = 'users/login'; // Redirect URL after success
+            });
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: data.message,
+              icon: 'error',
+              background: '#f9f9f9',
+              color: '#333',
+              iconColor: '#dc3545',
+              customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+                content: 'custom-swal-content',
+                icon: 'custom-swal-icon'
+              },
+              timer: 10000,
+              showConfirmButton: true
+            });
+          }
+        } catch (error) {
+          console.log('Error verifying OTP:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred. Please try again.',
+            icon: 'error',
+            background: '#f9f9f9',
+            color: '#333',
+            iconColor: '#dc3545',
+            customClass: {
+              popup: 'custom-swal-popup',
+              title: 'custom-swal-title',
+              content: 'custom-swal-content',
+              icon: 'custom-swal-icon'
+            },
+            timer: 10000,
+            showConfirmButton: true
+          });
+        }
+      });
+    });
+  </script>
+  <style>
+    
+    .custom-swal-popup {
+      border-radius: 15px;
+      padding: 20px;
+    }
+    .custom-swal-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007BFF;
+    }
+    .custom-swal-content {
+      font-size: 18px;
+      color: #333;
+    }
+    .custom-swal-icon {
+      color: #007BFF;
+    }
+  </style>
+</body>
+</html>
