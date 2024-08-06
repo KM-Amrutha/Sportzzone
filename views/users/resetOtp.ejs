@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 400px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #088178;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button.resend {
+      background-color: #d40d0d;
+    }
+
+    button:disabled {
+      background-color: #b8b8b8;
+      cursor: not-allowed;
+    }
+
+    #timer {
+      color: #333;
+      margin-top: 20px;
+    }
+
+    .text-danger {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Enter OTP</h1>
+  <form action="/newOtp" method="post" onsubmit="return submitForm()">
+    <% if (locals.message) { %>
+      <span class="text-danger"><%= message %></span>
+    <% } %>
+    <input type="text" id="otp" name="newOtp" required oninput="handleOTPInput()">
+    <button type="submit" id="actionButton" disabled>Verify OTP</button>
+  </form>
+
+  <p id="timer">Time remaining: <span id="timer-value">60</span> seconds</p>
+</div>
+
+<script>
+  // Timer logic
+  let timerValue = 60;
+  let timerInterval;
+
+  function startTimer() {
+    timerInterval = setInterval(function() {
+      timerValue--;
+      document.getElementById('timer-value').innerText = timerValue;
+
+      if (timerValue === 0) {
+        clearInterval(timerInterval);
+        transformToResendButton();
+      }
+    }, 1000);
+  }
+
+  // Function to enable/disable the action button based on OTP input
+  function handleOTPInput() {
+    const otpInput = document.getElementById('otp').value;
+    const actionButton = document.getElementById('actionButton');
+
+    if (otpInput.length > 0) {
+      actionButton.disabled = false;
+    } else {
+      actionButton.disabled = true;
+    }
+  }
+
+  // Function to transform the button into Resend OTP after the timer
+  function transformToResendButton() {
+    const actionButton = document.getElementById('actionButton');
+    actionButton.innerText = 'Resend OTP';
+    actionButton.classList.add('resend');
+    actionButton.disabled = false;
+    actionButton.onclick = resendOTP;
+  }
+
+  // Function to submit the form (replace this with actual form submission logic)
+  function submitForm() {
+    return true; // Allow form submission
+  }
+
+  // Function to simulate OTP resend (replace this with actual logic)
+  function resendOTP() {
+    // Add logic to resend OTP here
+    // Reset timer
+    clearInterval(timerInterval);
+    timerValue = 60;
+    document.getElementById('timer-value').innerText = timerValue;
+
+    // Change button back to "Verify OTP"
+    const actionButton = document.getElementById('actionButton');
+    actionButton.innerText = 'Verify OTP';
+    actionButton.classList.remove('resend');
+    actionButton.disabled = true;
+
+    // Start the timer again
+    startTimer();
+  }
+
+  // Start the timer when the page loads
+  startTimer();
+</script>
+
+</body>
+</html>

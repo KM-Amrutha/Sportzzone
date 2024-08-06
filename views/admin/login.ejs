@@ -1,0 +1,100 @@
+<% include('../layouts/header.ejs') %>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+  }
+
+  .login-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+  }
+
+  h1 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    font-weight: 500;
+  }
+
+  h3 {
+    color: #e74c3c;
+    font-size: 1em;
+    margin-bottom: 20px;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  input {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background-color: #f0f2f5;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1em;
+    transition: all 0.3s ease;
+  }
+
+  input::placeholder {
+    color: #aaa;
+  }
+
+  input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  }
+
+  input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    border: none;
+    padding: 12px;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="login-container">
+  <h1>Login</h1>
+
+  <% if (typeof message !== 'undefined') { %>
+    <h3><%= message %></h3>
+  <% } %>
+
+  <form action="" method="POST">
+    <input type="email" name="email" placeholder="Email" required pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$">
+    <br>
+    <input type="password" name="password" placeholder="Password" required>
+    <br>
+    <input type="submit" value="Login">
+  </form>
+</div>
+
+<% include('../layouts/footer.ejs') %>

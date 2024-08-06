@@ -1,0 +1,120 @@
+<% include('../layouts/header.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #333; /* Light black background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .message {
+            color: #ff4d4d;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #007bff;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <div class="login-container">
+    <h1>Login</h1>
+    
+    <form action="/login" method="POST">
+        <input type="email" id="email" placeholder="Enter your email" name="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required title="Please Check your Email Address">
+        <input type="password" id="password" placeholder="Enter your password" name="password" pattern=".{8,}" required title="Please Check your Password">
+
+        <a class="forget" href="/forgot-Password">Forgot password?</a>
+        <a href="/register">New user? Register here</a>
+
+        <button type="submit">Login</button>
+    </form>
+</div>
+
+
+<% if (typeof message !== 'undefined' && message) { %>
+  <script>
+    Swal.fire({
+      icon: 'warning',
+      title: '<%= message %>',
+      timer: 10000, // 10 seconds
+      timerProgressBar: true,
+      didClose: () => {
+       
+      }
+    });
+  </script>
+<% } %>
+
+</body>
+</html>
+
+<% include('../layouts/footer.ejs') %>
