@@ -6,7 +6,8 @@
  const auth = require("../middleware/auth")
  const bodyParser = require ('body-parser');
  const userController = require('../controllers/userController');
- const categoryController= require('../controllers/categoryController')
+ const categoryController= require('../controllers/categoryController');
+ const cartController = require('../controllers/cartController');
  
 
  const config = require("../config/config");
@@ -54,6 +55,9 @@ user_route.get('/home',auth.isBlocked,userController.loadHome);
 user_route.get('/logout',auth.isLogin,userController.userLogout);
 
 
+user_route.get('/userProfile',auth.isLogin,auth.isBlocked,userController.userProfile)
+
+
 
 // New routes for OTP verification
 user_route.get('/otp', userController.loadVerifyOTP); // Render OTP verification page
@@ -72,14 +76,20 @@ user_route.post('/newOtp', auth.isLogout,userController.verifyNewOtp);
 user_route.post('/newPassword',auth.isLogout,userController.verifyPassword)
 
 
-
+//----------------------------category-----------//
 user_route.get('/filterCategory',auth.isLogin,auth.isBlocked,categoryController.filterCategory)
 
-
-
 user_route.get("/users/productShop",auth.isLogin,auth.isBlocked,userController.loadshopPage);
-user_route.get('/productDetail',userController.productdetailPage);
+user_route.get('/productDetail',auth.isLogin,auth.isBlocked,userController.productdetailPage);
 
+
+
+//---------------------cart------------//
+
+user_route.get('/getCart',auth.isLogin,auth.isBlocked,cartController.getCart);
+user_route.post('/addToCart',auth.isLogin,auth.isBlocked,cartController.addToCart);
+user_route.post('/updatecart', cartController.updateCart);
+user_route.post('/removeFromCart',auth.isLogin,auth.isBlocked,cartController.removeFromCart);
 
 
 

@@ -107,7 +107,7 @@ const productListview = async (req,res) =>{
   
       console.log("sanam kityyyyyyyyyyyyyyyyyyyyy")
       const productid= req.query.proid
-      console.log(productid);
+      
       const products = await Product.findOne({_id:productid}); 
 
       if (!products) {
@@ -146,9 +146,6 @@ const productListview = async (req,res) =>{
       
       try {
           const errors = [];
-          console.log('Request Body:', req.body);
-          console.log('Request Files:', req.files);
-  
           const {
               productName,
               productDescription,
@@ -238,8 +235,6 @@ const productListview = async (req,res) =>{
               updateData.images = imageUrls;
           }
   
-          console.log("Update Data:", updateData);
-  
           const editedProduct = await Product.findByIdAndUpdate(
               productId,
               { $set: updateData },
@@ -251,7 +246,7 @@ const productListview = async (req,res) =>{
               return res.status(500).json({ success: false, error: 'Product not edited' });
           }
   
-          console.log('Product edited successfully:', editedProduct);
+         
   
           res.redirect("/admin/productlist");
       } catch (error) {
@@ -264,15 +259,15 @@ const productListview = async (req,res) =>{
 const deleteImage= async(req,res)=>{
   try {
 const{image,productId} = req.body;
-console.log('IMAGE URL:',image)
-console.log('PRODUCT:', productId);
+// console.log('IMAGE URL:',image)
+// console.log('PRODUCT:', productId);
 
 const product = await Product.findByIdAndUpdate(
   productId,
   { $pull: { image: image } },
   { new: true }
 );
-console.log("Updated product:", product);
+
 if (!product) {
     return res.status(404).json({ error: 'Product not found' });
 }
@@ -297,6 +292,4 @@ return res.status(200).json({ message: 'Image deleted successfully', product })
     ToggleblockProduct,
     deleteImage
     
-
-
   }

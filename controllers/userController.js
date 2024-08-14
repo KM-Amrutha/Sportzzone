@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const  User = require('../models/userModel');
+const Address= require('../models/addressModel');
 const bcrypt = require('bcrypt');
 const products = require('../models/productModel')
 const category = require('../models/categoryModel')
@@ -67,7 +68,7 @@ const securePassword = async (password) => {
 const homewithoutLogin = async (req,res)=>{
   try {
     const productData = await products.find({})
-    console.log(productData);
+    // console.log(productData);
     res.render('users/homePage', {product:productData})
   } catch (error) {
     console.error(error)
@@ -78,13 +79,14 @@ const homewithoutLogin = async (req,res)=>{
 const loadHome = async(req,res)=>{
   try{
  const userid= req.session.user_id
+ console.log(userid)
  const productData = await products.find()
- console.log(productData,"in server pro");
+
  const userData = await User.findById(userid)
 
 
  if(userData){
- res.render('users/homePage',{user:userData,product:productData});
+ res.render('users/homePage',{user:userData,name:userData.name,product:productData});
  }
   } 
   catch(error){
@@ -173,7 +175,7 @@ const verifyLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         const userData = await User.findOne({ email });
-        console.log("User Data: ", userData);
+        // console.log("User Data: ", userData);
        
 
         if (userData) {
@@ -185,7 +187,12 @@ const verifyLogin = async (req, res) => {
             else if (passwordMatch) {
                 console.log("Password matches");
                 req.session.user_id = userData._id;
+                // console.log(req.session.user_id,"this is the req.session.userId");
+               
+
+                
                 req.session.userData = userData; 
+                   console.log(userData.name)
                 res.redirect('/home');
             } else {
                 res.render('users/login', { message: "Your password is wrong." });
@@ -394,20 +401,11 @@ const verifyPassword = async(req,res)=>{
   }
 }
 
-
-
-
-
-
-
-
-
-
 const loadshopPage = async (req, res) => {
   try {
     const productData = await products.find({})
     const categories= await category.find({})
-    console.log(productData);
+    // console.log(productData);
     res.render('users/productShop', {product:productData, category:categories})
   } catch (error) {
     console.error('Error loading shop page:', error);
@@ -431,7 +429,24 @@ console.log(productData);
     console.error(error)
   }
 }
-      
+const userProfile = async (req, res) => {
+  try {
+      const userId = req.session.user_id; // Fetch the user ID from session
+      const userData = await User.findById(userId); // Fetch the user data based on the ID
+
+      if (!userData) {
+          return res.status(404).send('User not found');
+      }
+
+      console.log("User data: ", userData);
+
+      res.render('users/userProfile', { userData });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+};
+
 
       
    
@@ -464,6 +479,7 @@ module.exports = {
     homewithoutLogin,
    loadshopPage,
    productdetailPage,
+   userProfile
 
 
 }
