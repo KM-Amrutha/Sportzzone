@@ -355,7 +355,7 @@
                                             </li>
                                         </ul> -->
                                     
-                                    <li><a href="blog-category-grid.html">Cart </a>
+                                    <li><a href="/getCart"> Cart </a>
                                         <!-- <ul class="sub-menu">
                                             <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
                                             <li><a href="blog-category-list.html">Blog Category List</a></li>
@@ -405,7 +405,7 @@
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <a class="mini-cart-icon" href="">
                                     <img alt="Evara" src="/assets/imgs/theme/icons/icon-cart.svg">
                                     <span class="pro-count white">2</span>
                                 </a>
@@ -514,7 +514,7 @@
                                     <li><a href="index-4.html">Home 4</a></li>
                                 </ul>
                             </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="shop-grid-right.html">shop</a>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">shop</a>
                                 <ul class="dropdown">
                                     <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
                                     <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
@@ -706,8 +706,10 @@
                                                     <div class="product-price">
                                                         <span>Rs.<%= product[i].productPrice %></span>
                                                     </div>
+
+
                                                     <div class="product-action-1 show">
-                                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html">
+                                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick= "addToCart('<%=product[i]._id%>')">
                                                             <i class="fi-rs-shopping-bag-add"></i>
                                                         </a>
                                                     </div>
@@ -756,6 +758,44 @@
             </div>
         </div>
     </div>
+
+<script>
+    function addToCart(productId) {
+    event.preventDefault(); 
+
+    fetch('/addtoCart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            productId, 
+            quantity: 1 
+        })
+    })
+    .then(response => {
+
+        if (!response.ok) {
+        throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+    }
+       return response.json()
+       
+    })
+    .then(data=>{
+        if(!data.success){
+            toastr.error(data.message)
+        }else{
+            toastr.success(data.message)
+        }
+        
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>

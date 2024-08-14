@@ -1,91 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Password Reset</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f4;
+const updateCart = async (req, res) => {
+    try {
+        const { productId, direction } = req.body;
+        const userId = req.session.user_id;
+
+        let userCart = await cart.findOne({ userId: userId }).populate('product.productId');
+
+        if (!userCart) {
+            return res.status(404).json({ error: 'User does not have a cart' });
+        }
+
+        const productIndex = userCart.product.findIndex(item => item.productId._id.toString() === productId);
+        if (productIndex !== -1) {
+            const product = userCart.product[productIndex].productId;
+
+            if (direction === 'up') {
+                if (userCart.product[productIndex].quantity < product.countStock) {
+                    userCart.product[productIndex].quantity++;
+                } else {
+                    return res.json({ error: 'Item is out of stock' });
+                }
+            } else if (direction === 'down' && userCart.product[productIndex].quantity > 1) {
+                userCart.product[productIndex].quantity--;
+            }
+
+            userCart.totalPrice = userCart.product.reduce((total, item) => {
+                return total + (item.quantity * item.productId.productPrice);
+            }, 0);
+
+            await userCart.save();
+
+            res.json({
+                quantity: userCart.product[productIndex].quantity,
+                totalPrice: userCart.totalPrice,
+            });
+        } else {
+            return res.status(404).json({ error: 'Item not found in the cart' });
+        }
+    } catch (error) {
+        console.error('updateCart - Error:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
-
-    div {
-      text-align: center;
-      max-width: 400px;
-      margin: auto;
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      color: #333;
-    }
-
-    form {
-      margin-top: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      color: #555;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      background-color: #088178;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background-color: #b8b8b8;
-      cursor: not-allowed;
-    }
-
-    .text-danger {
-      color: red;
-    }
-  </style>
-</head>
-<body>
-
-<div>
-  <h1>Reset Password</h1>
-  <form action="/newPassword" method="post">
-    <% if (locals.message) { %>
-      <span class="text-danger"><%= message %></span>
-    <% } %>
-    <label for="newPassword">New Password:</label>
-    <input type="password" id="newPassword" name="newPassword" required>
-    
-    <label for="confirmPassword">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" required>
-    
-    <button type="submit" id="resetButton">Reset Password</button>
-  </form>
-</div>
-
-</body>
-</html>
+};
