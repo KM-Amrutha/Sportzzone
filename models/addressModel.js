@@ -1,5 +1,3 @@
-const { ObjectId } = require('mongodb')
-
 const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
@@ -7,21 +5,15 @@ const addressSchema = new mongoose.Schema({
         ref:'User',
         required:true
     },
-
-  firstName: {
+  name: {
     type: String,
     required: true
   },
-  lastName: {
-    type: String,
-    required: true,
-    
+  mobile:{
+    type: Number,
+    required:true
   },
-     userId: { type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-  },
-  address: {
+  houseName: {
     type: String,
     required: true,
   },
@@ -35,14 +27,11 @@ const addressSchema = new mongoose.Schema({
     required: true,
   },
   
-  zipcode:{
+  pincode:{
     type:Number,
     required:true
 },
-  mobile: {
-    type: Number,
-    required: true,
-  }
+  
 },
   
 { timestamps: true }

@@ -1,0 +1,479 @@
+
+<%- include('../layouts/userHeader.ejs') -%>
+    
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow">Home</a>
+                    <span></span> Shop
+                    <span></span> Checkout
+                </div>
+            </div>
+        </div>
+
+
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 mb-sm-15">
+                        <div class="panel-collapse collapse login_form" id="loginform">
+                            <div class="panel-body">
+
+
+                                <p class="mb-30 font-sm">If you have shopped with us before, please enter your details below.
+                                     If you are a new customer, please proceed to the Billing &amp; Shipping section.</p>
+                                <form method="post">
+                                    <div class="form-group">
+                                        <input type="text" name="email" placeholder="Username Or Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" placeholder="Password">
+                                    </div>
+                                    <div class="login_footer form-group">
+                                        <div class="chek-form">
+                                            <div class="custome-checkbox">
+                                                <input class="form-check-input" type="checkbox" name="checkbox" id="remember" value="">
+                                                <label class="form-check-label" for="remember"><span>Remember me</span></label>
+                                            </div>
+                                        </div>
+                                        <a href="#">Forgot password?</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-md" name="login">Log in</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- <div class="col-lg-6">
+                        <div class="toggle_info">
+                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                        </div>
+                        <div class="panel-collapse collapse coupon_form " id="coupon">
+                            <div class="panel-body">
+                                <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
+                                <form method="post">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter Coupon Code...">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn  btn-md" name="login">Apply Coupon</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+
+                <!-- <div class="row">
+                    <div class="col-12">
+                        <div class="divider mt-50 mb-50"></div>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-25">
+                            <h4>Billing Details</h4>
+                        </div>
+                        <!-- <form action="/addAddress" method="post"> -->
+                            <% if (addresses && addresses.length > 0) { %>
+                                <% addresses.forEach((address, index) => { %>
+                                    <hr>
+                                    <div class="address-container" id="address_<%= address._id %>">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="selectedAddress"
+                                                   id="address_radio_<%= address._id %>" value="<%= address._id %>"
+                                                   <%= addresses.length === 1 ? 'checked' : '' %>
+                                            >
+                                            <label class="form-check-label" for="address_radio_<%= address._id %>">
+                                                <address>
+                                                    Name: <%= address.name %> <br>
+                                                    Housename: <%= address.houseName %> <br>
+                                                    City: <%= address.city %>, <br>
+                                                    State: <%= address.state %>. <br>
+                                                    Pincode: <%= address.pincode %>
+                                                </address>
+                                                <a class="remove-icon" onclick="removeAddress('<%= address._id %>')">
+                                                    <i class="fa-solid fa-trash fa-xl"></i>
+                                                </a>
+                                                <h6><a href="/loadEditAddress?id=<%= address._id %>" class="edit-address" style="color: green;">Edit</a></h6>
+                                            </label>
+                                        </div>
+                                        <h5></h5>
+                                    </div>
+                                    <hr>
+                                <% }); %>
+                                <% if (addresses.length < 3) { %>
+                                    <div class="address-container">
+                                        <input type="button" value="Add Address" onclick="toggleAddressForm()" class="add-address" style="background-color:#046963; color: aliceblue; font-weight: bold;">
+                                    </div>
+                                <% } %>
+                            <% } else { %>
+                                <p>No address found.</p>
+                                <div class="address-container">
+                                    <input type="button" value="Add Address" onclick="toggleAddressForm()" class="add-address" style="background-color:#046963; color: aliceblue; font-weight: bold;">
+                                </div>
+                            <% } %>
+                    
+                            <div class="col-lg-12" id="addressFormContainer" style="display: none;">
+                                <div class="card mb-3 mb-lg-0">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Add New Address</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        
+                                        <form id="addressForm" action="/addAddress" method="post">
+                                            <div class="form-group mb-3">
+                                                <label for="inputName" class="form-label">Name</label>
+                                                <input type="text" class="form-control form-control-lg p-3" name="name" id="inputName" placeholder="Enter your full name">
+                                                <div id="nameError" class="text-danger"></div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="inputMobile" class="form-label">Mobile</label>
+                                                <input type="text" class="form-control form-control-lg p-3" name="mobile" id="inputMobile" placeholder="Enter your mobile number" pattern="[0-9]{10}">
+                                                <div id="mobileError" class="text-danger"></div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="inputHouseName" class="form-label">House Name</label>
+                                                <input type="text" class="form-control form-control-lg p-3" name="houseName" id="inputHouseName" placeholder="Enter your house name">
+                                                <div id="houseNameError" class="text-danger"></div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="inputCity" class="form-label">City</label>
+                                                <input type="text" class="form-control form-control-lg p-3" name="city" id="inputCity" placeholder="Enter your city">
+                                                <div id="cityError" class="text-danger"></div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="inputState" class="form-label">State</label>
+                                                <input type="text" class="form-control form-control-lg p-3" name="state" id="inputState" placeholder="Enter your state">
+                                                <div id="stateError" class="text-danger"></div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="inputZip" class="form-label">Pin Code</label>
+                                                <input type="number" class="form-control form-control-lg p-3" name="pincode" id="inputZip" placeholder="Enter your pin code">
+                                                <div id="pinCodeError" class="text-danger"></div>
+                                            </div>
+                                            <div class="form-group mt-4">
+                                                <button type="submit" class="btn btn-fill-out btn-block btn-lg font-weight-bold">Save Address</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="order_review">
+                            <div class="mb-20">
+                                <h4>Your Orders</h4>
+                            </div>
+                            <div class="table-responsive order_table text-center">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (locals.cartData && cartData.product.length> 0) { %>
+                                            <% let total=0; %>
+                                                <% for (let i=0; i < cartData.product.length; i++) { %>
+                                                    <tr>
+                                                        <td class="image product-thumbnail">
+                                                            <img src="/uploads/<%= cartData.product[i].productId.images[0] %>" alt="#">
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <h5><a href="shop-product-full.html">
+                                                                    <%= cartData.product[i].productId.productName %>
+                                                                </a></h5>
+                                                            <span class="product-qty">x <%=
+                                                                    cartData.product[i].quantity %></span>
+                                                        </td>
+                                                        <td>$<%= cartData.product[i].productId.productPrice *
+                                                                cartData.product[i].quantity %>
+                                                        </td>
+                                                    </tr>
+                                                    <% total +=cartData.product[i].productId.productPrice *
+                                                        cartData.product[i].quantity; %>
+                                                        <% } %>
+                                                                <tr>
+                                                                    <th>Total</th>
+                                                                    <td colspan="2" class="product-subtotal"><span
+                                                                            class="font-xl text-brand fw-900"
+                                                                            id="GrandTotal">$<%= total.toFixed(2) %>
+                                                                                </span></td>
+                                                                </tr>
+                                                            <% }else{%>
+                                                                <tr>
+                                                                    <td class="image product-thumbnail">
+                                                                        
+                                                                            <img src="/uploads/<%=cartData.product[i].productId.images[0]%>" alt="#">
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5><a href="shop-product-full.html">
+                                                                                <%= product.productName %>
+                                                                            </a></h5>
+                                                                        <span class="product-qty"></span>
+                                                                    </td>
+                                                                    <td>$<%=product.productPrice %>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Total</th>
+                                                                    <td colspan="2" class="product-subtotal"><span
+                                                                            class="font-xl text-brand fw-900"
+                                                                            id="GrandTotal"> $
+                                                                            <%=product.productPrice.toFixed(2) %>
+                                                                                </span></td>
+                                                                </tr>
+                                                                <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+
+                            <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                            <div class="payment_method">
+                                <div class="mb-25">
+                                    <h5>Payment</h5>
+                                </div>
+                                <div class="payment_option">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
+                                        <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">razor pay</label>
+                                        <div class="form-group collapse in" id="bankTranfer">
+                                            <p class="text-muted mt-5">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration. </p>
+                                        </div>
+                                    </div>
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
+                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment"> wallet</label>
+                                        <div class="form-group collapse in" id="checkPayment">
+                                            <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" 
+                                        value="Cash on delivery" id="exampleRadios5" >
+
+                                        <label class="form-check-label" for="exampleRadios5"
+                                         data-bs-toggle="collapse" data-target="#paypal" 
+                                         aria-controls="paypal">Cash on delivery</label>
+                                        <div class="form-group collapse in" id="paypal">
+                                        </div>
+                                        
+                                    </div>
+                                    <p id="codMessage" class="text-danger" style="display: none;">COD is not available for this porduct.</p>
+
+                                </div>
+                            </div>
+                            <button onclick="placeOrder()" class="btn btn-fill-out btn-block mt-30">Place
+                                Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <%- include('../layouts/userFooter.ejs') -%>
+
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <h5 class="mb-5">Now Loading</h5>
+                    <div class="loader">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        function removeAddress(addressId) {
+            const addressElement = document.getElementById('address_' + addressId);
+            if (addressElement) {
+                addressElement.parentNode.removeChild(addressElement);
+                console.log('Address removed successfully');
+                fetch('/removeAddress', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ addressId })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error('Failed to remove address');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else {
+                console.error('Address element not found');
+            }
+        }
+    </script>
+
+<script>
+    function toggleAddressForm() {
+        const formContainer = document.getElementById('addressFormContainer');
+        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+<script>
+    document.getElementById('addressForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => (data[key] = value));
+
+        fetch('/addAddress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Redirect to the checkout page after successfully saving the address
+                window.location.href = '/loadCheckout';
+            } else {
+                // Display error messages or handle the error
+                console.error('Error:', result.message);
+                alert(result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the address.');
+        });
+    });
+</script>
+
+<script>
+
+function placeOrder() {
+  console.log("place order worked");
+  let selectedRadioButton = document.querySelector('input[name="payment_option"]:checked');
+  if (!selectedRadioButton) {
+    toastr.info("Please select a Payment Method.");
+    return false; 
+  }
+  const selectedRadioButtons = selectedRadioButton.value;
+
+  if (!selectedRadioButtons) {
+    toastr.info("Please select a Payment Method.");
+    return false;
+  }
+
+  const selectedAddress1 = document.querySelector('input[name="selectedAddress"]:checked');
+  if (!selectedAddress1) {
+    toastr.info("Please select an address.");
+    return false;
+  }
+
+  const selectedAddress = selectedAddress1.value;
+  const totalAmountWithSymbol = document.getElementById("GrandTotal").innerText;
+  const totalAmount = parseFloat(totalAmountWithSymbol.replace('$', ''));
+  const orderData = {
+    paymentMethod: selectedRadioButtons,
+    paymentStatus: "Failed",
+    amount: totalAmount,
+    address: selectedAddress,
+  };
+
+  url = '/placeOrder';
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(orderData),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Order Placed",
+      showConfirmButton: false,
+      timer: 2000
+    });
+
+    setTimeout(() => {
+      window.location.href = '/loadOrderPage';
+    }, 2000);
+  })
+  .catch(error => {
+    console.error('Error placing order:', error);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+    });
+  });
+}
+
+</script>
+
+
+
+    <!-- Vendor JS-->
+    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/plugins/slick.js"></script>
+    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="assets/js/plugins/wow.js"></script>
+    <script src="assets/js/plugins/jquery-ui.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="assets/js/plugins/magnific-popup.js"></script>
+    <script src="assets/js/plugins/select2.min.js"></script>
+    <script src="assets/js/plugins/waypoints.js"></script>
+    <script src="assets/js/plugins/counterup.js"></script>
+    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="assets/js/plugins/images-loaded.js"></script>
+    <script src="assets/js/plugins/isotope.js"></script>
+    <script src="assets/js/plugins/scrollup.js"></script>
+    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
+    <!-- Template  JS -->
+    <script src="assets/js/maind134.js?v=3.4"></script>
+    <script src="assets/js/shopd134.js?v=3.4"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
+</html>
+
+

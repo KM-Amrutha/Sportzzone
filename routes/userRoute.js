@@ -28,21 +28,9 @@ user_route.use(bodyParser.urlencoded({extended:true}));
 user_route.use(express.static('public'));
 
 
-//    const storage = multer.diskStorage({
-//     destination:function(req,file,cb){
-//        cb(null,path.join(__dirname,'../public/userImages'));
-//     },
-//     filename:function(req,file,cb){
-//         const name = Date.now()+'-'+file.originalname;
-//          cb(null,name);
-//     }
-     
-//    })
-
-// const upload = multer({storage:storage});
-
-
-user_route.get('/',userController.homewithoutLogin)
+user_route.get('/',userController.homewithoutLogin);
+user_route.get('/users/productShop',auth.isBlockedoornot,userController.guestShopPage);
+user_route.get('/productDetail',auth.isBlockedoornot,userController.guestProductDetailPage);
 
 
 user_route.get('/register',auth.isLogout,userController.loadRegister); 
@@ -55,12 +43,9 @@ user_route.get('/home',auth.isBlocked,userController.loadHome);
 user_route.get('/logout',auth.isLogin,userController.userLogout);
 
 
-user_route.get('/userProfile',auth.isLogin,auth.isBlocked,userController.userProfile)
-
-
 
 // New routes for OTP verification
-user_route.get('/otp', userController.loadVerifyOTP); // Render OTP verification page
+user_route.get('/otp', userController.loadVerifyOTP); 
 user_route.post('/verify-otp', userController.verifyOTP);  
 
 //resned OTP again athinulla route..// 
@@ -83,33 +68,34 @@ user_route.get("/users/productShop",auth.isLogin,auth.isBlocked,userController.l
 user_route.get('/productDetail',auth.isLogin,auth.isBlocked,userController.productdetailPage);
 
 
-
 //---------------------cart------------//
 
 user_route.get('/getCart',auth.isLogin,auth.isBlocked,cartController.getCart);
 user_route.post('/addToCart',auth.isLogin,auth.isBlocked,cartController.addToCart);
 user_route.post('/updatecart', cartController.updateCart);
 user_route.post('/removeFromCart',auth.isLogin,auth.isBlocked,cartController.removeFromCart);
+user_route.get('/loadCheckout',auth.isLogin,auth.isBlocked,cartController.isCartempty,cartController.loadCheckout);
+user_route.post('/placeOrder',auth.isLogin,auth.isBlocked,cartController.placeOrder);
+user_route.get('/loadOrderPage',auth.isLogin,userController.loadOrderPage);
 
 
 
 
 
 
+user_route.get('/userProfile',auth.isLogin,auth.isBlocked,userController.userProfile);
+user_route.post('/addAddress', auth.isLogin,auth.isBlocked, userController.addAddress)
+user_route.get('/loadEditAddress', auth.isLogin,auth.isBlocked, userController.loadEditAddress);
+user_route.post('/updateAddress', auth.isLogin,auth.isBlocked, userController.updateAddress);
+user_route.post('/removeAddress',auth.isLogin,auth.isBlocked,userController.removeAddress);
+
+user_route.get('/loadAddAddress',auth.isLogin,auth.isBlocked,userController.loadAddAddress);
 
 
+user_route.post('/changePassword',auth.isLogin,auth.isBlocked,userController.changePassword);
 
+user_route.post('/updateProfile', auth.isLogin,auth.isBlocked,userController.updateUserProfile);
 
-
-
-
-
-
-
-
-
-
- 
 
 
 module.exports = user_route;

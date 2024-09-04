@@ -18,7 +18,8 @@ const config = require("./config/config");
 //connnect to mongoDb
 mongoose.connect(process.env.mongourl)
 .then(()=>{
-  console.log("connected to server db");})
+  // console.log("connected to server db");
+  })
  .catch((err)=>{
   console.log(err.message);
   

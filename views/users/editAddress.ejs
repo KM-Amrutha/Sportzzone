@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportZone</title>
+    <!-- Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        /* Custom CSS for additional styling */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            margin: 50px auto;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            border-bottom: none;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            background-color: #181413;
+            color: #fff;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+        }
+    </style>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+</head>
+
+<body>
+    <div class="card border-primary">
+        <div class="card-header">
+            <h5 class="mb-0 text-center">Edit Address</h5>
+        </div>
+        <% if (addresses) { %>
+        <div class="card-body">
+            <form id="addressForm" action="/updateAddress?id=<%=addresses._id%>" method="post">
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Name</label>
+                    <input type="text" class="form-control form-control-lg" name="name" id="inputName" value="<%= addresses.name %>" required>
+                    <div class="invalid-feedback" id="nameError"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputMobile" class="form-label">Mobile</label>
+                    <input type="tel" pattern="[0-9]{10}" maxlength="10" class="form-control form-control-lg" name="mobile" id="inputMobile" value="<%= addresses.mobile %>" required>
+                    <small>Please enter a 10-digit mobile number.</small>
+                    <div class="invalid-feedback" id="mobileError"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputHouseName" class="form-label">House Name</label>
+                    <input type="text" class="form-control form-control-lg" name="houseName" id="inputHouseName" value="<%= addresses.houseName %>" required>
+                    <div class="invalid-feedback" id="houseNameError"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputCity" class="form-label">City</label>
+                    <input type="text" class="form-control form-control-lg" name="city" id="inputCity" value="<%= addresses.city %>" required>
+                    <div class="invalid-feedback" id="cityError"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputState" class="form-label">State</label>
+                    <input type="text" class="form-control form-control-lg" name="state" id="inputState" value="<%= addresses.state %>" required>
+                    <div class="invalid-feedback" id="stateError"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputPinCode" class="form-label">Pincode</label>
+                    <input type="text" class="form-control form-control-lg" maxlength="6" name="pinCode" id="inputPinCode" value="<%= addresses.pinCode %>" required pattern="[0-9]{6}">
+                    <small>Please enter a 6-digit pin code.</small>
+                    <div class="invalid-feedback" id="pinCodeError"></div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Address</button>
+            </form>
+        </div>
+        <% } %>
+    </div>
+
+    <script>
+        document.getElementById("addressForm").addEventListener("submit", function(event) {
+            // Prevent form submission
+            event.preventDefault();
+
+            let isValid = true;
+
+            // Validate Name: Only letters, no spaces
+            const nameInput = document.getElementById("inputName");
+            const nameError = document.getElementById("nameError");
+            if (!/^[A-Za-z]+$/.test(nameInput.value)) {
+                nameError.textContent = "Name should contain only letters and no spaces.";
+                nameInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                nameError.textContent = "";
+                nameInput.classList.remove("is-invalid");
+            }
+
+            // Validate Mobile: Already restricted by pattern and maxlength in the input
+
+            // Validate House Name: No numbers allowed
+            const houseNameInput = document.getElementById("inputHouseName");
+            const houseNameError = document.getElementById("houseNameError");
+            if (/\d/.test(houseNameInput.value)) {
+                houseNameError.textContent = "House Name should not contain numbers.";
+                houseNameInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                houseNameError.textContent = "";
+                houseNameInput.classList.remove("is-invalid");
+            }
+
+            // Validate City: Only letters allowed
+            const cityInput = document.getElementById("inputCity");
+            const cityError = document.getElementById("cityError");
+            if (!/^[A-Za-z\s]+$/.test(cityInput.value)) {
+                cityError.textContent = "City should contain only letters.";
+                cityInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                cityError.textContent = "";
+                cityInput.classList.remove("is-invalid");
+            }
+
+            // Validate State: Only letters allowed
+            const stateInput = document.getElementById("inputState");
+            const stateError = document.getElementById("stateError");
+            if (!/^[A-Za-z\s]+$/.test(stateInput.value)) {
+                stateError.textContent = "State should contain only letters.";
+                stateInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                stateError.textContent = "";
+                stateInput.classList.remove("is-invalid");
+            }
+
+            // Validate Pincode: Already restricted by pattern and maxlength in the input
+
+            // If all validations pass, submit the form
+            if (isValid) {
+                this.submit();
+            }
+        });
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</body>
+
+</html>

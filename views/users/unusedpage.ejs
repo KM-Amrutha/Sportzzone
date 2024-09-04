@@ -1,43 +1,618 @@
-const updateCart = async (req, res) => {
-    try {
-        const { productId, direction } = req.body;
-        const userId = req.session.user_id;
 
-        let userCart = await cart.findOne({ userId: userId }).populate('product.productId');
+<!DOCTYPE html>
+<html lang="zxx">
 
-        if (!userCart) {
-            return res.status(404).json({ error: 'User does not have a cart' });
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>SportZone</title>
+
+    <!-- ::::::::::::::Favicon icon::::::::::::::-->
+    <!-- <link rel="shortcut icon" href="images/favicon.ico" type="image/png"> -->
+
+    <!-- ::::::::::::::All CSS Files here :::::::::::::: -->
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="css/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="css/vendor/ionicons.css">
+    <link rel="stylesheet" href="css/vendor/simple-line-icons.css">
+    <link rel="stylesheet" href="css/vendor/jquery-ui.min.css">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="css/plugins/swiper-bundle.min.css">
+    <link rel="stylesheet" href="css/plugins/animate.min.css">
+    <link rel="stylesheet" href="css/plugins/nice-select.css">
+    <link rel="stylesheet" href="css/plugins/venobox.min.css">
+    <link rel="stylesheet" href="css/plugins/jquery.lineProgressbar.css">
+    <link rel="stylesheet" href="css/plugins/aos.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+    <!-- <link rel="stylesheet" href="css/vendor/vendor.min.css">
+    <link rel="stylesheet" href="css/plugins/plugins.min.css">
+    <link rel="stylesheet" href="css/style.min.css"> -->
+</head>
+
+<body>
+    <!-- Start Header Area -->
+    <header class="header-section d-none d-xl-block">
+        <div class="header-wrapper">
+            <div class="header-bottom header-bottom-color--black section-fluid sticky-header sticky-color--black">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 d-flex align-items-center justify-content-between">
+                            <!-- Start Header Logo -->
+                            <div class="header-logo">
+                                <div class="logo">
+                                    <a href="home"><img src="images/logo/logo_1.png" alt=""></a>
+                                </div>
+                            </div>
+                            <!-- End Header Logo -->
+
+                            <!-- Start Header Main Menu -->
+                            <div class="main-menu menu-color--white menu-hover-color--pink">
+                                <nav>
+                                    <ul>
+                                        <li class="has-dropdown">
+                                            <a class="active main-menu-link" href="/home">Home</a>
+                                            <!-- Sub Menu -->
+                                          
+                                        </li>
+                                        <li class="has-dropdown has-megaitem">
+                                            <a href="/users/productShop">Shop 
+                                                   </a>
+                                          
+                                            
+                                        </li> 
+                                        <li>
+                                             <a href="/userProfile">Profile</a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="contact-us.html">Contact Us</a>
+                                        </li> -->
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- End Header Main Menu Start  -->
+
+                            <!-- Start Header Action Link -->
+                             <ul class="header-action-link action-color--white action-hover-color--pink">
+                                <!-- <li>
+                                    <a href="wishlist">
+                                        <i class="icon-heart"></i>
+                                         <span class="item-count"><</span>
+                                    </a>
+                                </li> -->
+                                <!-- <li>
+                                    <a href="cart">
+                                        <i class="icon-bag"></i>
+                                        <span class="item-count"></span>
+                                    </a>
+                                </li> -->
+                                 <li>
+                                    <a href="#search">
+                                        <i class="icon-magnifier"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="user-profile">
+                                        <i class="icon-user"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">
+                                        <i class="icon-menu"></i>
+                                    </a>
+                                </li>
+                               
+                            </ul> 
+                            <!-- End Header Action Link -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
         }
 
-        const productIndex = userCart.product.findIndex(item => item.productId._id.toString() === productId);
-        if (productIndex !== -1) {
-            const product = userCart.product[productIndex].productId;
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-            if (direction === 'up') {
-                if (userCart.product[productIndex].quantity < product.countStock) {
-                    userCart.product[productIndex].quantity++;
-                } else {
-                    return res.json({ error: 'Item is out of stock' });
+        h2 {
+            text-align: center;
+        }
+
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .order-info {
+            flex: 1;
+        }
+
+        .order-actions {
+            flex: 0 0 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .order-actions .btn-cancel-order {
+            background-color: #b19361;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .order-actions .btn-cancel-order:hover {
+            background-color: #8e6f4d;
+        }
+
+        ul {
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        li {
+            list-style-type: none;
+            margin-bottom: 5px;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .btn {
+    margin-right: 10px;
+}
+
+.btn-return-order {
+    background-color: #ff4c4c; /* Red */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .btn-download-invoice {
+    background-color: #4caf50; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .btn-return-order:hover,
+  .btn-download-invoice:hover {
+    opacity: 0.8;
+  }
+
+  
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    .order-details {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .order-info, 
+    .order-actions {
+        width: 100%;
+    }
+
+    .order-actions .btn-cancel-order {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .product-info img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+
+@media (max-width: 576px) {
+    h2 {
+        font-size: 24px;
+    }
+
+    .order-actions .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Order Details</h2>
+        <div class="order-info">
+            <p><strong>Customer Name:</strong> <%= user.name %></p>
+            <p><strong>Order Status:</strong> <%= order.status %></p>
+            <p><strong>Order Date:</strong> <%= new Date(order.placed).toLocaleDateString() %></p>
+            <p><strong>Shipping Address:</strong></p>
+            <ul>
+                <li><strong>Address:</strong> <%= address.Address[0].address %></li>
+                <li><strong>Phone Number:</strong> <%= address.Address[0].phone %></li>
+                <li><strong>Pincode:</strong> <%= address.Address[0].pincode %></li>
+            </ul>
+            <p><strong>Products:</strong></p>
+            <ul>
+                <% products.forEach(product => { %>
+                    <li data-product-id="<%= product._id %>">
+                        <div class="product-info">
+                            <img src="<%= './productimage/' + product.image[0] %>" alt="<%= product.name %>" width="100" height="100">
+                            <div class="product-details">
+                                <p>
+                                    <%= product.name %> <%= product.quantity %> x ₹<%= (product.price || 0).toFixed(2) %>
+                                    <% if (product.discountPercentage > 0) { %>
+                                        <span class="discount-info">(Discount: <%= (product.discountPercentage || 0).toFixed(2) %>%, -₹<%= (product.discountAmount || 0).toFixed(2) %>)</span>
+                                    <% } %>
+                                </p>
+                                <button class="remove-product">Remove</button>
+                            </div>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+            <p><strong>Subtotal:</strong> ₹<span id="subtotal"><%= order.totalprice.toFixed(2) %></span></p>
+            <% if (couponDiscount > 0) { %>
+                <p><strong>Coupon Discount (<%= couponPercentage %>%) :</strong> -₹<%= couponDiscount.toFixed(2) %></p>
+            <% } %>
+            <p><strong>Total:</strong> ₹<span id="total"><%= order.totalprice.toFixed(2) %></span></p>
+        
+            <div class="order-actions">
+                <% if (order.payment !== 'COD' && order.paymentstatus === 'Pending') { %>
+                    <button id="payNowBtn" class="btn btn-pay-now" data-order-id="<%= order._id %>" data-address-id="<%= address.Address[0]._id %>" data-total-price="<%= order.totalprice %>">
+                        Pay Now
+                    </button>
+                <% } %>
+                
+                <% if (order.status !== 'Cancelled' && order.status !== 'Return Requested' && order.status !== 'Returned') { %>
+                    <% if (order.status === 'Delivered') { %>
+                        <button id="returnOrderBtn" class="btn btn-return-order" data-order-id="<%= order._id %>">
+                            Return Product
+                        </button>
+                        <br>
+                        <button id="downloadInvoiceBtn" class="btn btn-download-invoice" data-order-id="<%= order._id %>">
+                            Download Invoice
+                        </button>
+                    <% } else { %>
+                        <button id="cancelOrderBtn" class="btn btn-cancel-order" data-order-id="<%= order._id %>">
+                            Cancel Order
+                        </button>
+                    <% } %>
+                <% } else if (order.status === 'Return') { %>
+                    <p><strong>Status:</strong> This order has been returned.</p>
+                <% } else { %>
+                    <p><strong>Status:</strong> This order has been cancelled.</p>
+                <% } %>
+            </div>    
+              
+        </div>
+        
+    </div>
+    <div id="returnReasonModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Return Reason</h2>
+            <select id="returnReasonDropdown">
+                <option value="Defective product">Defective product</option>
+                <option value="Received wrong item">Received wrong item</option>
+                <option value="Product not as described">Product not as described</option>
+                <option value="Other">Other</option>
+            </select>
+            <button id="confirmReturnBtn" class="btn">Confirm Return</button>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+    const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+    const payNowBtn = document.getElementById('payNowBtn');
+
+    if (cancelOrderBtn) {
+        cancelOrderBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to cancel this order.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/cancel-order/<%= order._id %>`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === 'Order cancelled successfully') {
+                            Swal.fire(
+                                'Cancelled!',
+                                'Your order has been cancelled.',
+                                'success'
+                            ).then(() => {
+                                
+                                if (payNowBtn) {
+                                    payNowBtn.style.display = 'none';
+                                }
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1000); 
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                data,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem cancelling your order.',
+                            'error'
+                        );
+                    });
                 }
-            } else if (direction === 'down' && userCart.product[productIndex].quantity > 1) {
-                userCart.product[productIndex].quantity--;
-            }
+            });
+        });
+    }
+});
+    
+document.getElementById('returnOrderBtn')?.addEventListener('click', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to return this product.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, return it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Select Return Reason',
+                input: 'select',
+                inputOptions: {
+                    'Defective product': 'Defective product',
+                    'Received wrong item': 'Received wrong item',
+                    'Product not as described': 'Product not as described',
+                    'Other': 'Other'
+                },
+                inputPlaceholder: 'Select a reason',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel'
+            }).then((reasonResult) => {
+                if (reasonResult.isConfirmed) {
+                    const returnReason = reasonResult.value;
 
-            userCart.totalPrice = userCart.product.reduce((total, item) => {
-                return total + (item.quantity * item.productId.productPrice);
-            }, 0);
+                    
+                    Swal.fire(
+                        'Returned!',
+                        'Your product return request has been submitted.',
+                        'success'
+                    ).then(() => {
+                        window.location.reload();
+                    });
 
-            await userCart.save();
+                    
+                    fetch(`/return-order/<%= order._id %>`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ returnReason })
+                    })
+                    .then(response => response.json()) 
+                    .then(data => {
+                        if (!data.success) {
+                            
+                            Swal.fire(
+                                'Error!',
+                                data.message || 'There was a problem returning your product.',
+                                'error'
+                            );
+                        }
+                    })
+                    // .catch(error => {
+                        
+                    //     Swal.fire(
+                    //         'Error!',
+                    //         'There was a problem returning your product.',
+                    //         'error'
+                    //     );
+                    // });
+                }
+            });
+        }
+    });
+});
 
-            res.json({
-                quantity: userCart.product[productIndex].quantity,
-                totalPrice: userCart.totalPrice,
+    </script>
+    
+
+    <script>
+
+document.getElementById('payNowBtn').addEventListener('click', function(e) {
+    const orderId = e.target.dataset.orderId;
+    const addressId = e.target.dataset.addressId;
+    const totalPrice = e.target.dataset.totalPrice;
+    console.log({ orderId, addressId, totalPrice });
+    fetch(`/retry-payment?id=${orderId}`, {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data,"data");
+        if (data.success) {
+            let amount=data.amount*100
+            const options = {
+                "key": "rzp_test_KBfeMuv9hM52Z0",
+                "amount": amount,
+                "currency": data.currency,
+                "name": "Avinadh and co",
+                "description": "Test Transaction",
+                "order_id": data.razorpayOrderId,
+                "handler": function (response){
+                    verifyPayment(response, data.orderId, addressId, totalPrice); 
+                },
+                "prefill": {
+                    "name": "avinadhkp",
+                    "email": "avinadhkp@gmail.com",
+                    "contact": "9999999999"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+function verifyPayment(payment, orderId, addressId, totalPrice) {
+    console.log('Order ID:', orderId);
+    console.log({ totalPrice });
+    fetch('/verifyrazorpay', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            razorpay_order_id: payment.razorpay_order_id,
+            razorpay_payment_id: payment.razorpay_payment_id,
+            razorpay_signature: payment.razorpay_signature,
+            addressId: addressId,
+            orderId: orderId,
+            totalPrice: totalPrice
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Payment Successful!',
+                text: 'Your payment was successful and your order has been confirmed.',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.reload(); 
+                }
             });
         } else {
-            return res.status(404).json({ error: 'Item not found in the cart' });
+            Swal.fire({
+                icon: 'error',
+                title: 'Payment Verification Failed',
+                text: 'Please try again.',
+                confirmButtonText: 'OK'
+            });
         }
-    } catch (error) {
-        console.error('updateCart - Error:', error.message);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong. Please try again later.',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+
+</script>
+</script>
+   
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const downloadInvoiceBtn = document.getElementById('downloadInvoiceBtn');
+        if (downloadInvoiceBtn) {
+            downloadInvoiceBtn.addEventListener('click', () => {
+                const orderId = downloadInvoiceBtn.getAttribute('data-order-id');
+                window.location.href = `/download-invoice/${orderId}`;
+            });
+        }
+    });
+    </script>
+    <script>
+     document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.remove-product').forEach(button => {
+        button.addEventListener('click', async function() {
+            const productElement = this.closest('li');
+            const productId = productElement.getAttribute('data-product-id');
+            const response = await fetch(`/remove-product?orderId=<%= order._id %>&productId=${productId}`, { method: 'DELETE' });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                 
+                    productElement.remove();
+           
+                    document.getElementById('subtotal').textContent = result.newSubtotal.toFixed(2);
+                    if (result.couponDiscount > 0) {
+                        document.getElementById('total-after-discount').textContent = result.newTotalAfterDiscount.toFixed(2);
+                    } else {
+                        document.getElementById('total').textContent = result.newTotal.toFixed(2);
+                    }
+                } else {
+                    alert('Failed to remove product. Please try again.');
+                }
+            }
+        });
+    });
+});
+    
+</script>
+</body>
+
+</html>

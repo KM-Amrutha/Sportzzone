@@ -23,150 +23,53 @@
                                         <th scope="col">Name</th>
                                         <th scope="col">Price</th>
                                         <th scope="col">Quantity</th>
-                                        <th scope="col">Subtotal</th>
+                                        <th scope="col" class="text-right" style="padding-right: 20px;">Subtotal</th>
                                         <th scope="col">Remove</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <%if(locals.cartData ){%>
-                                        <% console.log(cartData,"cartdata verunund")%>
-                                        <%for(let i=0;i<cartData.product.length;i++){%>
+                                
+                                            <% if (locals.cartData && cartData.product && cartData.product.length > 0) { %>
+                                        <% let total = 0; %>
+                                        <% for (let i = 0; i < cartData.product.length; i++) { %>
+                                            <tr>
+                                                <td class="image product-thumbnail"><img src="/uploads/<%= cartData.product[i].productId.images[0] %>" alt="#"></td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name"><a href="#"><%= cartData.product[i].productId.productName %></a></h5>
+                                                </td>
+                                                <% total += cartData.product[i].productId.productPrice * cartData.product[i].quantity; %>
+                                                <td class="price" data-title="Price"><span>₹<%= cartData.product[i].productId.productPrice %> </span></td>
+                                                <td class="text-center" data-title="Stock">
+                                                    <div class="detail-qty border radius m-auto">
+                                                        <a href="#" class="qty-down" onclick="decreaseQuantity('<%= cartData.product[i]._id %>', '<%= cartData.product[i].productId._id %>', '<%= cartData.product[i].productId.productPrice %>')"><i class="fi-rs-angle-small-down"></i></a>
+                                                        <span class="qty-val" id="qty_<%= cartData.product[i]._id %>"><%= cartData.product[i].quantity %></span>
+                                                        <a href="#" class="qty-up" onclick="increaseQuantity('<%= cartData.product[i]._id %>', '<%= cartData.product[i].productId._id %>', '<%= cartData.product[i].productId.countStock %>', '<%= cartData.product[i].productId.productPrice %>')"><i class="fi-rs-angle-small-up"></i></a>
+                                                    </div>
+                                                </td>
 
-                                    <tr>
-                                        <td class="image product-thumbnail"><img src="/uploads/<%=cartData.product[i].productId.images[0]%>" alt="#"></td>
-                                        <td class="product-des product-name">
-                                            <h5 class="product-name"><a href="#"><%=cartData.product[i].productId.productName%></a></h5>
-                                           
-                                        </td>
-                                            <!-- <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
-                                            </p> -->
-                                            <%Total += cartData.product[i].productId.productPrice*cartData.product[i].countStock%>
-                                        <td class="price" data-title="Price"><span>₹<%=cartData.product[i].productId.productPrice%> </span></td>
-                                        
-                                        <td class="text-center" data-title="Stock">
-                                            <div class="detail-qty border radius  m-auto">
-                                                 <!-- <h1>'<%= cartData.product[i].productId._id%></h1> -->
-                                                <a href="#" class="qty-down" onclick="decreaseQuantity('<%= cartData.product[i]._id%>','<%= cartData.product[i].productId._id%>','<%=cartData.product[i].price%>')"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val" id='qty_<%=cartData.product[i]._id%>' ><%=cartData.product[i].quantity%></span>
-                                                <a href="#" class="qty-up" onclick="increaseQuantity('<%= cartData.product[i]._id%>','<%= cartData.product[i].productId._id%>','<%=Total%>','<%=cartData.product[i].price%>')"><i class="fi-rs-angle-small-up"></i></a>
-                                            
-                                            </div>
-                                        </td>
-                                        <td class="text-right" data-title="Cart">
-                                            <span id="subTotal_<%=cartData.product[i]._id %>">₹<%=cartData.product[i].price*cartData.product[i].quantity %></span>
-                                        </td>
-                                        <td class="action" data-title="Remove">
-                                     
-                                        <a  class="text-muted remove-item" onclick="removeCartItem('<%= cartData.product[i].productId._id %>')">
-                                        <i class="fi-rs-trash"></i></a>
-                                    </td>
-                                    </tr>
-                                    
-                                  <%}%>
+                                               
+                                                <td class="text-right" data-title="Cart" style="padding-right: 20px;">
+                                                    <span id="subTotal_<%= cartData.product[i]._id %>">₹<%= cartData.product[i].productId.productPrice * cartData.product[i].quantity %></span>
+                                                </td>
 
-                                  <%}%>
-
-                                  <script>
-                                    function increaseQuantity(id,productId, total, price) {
-                                    var currSubtotal = document.getElementById(`subTotal_${id}`);
-                                    var currentQuantityElement = document.getElementById(`qty_${id}`);
-                                    var currentQuantityValue = parseInt(currentQuantityElement.innerText);
-                                
-                                    currentQuantityValue++;
-                                    currentQuantityElement.innerText = currentQuantityValue;
-                                    console.log(currentQuantityElement,"ygtygygy");
-                                    
-                                    currSubtotal.innerText = `₹${currentQuantityValue * price}`;
-                                
-                                    // Recalculate and update the total amount
-                                    
-                                    // Add logic to update the cart on the server when the quantity changes
-                                    updateCart(productId, 'up');
-                                }
-                                
-                                function decreaseQuantity(id,productId, price) {
-                                    console.log("keriiiii")
-                                    console.log(productId,price)
-                                    var currSubtotal = document.getElementById(`subTotal_${id}`);
-                                    var currentQuantityElement = document.getElementById(`qty_${id}`);
-                                    var currentQuantityValue = parseInt(currentQuantityElement.innerText);
-                                
-                                    if (currentQuantityValue > 1) {
-                                        currentQuantityValue--;
-                                        currentQuantityElement.innerText = currentQuantityValue;
-                                        currSubtotal.innerText = `₹${currentQuantityValue * price}`;
-                                
-                                        // Recalculate and update the total amount
+                                                <td class="action" data-title="Remove">
+                                                    <a class="text-muted remove-item" onclick="removeCartItem('<%= cartData.product[i].productId._id %>')">
+                                                        <i class="fi-rs-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        <% } %>
                                        
-                                        // Add logic to update the cart on the server when the quantity changes
-                                        updateCart(productId, 'down');
-                                    }
-                                }
-
-                                async function updateCart(productId, direction) {
-                                    console.log(direction,"what is this");
-
-                                    
-                                    console.log("this is from the front");
-                                    
-                                  try {
-                              const response = await fetch('/updatecart', {
-                             method: 'POST',
-                             headers: {
-                           'Content-Type': 'application/json',
-                                },
-                            body: JSON.stringify({ productId, direction }),
-                             });
-         
-                           if (!response.ok) {
-                           console.error('Failed to update item quantity:', response.statusText);
-                          } else {
-                          const responseData = await response.json();
-                          console.log('Response data:', data);
-                       if (responseData.error) {
-                        // Show Toastr message for out of stock
-                         toastr.error('Item is out of stock');
-                         } else {
-                           // Access the totalPrice here
-                           console.log('Updated totalPrice:', response.totalPrice);
-                           }
-                            }
-                        } catch (error) {
-                               console.error('Error:', error.message);
-    
-                                   }
-                                     }
-  
-                                </script>
-                                
-                                <script>
-                                    async function removeCartItem(productId) {
-                                   try {
-                                       const response = await fetch('/removeFromCart', {
-                                           method: 'POST',
-                                           headers: {
-                                               'Content-Type': 'application/json',
-                                           },
-                                           body: JSON.stringify({ productId }),
-                                       })
-                                       if (response.ok) {
-                                           window.location.reload()
-                                           // Item removed successfully, you might want to update the UI accordingly
-                                           const rowToRemove = document.querySelector(`tr[data-product-id="${productId}"]`);
-                                           if (rowToRemove) {
-                                               rowToRemove.remove();
-                                           }
-                                       } else {
-                                           console.error('Failed to remove item from cart:', response.statusText);
-                                       }
-                                   } catch (error) {
-                                       console.error('Error:', error.message);
-                                   }
-                               }
-                               </script>
-                           
-                                  
-                                   
+                                        <tr>
+                                            <th colspan="4" class="text-right" style="font-weight: bold;">Total</th>
+                                            <td class="product-subtotal text-right" style="font-weight: bold; padding-right: 20px;">
+                                                <span class="font-xl text-brand fw-900" id="GrandTotal">₹<%= total.toFixed(2) %></span>
+                                            </td>
+                                        </tr>
+                                        <% } else { %>
+                                        <tr>
+                                            <td colspan="6" class="text-center">No items in your cart</td>
+                                        </tr>
+                                        <% } %>
                                 </tbody>
                             </table>
                         </div>
@@ -176,12 +79,12 @@
 
                             <div class="col-lg-6 col-md-12">
                                 <div class="border p-md-4 p-30 border-radius cart-totals">
-                                    <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> continue shopping</a>
+                                    <a href="users/productShop" class="btn "> <i class="fi-rs-box-alt mr-10"></i> continue shopping</a>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12">
                                 <div class="border p-md-4 p-30 border-radius cart-totals">
-                                    <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                    <a href="/loadCheckout" class="btn"> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
                                 </div>
                             </div>
 
@@ -190,7 +93,97 @@
                     </div>
         </section>
     </main>
- 
+    <script>
+       function increaseQuantity(id, productId, stockAvailable, price) {
+    var currSubtotal = document.getElementById(`subTotal_${id}`);
+    var currentQuantityElement = document.getElementById(`qty_${id}`);
+    var currentQuantityValue = parseInt(currentQuantityElement.innerText);
+
+    var maxQuantityPerPerson = 5;
+
+    if (currentQuantityValue < maxQuantityPerPerson && currentQuantityValue < stockAvailable) {
+        currentQuantityValue++;
+        currentQuantityElement.innerText = currentQuantityValue;
+        currSubtotal.innerText = `₹${(currentQuantityValue * price).toFixed(2)}`;
+
+        updateGrandTotal();
+
+        
+        updateCart(productId, 'up');
+    } else {
+        toastr.error('Cannot add more than the maximum allowed or available stock.');
+    }
+}
+        function decreaseQuantity(id, productId, price) {
+            const currSubtotal = document.getElementById(`subTotal_${id}`);
+            const currentQuantityElement = document.getElementById(`qty_${id}`);
+            let currentQuantityValue = parseInt(currentQuantityElement.innerText);
+    
+            if (currentQuantityValue > 1) {
+                currentQuantityValue--;
+                currentQuantityElement.innerText = currentQuantityValue;
+                currSubtotal.innerText = `₹${(currentQuantityValue * price).toFixed(2)}`;
+    
+                updateGrandTotal();
+                updateCart(productId, 'down');
+            }
+        }
+    
+        function updateGrandTotal() {
+            let total = 0;
+            const subtotalElements = document.querySelectorAll('[id^="subTotal_"]');
+            subtotalElements.forEach((element) => {
+                total += parseFloat(element.innerText.replace('₹', ''));
+            });
+            document.getElementById('GrandTotal').innerText = `₹${total.toFixed(2)}`;
+        }
+    
+        async function updateCart(productId, direction) {
+            try {
+                const response = await fetch('/updatecart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productId, direction }),
+                });
+    
+                if (!response.ok) {
+                    console.error('Failed to update item quantity:', response.statusText);
+                } else {
+                    const responseData = await response.json();
+                    if (responseData.error) {
+                        toastr.error('Item is out of stock');
+                    } else {
+                        console.log('Updated totalPrice:', responseData.totalPrice);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+    
+        async function removeCartItem(productId) {
+            try {
+                const response = await fetch('/removeFromCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productId }),
+                });
+    
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error('Failed to remove item from cart:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+    </script>
+
     <%- include('../layouts/userFooter.ejs') -%>
     <!-- Preloader Start -->
     <div id="preloader-active">
