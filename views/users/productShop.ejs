@@ -159,34 +159,34 @@
                 <div class="row align-items-center">
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info">
-                            <ul>
+                            <!-- <ul>
                                 <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
                                 <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-4">
                         <div class="text-center">
                             <div id="news-flash" class="d-inline-block">
-                                <ul>
+                                <!-- <ul>
                                     <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
                                     <li>Supper Value Deals - Save more with coupons</li>
                                     <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
-                                <li>
+                                <!-- <li>
                                     <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">
                                         <li><a href="#"><img src="/assets/imgs/theme/flag-fr.png" alt="">Français</a></li>
                                         <li><a href="#"><img src="/assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
                                         <li><a href="#"><img src="/assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
                                     </ul>
-                                </li>
+                                </li> -->
                                 <li><i class="fi-rs-user"></i><a href="/login">Log In </a></li>
                                 <li><i class="fi-rs-user"></i><a href="/logout">Log out</a></li>
                             </ul>
@@ -625,6 +625,9 @@
             </div>
         </div>
     </div>
+
+
+
     <main class="main">
         <section class="mt-50 mb-50">
             <div class="container">
@@ -706,6 +709,9 @@
                                                     <div class="product-price">
                                                         <span>Rs.<%= product[i].productPrice %></span>
                                                     </div>
+                                                    <div class="product-stock">
+                                                        <span>Stock.<%= product[i].countStock %></span>
+                                                    </div>
 
 
                                                     <div class="product-action-1 show">
@@ -759,42 +765,48 @@
         </div>
     </div>
 
-<script>
-    function addToCart(productId) {
-    event.preventDefault(); 
-
-    fetch('/addtoCart', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            productId, 
-            quantity: 1 
-        })
-    })
-    .then(response => {
-
-        if (!response.ok) {
-        throw new Error(`Failed to add item to cart. Status: ${response.status}`);
-    }
-       return response.json()
-       
-    })
-    .then(data=>{
-        if(!data.success){
-            toastr.error(data.message)
-        }else{
-            toastr.success(data.message)
-        }
+    <script>
+        function addToCart(productId) {
+            event.preventDefault(); // Prevent the default form submission behavior
         
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-</script>
+            fetch('/addtoCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId
+                })
+            })
+            .then(response => {
+                console.log('Fetch response status:', response.status); // Debugging line
+        
+                if (!response.ok) {
+                    throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetch response data:', data); // Debugging line
+        
+                if (!data.success) {
+                    toastr.error(data.message); // Display error message if adding to cart fails
+                } else {
+                    toastr.success(data.message); // Display success message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                toastr.error('An error occurred. Please try again.');
+            });
+        }
+        </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        toastr.success('Toastr is working!');
+    });
+</script>
 
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>

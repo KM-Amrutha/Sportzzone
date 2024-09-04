@@ -37,10 +37,27 @@ const isLogout = async(req,res,next)=>{
     } catch (error) {
         console.log(error.message);
     }
+  }
+    const isBlockedoornot = async(req,res,next)=>{
+      try {
+          const user =await User.findById(req.session.user_id);
+          if(!user)
+          {
+            next()
+          }
+          else if(user.is_Active== false){
+              res.redirect('/logout');
+          }else{
+              next()
+          }
+      } catch (error) {
+          console.log(error.message);
+      }
 }
 
   module.exports = {
     isLogin,
     isLogout,
-    isBlocked
+    isBlocked,
+    isBlockedoornot
   }

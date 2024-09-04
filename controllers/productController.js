@@ -1,5 +1,6 @@
 const Product=require("../models/productModel") 
 const category = require("../models/categoryModel");
+const Orders = require('../models/orderModel');
 const { v4: uuidv4 } = require("uuid")
 const sharp = require('sharp')
 const fs = require('fs')
@@ -18,7 +19,7 @@ const productListview = async (req,res) =>{
   };
 
   const loadaddProduct = async(req,res)=>{
-    console.log("load Add product success");
+    console.log("load Add product success")
     try{
        const categories = await category.find()
       res.render("admin/addProduct",{categories })
@@ -103,9 +104,6 @@ const productListview = async (req,res) =>{
   
   const ToggleblockProduct= async (req,res)=>{
     try{
-  
-  
-      console.log("sanam kityyyyyyyyyyyyyyyyyyyyy")
       const productid= req.query.proid
       
       const products = await Product.findOne({_id:productid}); 
@@ -128,7 +126,11 @@ const productListview = async (req,res) =>{
       try {
         const categories = await category.find({ is_Active: true });
     
-        const product = await Product.findById(req.query.id).populate('productCategory');
+       
+        const product = await Product.findOne({
+          _id: req.query.id,
+          is_Active: true
+        }).populate('productCategory');
     
         req.session.productid = req.query.id;
         if(product){
@@ -142,8 +144,8 @@ const productListview = async (req,res) =>{
       }
     };
     
+    
     const editProduct = async (req, res) => {
-      
       try {
           const errors = [];
           const {
@@ -157,7 +159,6 @@ const productListview = async (req,res) =>{
           } = req.body;
   
           const productId = req.query.id;
-          // console.log('Product ID:', productId);
   
           if (!mongoose.Types.ObjectId.isValid(productId)) {
               return res.status(400).send({ error: 'Invalid product ID' });
@@ -177,9 +178,13 @@ const productListview = async (req,res) =>{
               return res.json({ success: false, error: 'Product name must be unique' });
           }
   
-          const imageUrls = [];
+          let imageUrls = existingProduct.images || [];
+          console.log("Existing images before adding new ones:", imageUrls);
+
+
           const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
   
+          // Process new files if they are provided
           if (req.files && req.files.length > 0) {
               for (const file of req.files) {
                   if (!allowedImageTypes.includes(file.mimetype)) {
@@ -195,7 +200,10 @@ const productListview = async (req,res) =>{
                           .resize({ width: 386, height: 595 })
                           .toFile(imageOutput);
   
-                      imageUrls.push(filename);
+                      imageUrls.push(filename); 
+
+                      console.log("Added image:", filename);
+                      console.log("Updated image list:", imageUrls);
   
                       fs.unlink(file.path, (err) => {
                           if (err) {
@@ -215,25 +223,24 @@ const productListview = async (req,res) =>{
                   return res.status(400).json({ errors });
               }
   
-              if (imageUrls.length < 1) { // Update the count based on your requirements
-                  errors.push('Please provide at least 1 image.');
-                  return res.status(400).json({ errors });
+              // Ensure the total images do not exceed 4
+              if (imageUrls.length > 4) {
+                  imageUrls = imageUrls.slice(0, 4); 
               }
           }
   
+          console.log("Final images list to be saved:", imageUrls);
+        
           const updateData = {
-              productName,
-              productDescription,
-              productCategory,
-              productBrand,
-              productPrice: parseFloat(productPrice),
-              countStock: parseInt(countStock),
-              listed: listed || false,
+              productName: productName || existingProduct.productName,
+              productDescription: productDescription || existingProduct.productDescription,
+              productCategory: productCategory || existingProduct.productCategory,
+              productBrand: productBrand || existingProduct.productBrand,
+              productPrice: productPrice ? parseFloat(productPrice) : existingProduct.productPrice,
+              countStock: countStock ? parseInt(countStock) : existingProduct.countStock,
+              listed: listed !== undefined ? listed === 'true' : existingProduct.listed,
+              images: imageUrls 
           };
-  
-          if (imageUrls.length > 0) {
-              updateData.images = imageUrls;
-          }
   
           const editedProduct = await Product.findByIdAndUpdate(
               productId,
@@ -246,21 +253,17 @@ const productListview = async (req,res) =>{
               return res.status(500).json({ success: false, error: 'Product not edited' });
           }
   
-         
-  
           res.redirect("/admin/productlist");
       } catch (error) {
           console.error('Error in editProduct:', error);
           res.status(500).json({ success: false, error: 'Server error' });
       }
   };
-  
-    
+
+
 const deleteImage= async(req,res)=>{
   try {
 const{image,productId} = req.body;
-// console.log('IMAGE URL:',image)
-// console.log('PRODUCT:', productId);
 
 const product = await Product.findByIdAndUpdate(
   productId,
