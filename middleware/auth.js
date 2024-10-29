@@ -8,7 +8,7 @@ const isLogin = async(req,res,next)=>{
       next(); 
     } 
     else{
-    res.redirect('/login')
+    res.redirect('/loadLogin')
     }
   }catch(error){
     console.log(error.message);

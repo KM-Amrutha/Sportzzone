@@ -84,36 +84,33 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-
     <div class="login-container">
-    <h1>Login</h1>
-    
-    <form action="/login" method="POST">
-        <input type="email" id="email" placeholder="Enter your email" name="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" value="review@yopmail.com" required title="Please Check your Email Address">
-        <input type="password" id="password" placeholder="Enter your password" name="password" value="review@1234" pattern=".{8,}" required title="Please Check your Password">
+        <h1>Login</h1>
+        
+        <form action="/login" method="POST">
+            <input type="email" id="email" placeholder="Enter your email" name="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" value="review@yopmail.com" required title="Please Check your Email Address">
+            <input type="password" id="password" placeholder="Enter your password" name="password" value="review@1234" pattern=".{8,}" required title="Please Check your Password">
 
-        <a class="forget" href="/forgot-Password">Forgot password?</a>
-        <a href="/register">New user? Register here</a>
+            <a class="forget" href="/forgot-Password">Forgot password?</a>
+            <a href="/register">New user? Register here</a>
 
-        <button type="submit">Login</button>
-    </form>
-</div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
+    <% if (message && message.trim().length > 0) { %> <!-- Only show alert if message is not empty -->
+        <script>
+          Swal.fire({
+            icon: 'warning',
+            title: '<%= message %>',
+            timer: 10000, // 10 seconds
+            timerProgressBar: true,
+            didClose: () => {}
+          });
+        </script>
+    <% } %>
 
-<% if (typeof message !== 'undefined' && message) { %>
-  <script>
-    Swal.fire({
-      icon: 'warning',
-      title: '<%= message %>',
-      timer: 10000, // 10 seconds
-      timerProgressBar: true,
-      didClose: () => {
-       
-      }
-    });
-  </script>
-<% } %>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
 

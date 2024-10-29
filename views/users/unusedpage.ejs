@@ -1,618 +1,842 @@
 
-<!DOCTYPE html>
-<html lang="zxx">
-
-
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>SportZone</title>
-
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
-    <!-- <link rel="shortcut icon" href="images/favicon.ico" type="image/png"> -->
-
-    <!-- ::::::::::::::All CSS Files here :::::::::::::: -->
-    <!-- Vendor CSS -->
-    <link rel="stylesheet" href="css/vendor/font-awesome.min.css">
-    <link rel="stylesheet" href="css/vendor/ionicons.css">
-    <link rel="stylesheet" href="css/vendor/simple-line-icons.css">
-    <link rel="stylesheet" href="css/vendor/jquery-ui.min.css">
-
-    <!-- Plugin CSS -->
-    <link rel="stylesheet" href="css/plugins/swiper-bundle.min.css">
-    <link rel="stylesheet" href="css/plugins/animate.min.css">
-    <link rel="stylesheet" href="css/plugins/nice-select.css">
-    <link rel="stylesheet" href="css/plugins/venobox.min.css">
-    <link rel="stylesheet" href="css/plugins/jquery.lineProgressbar.css">
-    <link rel="stylesheet" href="css/plugins/aos.min.css">
-
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="css/style.css">
-
-    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
-    <!-- <link rel="stylesheet" href="css/vendor/vendor.min.css">
-    <link rel="stylesheet" href="css/plugins/plugins.min.css">
-    <link rel="stylesheet" href="css/style.min.css"> -->
-</head>
-
-<body>
-    <!-- Start Header Area -->
-    <header class="header-section d-none d-xl-block">
-        <div class="header-wrapper">
-            <div class="header-bottom header-bottom-color--black section-fluid sticky-header sticky-color--black">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 d-flex align-items-center justify-content-between">
-                            <!-- Start Header Logo -->
-                            <div class="header-logo">
-                                <div class="logo">
-                                    <a href="home"><img src="images/logo/logo_1.png" alt=""></a>
+<section class="mt-50 mb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shop-product-fillter">
+                    <div class="totall-product">
+                        <p> We found <strong class="text-brand"><%= product.length %></strong> items for you!</p>
+                    </div>
+                    <div class="sort-by-product-area">
+                        <div class="sort-by-cover">
+                            <div class="sort-by-product-wrap">
+                                <div class="sort-by">
+                                    <span><i class="fi-rs-apps-sort"></i>Sort :</span>
+                                </div>
+                                <div class="sort-by-dropdown-wrap">
+                                    <span> Price<i class="fi-rs-angle-small-down"></i></span>
                                 </div>
                             </div>
-                            <!-- End Header Logo -->
-
-                            <!-- Start Header Main Menu -->
-                            <div class="main-menu menu-color--white menu-hover-color--pink">
-                                <nav>
-                                    <ul>
-                                        <li class="has-dropdown">
-                                            <a class="active main-menu-link" href="/home">Home</a>
-                                            <!-- Sub Menu -->
-                                          
-                                        </li>
-                                        <li class="has-dropdown has-megaitem">
-                                            <a href="/users/productShop">Shop 
-                                                   </a>
-                                          
-                                            
-                                        </li> 
-                                        <li>
-                                             <a href="/userProfile">Profile</a>
-                                        </li>
-                                        <!-- <li>
-                                            <a href="contact-us.html">Contact Us</a>
-                                        </li> -->
-                                    </ul>
-                                </nav>
+                            <div class="sort-by-dropdown">
+                                <ul>
+                                    <li><a href="/Aa_Zz">Aa to zz</a></li>
+                                    <li><a href="/Zz_Aa">Zz to Aa</a></li> 
+                                    <li><a class="active" href="/lowtoHigh">Low to High</a></li>
+                                    <li><a href="/hightoLow">High to Low</a></li>
+                                </ul>
                             </div>
-                            <!-- End Header Main Menu Start  -->
-
-                            <!-- Start Header Action Link -->
-                             <ul class="header-action-link action-color--white action-hover-color--pink">
-                                <!-- <li>
-                                    <a href="wishlist">
-                                        <i class="icon-heart"></i>
-                                         <span class="item-count"><</span>
-                                    </a>
-                                </li> -->
-                                <!-- <li>
-                                    <a href="cart">
-                                        <i class="icon-bag"></i>
-                                        <span class="item-count"></span>
-                                    </a>
-                                </li> -->
-                                 <li>
-                                    <a href="#search">
-                                        <i class="icon-magnifier"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="user-profile">
-                                        <i class="icon-user"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">
-                                        <i class="icon-menu"></i>
-                                    </a>
-                                </li>
-                               
-                            </ul> 
-                            <!-- End Header Action Link -->
                         </div>
                     </div>
                 </div>
+
+                <% if (products && products.length > 0) { %>
+                    <div class="row product-grid-3">
+                        <% products.forEach(product => { %>
+                            <div class="col-lg-3 col-md-4">
+                                <div class="product-cart-wrap mb-30">
+                                    <div class="product-img-action-wrap">
+                                        <div class="product-img product-img-zoom">
+                                            <a href="/productDetail?id=<%= product._id %>">
+                                                <% if (product.images && product.images.length > 0) { %>
+                                                    <img class="default-img" src="../uploads/<%= product.images[0] %>" alt="">
+                                                    <% if (product.images.length > 1) { %>
+                                                        <img class="hover-img" src="../uploads/<%= product.images[1] %>" alt="">
+                                                    <% } %>
+                                                <% } else { %>
+                                                    <img class="default-img" src="../uploads/default-image.jpg" alt="No image available">
+                                                <% } %>
+                                            </a>
+                                        </div>
+                                        <div class="product-action-1">
+                                            <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                                <i class="fi-rs-search"></i>
+                                            </a>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html">
+                                                <i class="fi-rs-heart"></i>
+                                            </a>
+                                            <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html">
+                                                <i class="fi-rs-shuffle"></i>
+                                            </a>
+                                        </div>
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <span class="hot">New</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-content-wrap">
+                                        <div class="product-category">
+                                            <a href="/productDetail?id=<%= product._id %>"><%= product.productCategory.catName %></a>
+                                        </div>
+                                        <h2><a href="/productDetail?id=<%= product._id %>"><%= product.productName %></a></h2>
+                                        <div class="rating-result" title="90%">
+                                            <span>
+                                                <span>90%</span>
+                                            </span>
+                                        </div>
+                                        <% if (product.countStock == 0) { %>
+                                            <div class="product-price">
+                                                <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="product-price">
+                                                <span>Rs.<%= product.productPrice %></span>
+                                            </div>
+                                            <div class="product-stock">
+                                                <span>Stock.<%= product.countStock %></span>
+                                            </div>
+                                            <div class="product-action-1 show">
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart('<%= product._id %>')">
+                                                    <i class="fi-rs-shopping-bag-add"></i>
+                                                </a>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <p>No products found.</p>
+                <% } %>
+
+                <!--pagination-->
+                <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                    <a class="page-link" href="/lowtoHigh?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="/lowtoHigh?page=<%= currentPage + 1 %>">
+                                        <i class="fi-rs-angle-double-small-right"></i>
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        .order-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .order-info {
-            flex: 1;
-        }
-
-        .order-actions {
-            flex: 0 0 30%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-        .order-actions .btn-cancel-order {
-            background-color: #b19361;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .order-actions .btn-cancel-order:hover {
-            background-color: #8e6f4d;
-        }
-
-        ul {
-            padding: 0;
-            margin: 10px 0;
-        }
-
-        li {
-            list-style-type: none;
-            margin-bottom: 5px;
-        }
-
-        strong {
-            font-weight: bold;
-        }
-
-        .btn {
-    margin-right: 10px;
-}
-
-.btn-return-order {
-    background-color: #ff4c4c; /* Red */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-
-  .btn-download-invoice {
-    background-color: #4caf50; /* Green */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-
-  .btn-return-order:hover,
-  .btn-download-invoice:hover {
-    opacity: 0.8;
-  }
-
-  
-@media (max-width: 768px) {
-    .container {
-        width: 90%;
-    }
-
-    .order-details {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .order-info, 
-    .order-actions {
-        width: 100%;
-    }
-
-    .order-actions .btn-cancel-order {
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .product-info img {
-        width: 80px;
-        height: 80px;
-    }
-}
-
-
-@media (max-width: 576px) {
-    h2 {
-        font-size: 24px;
-    }
-
-    .order-actions .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .modal-content {
-        width: 90%;
-    }
-}
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Order Details</h2>
-        <div class="order-info">
-            <p><strong>Customer Name:</strong> <%= user.name %></p>
-            <p><strong>Order Status:</strong> <%= order.status %></p>
-            <p><strong>Order Date:</strong> <%= new Date(order.placed).toLocaleDateString() %></p>
-            <p><strong>Shipping Address:</strong></p>
-            <ul>
-                <li><strong>Address:</strong> <%= address.Address[0].address %></li>
-                <li><strong>Phone Number:</strong> <%= address.Address[0].phone %></li>
-                <li><strong>Pincode:</strong> <%= address.Address[0].pincode %></li>
-            </ul>
-            <p><strong>Products:</strong></p>
-            <ul>
-                <% products.forEach(product => { %>
-                    <li data-product-id="<%= product._id %>">
-                        <div class="product-info">
-                            <img src="<%= './productimage/' + product.image[0] %>" alt="<%= product.name %>" width="100" height="100">
-                            <div class="product-details">
-                                <p>
-                                    <%= product.name %> <%= product.quantity %> x ₹<%= (product.price || 0).toFixed(2) %>
-                                    <% if (product.discountPercentage > 0) { %>
-                                        <span class="discount-info">(Discount: <%= (product.discountPercentage || 0).toFixed(2) %>%, -₹<%= (product.discountAmount || 0).toFixed(2) %>)</span>
-                                    <% } %>
-                                </p>
-                                <button class="remove-product">Remove</button>
-                            </div>
-                        </div>
-                    </li>
-                <% }) %>
-            </ul>
-            <p><strong>Subtotal:</strong> ₹<span id="subtotal"><%= order.totalprice.toFixed(2) %></span></p>
-            <% if (couponDiscount > 0) { %>
-                <p><strong>Coupon Discount (<%= couponPercentage %>%) :</strong> -₹<%= couponDiscount.toFixed(2) %></p>
-            <% } %>
-            <p><strong>Total:</strong> ₹<span id="total"><%= order.totalprice.toFixed(2) %></span></p>
-        
-            <div class="order-actions">
-                <% if (order.payment !== 'COD' && order.paymentstatus === 'Pending') { %>
-                    <button id="payNowBtn" class="btn btn-pay-now" data-order-id="<%= order._id %>" data-address-id="<%= address.Address[0]._id %>" data-total-price="<%= order.totalprice %>">
-                        Pay Now
-                    </button>
-                <% } %>
-                
-                <% if (order.status !== 'Cancelled' && order.status !== 'Return Requested' && order.status !== 'Returned') { %>
-                    <% if (order.status === 'Delivered') { %>
-                        <button id="returnOrderBtn" class="btn btn-return-order" data-order-id="<%= order._id %>">
-                            Return Product
-                        </button>
-                        <br>
-                        <button id="downloadInvoiceBtn" class="btn btn-download-invoice" data-order-id="<%= order._id %>">
-                            Download Invoice
-                        </button>
-                    <% } else { %>
-                        <button id="cancelOrderBtn" class="btn btn-cancel-order" data-order-id="<%= order._id %>">
-                            Cancel Order
-                        </button>
-                    <% } %>
-                <% } else if (order.status === 'Return') { %>
-                    <p><strong>Status:</strong> This order has been returned.</p>
-                <% } else { %>
-                    <p><strong>Status:</strong> This order has been cancelled.</p>
-                <% } %>
-            </div>    
-              
-        </div>
-        
     </div>
-    <div id="returnReasonModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Return Reason</h2>
-            <select id="returnReasonDropdown">
-                <option value="Defective product">Defective product</option>
-                <option value="Received wrong item">Received wrong item</option>
-                <option value="Product not as described">Product not as described</option>
-                <option value="Other">Other</option>
-            </select>
-            <button id="confirmReturnBtn" class="btn">Confirm Return</button>
-        </div>
-    </div>
+</section>
+
+<span class="text-danger font-weight-bold">Out of stock</span>
+</td>
+<td class="text-right" data-title="Cart">
+    <button class="btn btn-sm btn-secondary"><i class="fi-rs-headset mr-5"></i>Contact Us</button>
+
+
+<!-- the offer body first allignments -->
+
+<tbody>
+    <% for(let i=0 ; i < categories.length ; i++) { %>
+      <tr class="align-middle">
     
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', (event) => {
-    const cancelOrderBtn = document.getElementById('cancelOrderBtn');
-    const payNowBtn = document.getElementById('payNowBtn');
-
-    if (cancelOrderBtn) {
-        cancelOrderBtn.addEventListener('click', function() {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You are about to cancel this order.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, cancel it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/cancel-order/<%= order._id %>`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        if (data === 'Order cancelled successfully') {
-                            Swal.fire(
-                                'Cancelled!',
-                                'Your order has been cancelled.',
-                                'success'
-                            ).then(() => {
-                                
-                                if (payNowBtn) {
-                                    payNowBtn.style.display = 'none';
-                                }
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 1000); 
-                            });
-                        } else {
-                            Swal.fire(
-                                'Error!',
-                                data,
-                                'error'
-                            );
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire(
-                            'Error!',
-                            'There was a problem cancelling your order.',
-                            'error'
-                        );
-                    });
-                }
-            });
-        });
-    }
-});
+        <td class="align-middle">
+          <h6 class="mb-0">
+            <%=categories[i].categoryName%>
+          </h6>
+        </td>
+        <td class="align-middle">
+      <h6><%=categories[i].offer%>%</h6>
+        </td>
     
-document.getElementById('returnOrderBtn')?.addEventListener('click', function() {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'You are about to return this product.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, return it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: 'Select Return Reason',
-                input: 'select',
-                inputOptions: {
-                    'Defective product': 'Defective product',
-                    'Received wrong item': 'Received wrong item',
-                    'Product not as described': 'Product not as described',
-                    'Other': 'Other'
-                },
-                inputPlaceholder: 'Select a reason',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Submit',
-                cancelButtonText: 'Cancel'
-            }).then((reasonResult) => {
-                if (reasonResult.isConfirmed) {
-                    const returnReason = reasonResult.value;
+            <td>
+                <h6><%= new Date(categories[i].expirationDate).toLocaleDateString() %></h6>
 
-                    
-                    Swal.fire(
-                        'Returned!',
-                        'Your product return request has been submitted.',
-                        'success'
-                    ).then(() => {
-                        window.location.reload();
-                    });
+            </td>
 
-                    
-                    fetch(`/return-order/<%= order._id %>`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ returnReason })
-                    })
-                    .then(response => response.json()) 
-                    .then(data => {
-                        if (!data.success) {
-                            
-                            Swal.fire(
-                                'Error!',
-                                data.message || 'There was a problem returning your product.',
-                                'error'
-                            );
-                        }
-                    })
-                    // .catch(error => {
-                        
-                    //     Swal.fire(
-                    //         'Error!',
-                    //         'There was a problem returning your product.',
-                    //         'error'
-                    //     );
-                    // });
-                }
-            });
-        }
-    });
-});
 
-    </script>
-    
+        <td class="align-middle">
+          <% if (product[i].is_Active) { %>
+            <span class="badge rounded-pill alert-success">Active</span>
+            <% } else { %>
+              <span class="badge rounded-pill alert-danger">Blocked</span>
+              <% } %>
+        </td>
+        <td>
+          <!-- Block/Unblock Button -->
+<% if (categories[i].is_Active) { %>
+<button class="btn btn-danger btn-sm" onclick="toggleOfferStatus('<%= categories[i]._id %>', false)">Block</button>
+<% } else { %>
+<button class="btn btn-success btn-sm" onclick="toggleOfferStatus('<%= categories[i]._id %>', true)">Unblock</button>
+<% } %>
 
-    <script>
+<a class="premium-button" onclick="showModal('<%= categories[i]._id %>')" style="background-color: rgb(48, 47, 47);">Apply</a>
+        
+        
+        </td>
+    </tr>
+      <% } %>
+</tbody>
 
-document.getElementById('payNowBtn').addEventListener('click', function(e) {
-    const orderId = e.target.dataset.orderId;
-    const addressId = e.target.dataset.addressId;
-    const totalPrice = e.target.dataset.totalPrice;
-    console.log({ orderId, addressId, totalPrice });
-    fetch(`/retry-payment?id=${orderId}`, {
-        method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data,"data");
-        if (data.success) {
-            let amount=data.amount*100
-            const options = {
-                "key": "rzp_test_KBfeMuv9hM52Z0",
-                "amount": amount,
-                "currency": data.currency,
-                "name": "Avinadh and co",
-                "description": "Test Transaction",
-                "order_id": data.razorpayOrderId,
-                "handler": function (response){
-                    verifyPayment(response, data.orderId, addressId, totalPrice); 
-                },
-                "prefill": {
-                    "name": "avinadhkp",
-                    "email": "avinadhkp@gmail.com",
-                    "contact": "9999999999"
-                },
-                "theme": {
-                    "color": "#3399cc"
-                }
-            };
-            const rzp1 = new Razorpay(options);
-            rzp1.open();
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
 
-function verifyPayment(payment, orderId, addressId, totalPrice) {
-    console.log('Order ID:', orderId);
-    console.log({ totalPrice });
-    fetch('/verifyrazorpay', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            razorpay_order_id: payment.razorpay_order_id,
-            razorpay_payment_id: payment.razorpay_payment_id,
-            razorpay_signature: payment.razorpay_signature,
-            addressId: addressId,
-            orderId: orderId,
-            totalPrice: totalPrice
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: 'Your payment was successful and your order has been confirmed.',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.reload(); 
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Payment Verification Failed',
-                text: 'Please try again.',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Something went wrong. Please try again later.',
-            confirmButtonText: 'OK'
-        });
-    });
-}
-
-</script>
-</script>
-   
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const downloadInvoiceBtn = document.getElementById('downloadInvoiceBtn');
-        if (downloadInvoiceBtn) {
-            downloadInvoiceBtn.addEventListener('click', () => {
-                const orderId = downloadInvoiceBtn.getAttribute('data-order-id');
-                window.location.href = `/download-invoice/${orderId}`;
+    function addToCart(productId) {
+        event.preventDefault(); // Prevent the default form submission behavior
+    
+        fetch('/addtoCart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                productId
+            })
+        })
+        .then(response => {
+            console.log('Fetch response status:', response.status); // Debugging line
+    
+            if (!response.ok) {
+                throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetch response data:', data); // Debugging line
+    
+            if (!data.success) {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Success',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
-        }
-    });
-    </script>
-    <script>
-     document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.remove-product').forEach(button => {
-        button.addEventListener('click', async function() {
-            const productElement = this.closest('li');
-            const productId = productElement.getAttribute('data-product-id');
-            const response = await fetch(`/remove-product?orderId=<%= order._id %>&productId=${productId}`, { method: 'DELETE' });
+        });
+    }
+</script>
 
-            if (response.ok) {
-                const result = await response.json();
-                if (result.success) {
-                 
-                    productElement.remove();
-           
-                    document.getElementById('subtotal').textContent = result.newSubtotal.toFixed(2);
-                    if (result.couponDiscount > 0) {
-                        document.getElementById('total-after-discount').textContent = result.newTotalAfterDiscount.toFixed(2);
-                    } else {
-                        document.getElementById('total').textContent = result.newTotal.toFixed(2);
-                    }
+apply offer, which is old and i required...
+
+const applyOffer = async(req,res)=>{
+    try
+    {
+      const { categoryId, discount, expiry } = req.body;
+      const updatedCategory = await category.findByIdAndUpdate(
+        categoryId,
+        { offer: discount, expirationDate: expiry, OfferisActive: true },
+        { new: true } 
+      );
+      if (!updatedCategory) {
+          return res.status(404).json({ message: 'Category not found' });
+        }
+  
+        const productsToUpdate = await products.find({ Categories: categoryId });
+        if (!productsToUpdate) {
+        
+          return res.status(404).json({ message: 'product not found' });
+        }
+  
+        for (const product of productsToUpdate) {
+        const updatedPrice = Math.round(product.offerPrice * ((100 - discount) / 100));
+        product.offerPrice = updatedPrice;
+  
+        await product.save();
+       }
+  
+        res.status(200).json({ message: 'Offer applied successfully', category: updatedCategory });
+  
+    } catch(error){
+      console.error(error.message);
+    }
+  }
+
+  if (!req.session.buyNowProductId) {
+    productDataToSave = userCart.product.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        offerPrice: item.offerPrice || item.price  // Add offerPrice fallback
+    }));
+}
+
+
+// place order first version aanu..
+
+const placeOrder = async (req, res) => {
+    try {
+        console.log("Inside placeOrder ++++++++++++++++++++", req.body);
+        const userId = req.session.user_id;
+
+        // Find user's cart and the selected address
+        const userCart = await cart.findOne({ userId });
+        const address = await Address.findOne({ _id: req.body.address });
+        const { couponCode } = req.body;
+
+        // Rename the local variable to avoid conflict with the 'coupon' model
+        const appliedCoupon = await coupon.findOne({ couponCode, isActive: true, expirationDate: { $gte: Date.now() } });
+
+        // Generate unique order ID
+        function generateOrderId() {
+            const timestamp = Date.now().toString();
+            const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let orderId = 'ORD';
+            while (orderId.length < 6) {
+                const randomIndex = Math.floor(Math.random() * randomChars.length);
+                orderId += randomChars.charAt(randomIndex);
+            }
+            return orderId + timestamp.slice(-6);
+        }
+
+        const newOrderId = generateOrderId();
+
+        let couponDiscount = 0; // default coupon discount
+
+        if (appliedCoupon) {
+            couponDiscount = appliedCoupon.discountAmount;
+        }
+
+        let productDataToSave;
+
+        // Handle Buy Now Product (Single Product Purchase)
+        if (req.session.buyNowProductId) {
+            const buyNowProduct = await products.findById(req.session.buyNowProductId);
+            if (buyNowProduct) {
+                productDataToSave = [{
+                    productId: buyNowProduct._id,
+                    quantity: 1,
+                    price: buyNowProduct.productPrice
+                }];
+
+                // Decrease product stock by 1
+                if (buyNowProduct.countStock > 0) {
+                    buyNowProduct.countStock -= 1; // Use `countStock` instead of `stock`
+                    await buyNowProduct.save();
                 } else {
-                    alert('Failed to remove product. Please try again.');
+                    return res.status(400).json({ message: `Insufficient stock for ${buyNowProduct.productName}` });
+                }
+
+                // Clean up session
+                delete req.session.buyNowProductId;
+                await req.session.save();
+            }
+        } else {
+            productDataToSave = userCart.product;
+        }
+
+        const order = new Orders({
+            orderId: newOrderId,
+            userId,
+            paymentMethod: req.body.paymentMethod,
+            paymentStatus: "Pending",  
+            totalAmount: req.body.amount,
+            product: productDataToSave,
+            address,
+            couponDiscount
+        });
+
+        await order.save();
+
+        if (!req.session.buyNowProductId) {
+            for (const item of productDataToSave) {
+                const orderProduct = await products.findById(item.productId); 
+                if (orderProduct) {
+                    if (orderProduct.countStock >= item.quantity) {
+                        orderProduct.countStock -= item.quantity;  // Reduce stock
+                        await orderProduct.save();
+                    } else {
+                        return res.status(400).json({ message: `Insufficient stock for product: ${orderProduct.productName}` });
+                    }
                 }
             }
-        });
-    });
-});
-    
-</script>
-</body>
+        }
 
-</html>
+        // Clear the user's cart after placing the order
+        if (!req.session.buyNowProductId) {
+            await cart.deleteOne({ userId });
+        }
+
+        // Send success response
+        res.status(200).json({ message: "Order Placed Successfully", orderId: order._id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Something went wrong!" });
+    }
+};
+
+const addToCart = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+
+
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Please log in to add products to your cart.' });
+        }
+
+        
+        const productId = req.body.productId;
+        const product = await products.findById(productId).populate('productCategory');
+
+        if (!product || product.countStock === 0) {
+            return res.status(404).json({ success: false, message: 'Product is out of stock' });
+        }
+        
+
+        let Cart = await cart.findOne({ userId });
+        if (!Cart) {
+            Cart = new cart({ userId, product: [] });
+        }
+
+        const existingProductIndex = Cart.product.findIndex(item => item.productId.toString() === productId);
+        if (existingProductIndex !== -1) {
+            const totalQuantity = Cart.product[existingProductIndex].quantity + 1;
+
+            if (totalQuantity > 6) {
+                return res.status(400).json({ success: false, message: 'You can only add up to 5 of the same product to your cart.' });
+            }
+
+            if (totalQuantity > product.countStock) {
+                return res.status(400).json({ success: false, message: 'Cannot add more items than available stock' });
+            }
+
+            Cart.product[existingProductIndex].quantity = totalQuantity;
+        } else {
+            Cart.product.push({ productId, quantity: 1, price: product.productPrice });
+        }
+
+        await Cart.save();
+
+        res.status(200).json({ success: true, message: 'Added to cart' });
+    } catch (error) {
+        console.error('Error in addToCart:', error);
+        res.status(500).json({ success: false, message: 'An error occurred while adding the product to the cart.' });
+    }
+};
+
+
+
+const updateCart = async (req, res) => {
+    try {
+        const { productId, direction } = req.body;
+        const currentUserId = req.session.user_id;
+
+        let userCart = await cart.findOne({ userId: currentUserId });
+
+        if (!userCart) {
+            console.log('Cart not found');
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        const cartItemIndex = userCart.product.findIndex(item => item.productId.toString() === productId);
+
+        if (cartItemIndex !== -1) {
+            const currentProduct = await products.findById(productId);
+
+            if (!currentProduct) {
+                console.log('Product not found');
+                return res.status(404).json({ error: 'Product not found' });
+            }
+
+            const maxQuantityPerPerson = 5;
+
+            if (direction === 'up') {
+                if (userCart.product[cartItemIndex].quantity < maxQuantityPerPerson &&
+                    userCart.product[cartItemIndex].quantity < currentProduct.countStock) {
+                    userCart.product[cartItemIndex].quantity++;
+                } else if (userCart.product[cartItemIndex].quantity >= maxQuantityPerPerson) {
+                    return res.json({ error: 'Cannot add more than the maximum allowed quantity of 5 per person.' });
+                } else {
+                    return res.json({ error: 'Item is out of stock' });
+                }
+            } else if (direction === 'down') {
+                if (userCart.product[cartItemIndex].quantity > 1) {
+                    userCart.product[cartItemIndex].quantity--;
+                }
+            }
+
+            await userCart.save();
+
+            return res.json({ 
+                success: true, 
+                cart: userCart,
+                message: 'Cart updated successfully'
+            });
+        } else {
+            console.log('Product not found in cart');
+            return res.status(404).json({ error: 'Product not found in cart' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Server error' });
+    }
+};
+
+
+
+<td class="text-right" data-title="Cart" style="padding-right: 20px;">
+    <span id="subTotal_<%= cartData.product[i]._id %>">₹<%= cartData.product[i].productId.productPrice * cartData.product[i].quantity %></span>
+</td>
+
+<script>
+    function increaseQuantity(id, productId, stockAvailable, price) {
+ var currSubtotal = document.getElementById(`subTotal_${id}`);
+ var currentQuantityElement = document.getElementById(`qty_${id}`);
+ var currentQuantityValue = parseInt(currentQuantityElement.innerText);
+
+ var maxQuantityPerPerson = 5;
+
+ if (currentQuantityValue < maxQuantityPerPerson && currentQuantityValue < stockAvailable) {
+     currentQuantityValue++;
+     currentQuantityElement.innerText = currentQuantityValue;
+     currSubtotal.innerText = `₹${(currentQuantityValue * price).toFixed(2)}`;
+
+     updateGrandTotal();
+
+     
+     updateCart(productId, 'up');
+ } else {
+     toastr.error('Cannot add more than the maximum allowed or available stock.');
+ }
+}
+     function decreaseQuantity(id, productId, price) {
+         const currSubtotal = document.getElementById(`subTotal_${id}`);
+         const currentQuantityElement = document.getElementById(`qty_${id}`);
+         let currentQuantityValue = parseInt(currentQuantityElement.innerText);
+ 
+         if (currentQuantityValue > 1) {
+             currentQuantityValue--;
+             currentQuantityElement.innerText = currentQuantityValue;
+             currSubtotal.innerText = `₹${(currentQuantityValue * price).toFixed(2)}`;
+ 
+             updateGrandTotal();
+             updateCart(productId, 'down');
+         }
+     }
+ 
+     function updateGrandTotal() {
+         let total = 0;
+         const subtotalElements = document.querySelectorAll('[id^="subTotal_"]');
+         subtotalElements.forEach((element) => {
+             total += parseFloat(element.innerText.replace('₹', ''));
+         });
+         document.getElementById('GrandTotal').innerText = `₹${total.toFixed(2)}`;
+     }
+ 
+     async function updateCart(productId, direction) {
+ try {
+     const response = await fetch('/updatecart', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ productId, direction }),
+     });
+
+     const responseData = await response.json();
+
+     if (!response.ok) {
+         console.error('Failed to update item quantity:', response.statusText);
+     } else {
+         if (responseData.error) {
+         
+             toastr.error(responseData.error);
+         } else if (responseData.message) {
+             
+             toastr.success(responseData.message);
+         } else {
+
+             console.log('Updated totalPrice:', responseData.totalPrice);
+         }
+     }
+ } catch (error) {
+     console.error('Error:', error.message);
+     toastr.error('An unexpected error occurred.');
+ }
+}
+ 
+     async function removeCartItem(productId) {
+     Swal.fire({
+         title: 'Are you sure?',
+         text: "Do you really want to remove this item from the cart?",
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Yes, remove it!',
+         cancelButtonText: 'No, keep it'
+     }).then(async (result) => {
+         if (result.isConfirmed) {
+             try {
+                 const response = await fetch('/removeFromCart', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({ productId }),
+                 });
+
+                 if (response.ok) {
+                     Swal.fire(
+                         'Removed!',
+                         'The item has been removed from the cart.',
+                         'success'
+                     ).then(() => {
+                         window.location.reload();
+                     });
+                 } else {
+                     console.error('Failed to remove item from cart:', response.statusText);
+                 }
+             } catch (error) {
+                 console.error('Error:', error.message);
+             }
+         }
+     });
+ }
+ </script>
+
+<tbody>
+                                
+    <% if (locals.cartData && cartData.product && cartData.product.length > 0) { %>
+<% let total = 0; %>
+<% for (let i = 0; i < cartData.product.length; i++) { %>
+    <tr>
+        <td class="image product-thumbnail"><img src="/uploads/<%= cartData.product[i].productId.images[0] %>" alt="#"></td>
+        <td class="product-des product-name">
+            <h5 class="product-name"><a href="#"><%= cartData.product[i].productId.productName %></a></h5>
+        </td>
+        <% total += cartData.product[i].productId.productPrice * cartData.product[i].quantity; %>
+
+        <td class="price" data-title="Price">
+            <% if (cartData.product[i].productId.offerPrice && cartData.product[i].productId.offerPrice < cartData.product[i].productId.productPrice) { %>
+                <span>₹<%= cartData.product[i].productId.offerPrice %></span> 
+                <del>₹<%= cartData.product[i].productId.productPrice %></del> <!-- Shows original price if offer is applied -->
+            <% } else { %>
+                <span>₹<%= cartData.product[i].productId.productPrice %></span>
+            <% } %>
+        </td>
+
+        <td class="text-center" data-title="Stock">
+            <div class="detail-qty border radius m-auto">
+                <a href="#" class="qty-down" onclick="decreaseQuantity('<%= cartData.product[i]._id %>', '<%= cartData.product[i].productId._id %>', '<%= cartData.product[i].productId.productPrice %>')"><i class="fi-rs-angle-small-down"></i></a>
+                <span class="qty-val" id="qty_<%= cartData.product[i]._id %>"><%= cartData.product[i].quantity %></span>
+                <a href="#" class="qty-up" onclick="increaseQuantity('<%= cartData.product[i]._id %>', '<%= cartData.product[i].productId._id %>', '<%= cartData.product[i].productId.countStock %>', '<%= cartData.product[i].productId.productPrice %>')"><i class="fi-rs-angle-small-up"></i></a>
+            </div>
+        </td>
+
+        <% 
+        let price = cartData.product[i].productId.offerPrice && cartData.product[i].productId.offerPrice < cartData.product[i].productId.productPrice
+            ? cartData.product[i].productId.offerPrice
+            : cartData.product[i].productId.productPrice;
+        total += price * cartData.product[i].quantity;
+    %>
+    <td class="text-right" data-title="Cart" style="padding-right: 20px;">
+        <span id="subTotal_<%= cartData.product[i]._id %>">₹<%= (price * cartData.product[i].quantity).toFixed(2) %></span>
+    </td>
+
+
+        
+
+        <td class="action" data-title="Remove">
+            <a class="text-muted remove-item" onclick="removeCartItem('<%= cartData.product[i].productId._id %>')">
+                <i class="fi-rs-trash"></i></a>
+        </td>
+    </tr>
+<% } %>
+
+<tr>
+    <th colspan="4" class="text-right" style="font-weight: bold;">Total</th>
+    <td class="product-subtotal text-right" style="font-weight: bold; padding-right: 20px;">
+        <span class="font-xl text-brand fw-900" id="GrandTotal">₹<%= total.toFixed(2) %></span>
+    </td>
+</tr>
+<% } else { %>
+<tr>
+    <td colspan="6" class="text-center">No items in your cart</td>
+</tr>
+<% } %>
+</tbody>
+
+
+
+
+
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow">Home</a>
+                <span></span> Shop
+            </div>
+        </div>
+    </div>
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+    
+                    <div class="shop-product-fillter">
+                        <div class="totall-product">
+                            <p> We found <strong class="text-brand">100</strong> items for you!</p>
+                        </div>
+                        <div class="sort-by-product-area">
+    
+                            
+                        
+                                
+                              
+                            </div>
+                        </div>
+                    </div>
+    
+                    <% if (product && product.length > 0) { %>
+                        <div class="row product-grid-3">
+                            <% for (let i = 0; i < product.length; i++) { %>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="product-cart-wrap mb-30">
+                                        <div class="product-img-action-wrap">
+                                            <div class="product-img product-img-zoom">
+                                                <a href="/productDetail?id=<%= product[i]._id %>">
+                                                    <% if (product[i].images) { %>
+                                                        <img class="default-img" src="../uploads/<%= product[i].images[0] %>" alt="">
+                                                        <% if (product[i].images.length > 1) { %>
+                                                            <img class="hover-img" src="../uploads/<%= product[i].images[1] %>" alt="">
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <img class="default-img" src="../uploads/default-image.jpg" alt="No image available">
+                                                    <% } %>
+                                                </a>
+                                            </div>
+                                            <div class="product-action-1">
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtoWishlist('<%= product[i]._id %>')">
+                                                    <i class="fi-rs-heart"></i>
+                                                </a>
+                                            </div>
+                                            <div class="product-badges product-badges-position product-badges-mrg">
+                                                <span class="hot">New</span>
+                                            </div>
+                                        </div>
+                                        <div class="product-content-wrap">
+                                            <div class="product-category">
+                                                <% if (product[i].productCategory) { %> <!-- Check against productCategory -->
+                                                    <a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productCategory.catName %></a> <!-- Correctly access catName -->
+                                                <% } else { %>
+                                                    <span>No category available</span>
+                                                <% } %>
+                                            </div>
+                                            <h2><a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
+
+                                            <% if (product[i].countStock == 0) { %>
+                                                <div class="product-price">
+                                                    <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
+                                               
+                                            <% } else { %>
+                                                        <% if (product[i].productCategory && product[i].productCategory.OfferisActive) { %>
+                                                            <span>Rs.<%= product[i].offerPrice %></span> <!-- Display the offer price -->
+                                                            <span class="old-price">Rs.<%= product[i].productPrice %></span> <!-- Original price -->
+                                                        <% } else { %>
+                                                            <span>Rs.<%= product[i].productPrice %></span> <!-- Display normal price if no active offer -->
+                                                        <% } %>
+                                                    </div>
+                                                    <% } %>
+                                                </div>
+                                                <div class="product-stock">
+                                                    <span>Stock: <%= product[i].countStock %></span>
+                                                </div>
+                                                <div class="product-action-1 show">
+                                                    <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart(event, '<%= product[i]._id %>')">
+                                                        <i class="fi-rs-shopping-bag-add"></i>
+                                                    </a>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    
+                    
+                    <!--pagination-->
+
+                    <div class="pagination-area mt-30 mb-50">
+                        <nav aria-label="Page navigation example">
+                          <ul class="pagination justify-content-start">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                              <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                              </li>
+                            <% } %>
+                          </ul>
+                        </nav>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </section>        
+</main>
+
+
+const verifyLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const userData = await User.findOne({ email });
+        if (userData) {
+            const passwordMatch = await bcrypt.compare(password, userData.password);
+            if(userData.is_Active==false)
+              {
+                res.render('users/login', { message: "Your account is blocked." });
+              }
+            else if (passwordMatch) {
+                
+                req.session.user_id = userData._id;
+                // console.log(req.session.user_id,"this is the req.session.userId");
+               
+
+                
+                req.session.userData = userData;
+                   console.log(userData.name);
+                   
+                res.redirect('/home');
+            } else {
+                res.render('users/login', { message: "Your password is wrong." });
+            }
+            
+        } else {
+            res.render('users/login', { message: "Email and password is incorrect" });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
+const userProfile = async (req, res) => {
+    try {
+      const userId = req.session.user_id;
+      const userData = await User.findById(userId);
+      const addressData = await Address.find({ userId });
+      const cartData = await Cart.findOne({ userId });
+      const cartLength = cartData ? cartData.product.length : 0;
+      const orders = await Orders.find({ userId }).populate('product.productId');
+  
+      res.render('users/userProfile', {
+        userData,
+        addresses: addressData,
+        cart: cartLength,
+        order:orders
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  };

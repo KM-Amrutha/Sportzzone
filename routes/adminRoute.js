@@ -4,6 +4,8 @@ const adminAuth = require("../middleware/adminAuth");
 const adminController = require("../controllers/adminController");
 const productController = require("../controllers/productController") ;
 const categoryController = require("../controllers/categoryController");
+const cartController = require('../controllers/cartController');
+const oderController = require('../controllers/orderController');
 
 const bodyParser = require("body-parser");
 const session =  require("express-session");
@@ -60,13 +62,37 @@ admin_route.get('/productlist',adminAuth.isLogin,productController.productListvi
 
 admin_route.get('/ToggleblockProduct',adminAuth.isLogin,productController.ToggleblockProduct)
 admin_route.delete("/deleteImage",adminAuth.isLogin,productController.deleteImage);
-// admin_route.get('/editProduct',adminAuth.isLogin,productController.loadeditProduct);
 admin_route.get('/loadeditProduct',adminAuth.isLogin,productController.loadeditProduct);
 admin_route.post('/editProduct', adminAuth.isLogin, upload.array('images', 4), productController.editProduct);
 
 
+//-----------------------order---------------//
 
- 
+admin_route.get('/loadOrder',adminAuth.isLogin,adminController.loadOrder);
+admin_route.get('/loadOrderDetails',adminAuth.isLogin,adminController.loadOrderDetails);
+
+admin_route.get('/orderPending',adminAuth.isLogin,adminController.orderPending);
+admin_route.get('/orderShipped',adminAuth.isLogin,adminController.orderShipped);
+admin_route.get('/orderDelivered',adminAuth.isLogin,adminController.orderDelivered);
+admin_route.get('/orderCancelled',adminAuth.isLogin,adminController.orderCancelled);
+admin_route.get('/orderReturned',adminAuth.isLogin,adminController.orderReturned);
+
+
+//-----------------------Coupon------------------//
+
+admin_route.get('/loadCoupon', adminAuth.isLogin,adminController.loadCoupon);
+admin_route.post('/addCoupon',adminAuth.isLogin,cartController.addCoupon);
+admin_route.get('/blockCoupon', adminAuth.isLogin,cartController.blockCoupon);
+admin_route.post('/deleteCoupon', adminAuth.isLogin,cartController.deleteCoupon);
+
+
+admin_route.get('/offers',adminAuth.isLogin,oderController.offers);
+admin_route.post('/applyOffer',adminAuth.isLogin,oderController.applyOffer);
+
+admin_route.post('/toggleOfferStatus',adminAuth.isLogin,oderController.toggleOfferStatus);
+
+
+
 admin_route.get("*",function(req,res){
     // console.log("Current URL:", req.originalUrl);
     res.redirect('/admin')

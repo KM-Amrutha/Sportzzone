@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-
-
-
 const productSchema = new mongoose.Schema({
 
   productName: {
@@ -11,7 +8,6 @@ const productSchema = new mongoose.Schema({
   productDescription: {
     type: String,
     required: true,
-    
   },
      productCategory: { type: mongoose.Schema.Types.ObjectId,
      ref: 'Category',
@@ -25,6 +21,10 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  offerPrice:{
+    type:Number,default: function () {
+      return this.productPrice;
+  }},
 
   countStock: {
     type: Number,

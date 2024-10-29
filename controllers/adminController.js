@@ -4,6 +4,11 @@ const User =  require("../models/userModel");
  const mongoose = require('mongoose')
 //  const multer = require('multer');
 
+const Product=require("../models/productModel");
+const category = require("../models/categoryModel");
+const Orders= require('../models/orderModel');
+const coupon = require('../models/couponModel');
+
 
 
 // Configure multer for file uploads
@@ -22,7 +27,6 @@ const User =  require("../models/userModel");
 
 const loadLogin = async(req,res)=>{
 try{
-  console.log("1")
 
     res.render('admin/login');
 } catch (error){
@@ -34,17 +38,13 @@ const verifyLogin = async(req,res)=>{
 try{
   const Email = req.body.email;
   const password = req.body.password;
- console.log(req.body,"body admin");
-
+ 
   const userData = await User.findOne({email:Email});
   if(userData){
-  console.log(userData)
      
   const passwordMatch = await bcrypt.compare(password,userData.password);
- 
- 
   if(passwordMatch){
-console.log("cool,password matched")
+
     if(userData.is_admin===0){
         res.render('admin/login',{message:"Email and password is incorrect"})
     }else {
@@ -58,12 +58,10 @@ console.log("cool,password matched")
     res.render('admin/login',{message:"Email and password is incorrect"});
  }  
 
-  }else{
-    res.render('admin/login',{message:"Email and password is incorrect"});
   }
 
 }catch(error){
-    console.log(error.message);
+    console.error(error.message);
     res.render('admin/login',{message:"an error occured,please try again later"})
 }
 
@@ -78,7 +76,7 @@ const loadDashboard = async(req,res)=>{
  try {
 
   const userData =  await  User.findById(req.session.admin_id);
-  console.log(userData)
+
     res.render('admin/adminHome', {user:userData})
  
 
@@ -87,10 +85,13 @@ const loadDashboard = async(req,res)=>{
 }
 }
 const loaduserList = async(req,res)=>{
-  console.log("load userlist success");
+  
     try{
-       const user = await User.find()
+       
+       const user = await User.find({ is_admin: { $ne: 1 } });
+       
       res.render("admin/userList",{user })
+       
     }
     catch(error){
       console.error(error)
@@ -101,9 +102,7 @@ const loaduserList = async(req,res)=>{
 
 const ToggleblockUser = async (req,res)=>{
   try{
-    console.log("userrr kityyyyyyyyyyyyyyyyyyyyy")
     const userId= req.query.userid
-    console.log(userId);
     const users = await User.findOne({_id:userId}); 
 
     if (!users) {
@@ -119,10 +118,6 @@ const ToggleblockUser = async (req,res)=>{
   }
 };
 
-
-
-
-
 const logout = async(req,res)=>{
 
 try{
@@ -135,16 +130,125 @@ try{
 }
 }
 
-// const adminDashboard = async (req,res)=>{
+const loadOrder = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 8; 
+    const skip = (page - 1) * limit; 
 
-//  try{
-//    const usersData = await User.find({is_admin:0});
-//    res.render('dashboard',{users:usersData});
- 
-//  }catch(error){
-//     console.log(error.message);
-//  }
-// };
+    
+    const totalOrders = await Orders.countDocuments();
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    
+    const orders = await Orders.find()
+      .populate('product.productId')
+      .skip(skip)
+      .limit(limit);
+
+    
+    res.render("admin/order", { 
+      orders, 
+      currentPage: page, 
+      totalPages 
+    }); 
+  } catch (error) {
+    console.error('Error loading admin orders page:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const loadOrderDetails = async(req,res)=>{
+  try{
+          const productId = req.query.id
+          const orders = await Orders.findOne({ _id:productId}).populate('product.productId')
+          const orderData = await Orders.findOne({ _id:productId})
+         
+    res.render('admin/orderDetail', { orders, orderData });
+
+  } catch(error){
+    console.error(error.message)
+  }
+}
+
+const orderPending= async(req,res)=>{
+  try {
+      const orderId= req.query.id
+      const orderPending= await Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:"Order Placed"}})
+      res.redirect('/admin/loadOrders')
+  } catch (error) {
+      console.log(error.message)
+  }
+}
+
+
+
+const orderShipped= async(req,res)=>{
+  try {
+      const orderId= req.query.id
+      const orderShipped =await Orders.findByIdAndUpdate(orderId,{$set:{ orderStatus:'Shipped'}})
+       res.redirect('/admin/loadOrder')
+  } catch (error) {
+      console.log(error.message)
+  }
+}
+
+
+
+const orderDelivered=async(req,res)=>{
+  try {
+      const orderId= req.query.id
+      const orderDelivered= await  Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:'Delivered'}})
+       res.redirect('/admin/loadOrder')
+  } catch (error) {
+      console.log(error.message)
+  }
+}
+
+
+
+const orderReturned=async(req,res)=>{
+  try {
+      const orderId= req.query.id
+      const orderReturned= await  Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:'Returned'}})
+      res.redirect('/admin/loadOrder')
+  } catch (error) {
+      console.log(error.message)
+  }
+}
+
+const orderCancelled=async(req,res)=>{
+  try {
+      const orderId= req.query.id
+      const OrderCancelled= await Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:'Cancelled'}})
+      res.redirect('/admin/loadOrder')
+  } catch (error) {
+      console.log(error.message)
+  }
+}
+
+const loadCoupon = async (req, res) => {
+  const page =  req.query.page || 1;
+  const limit = 4; 
+  const skip = (page - 1) * limit; 
+
+  try {
+      const couponData = await coupon.find().sort({ Date: -1 }).skip(skip).limit(limit); 
+      const totalCoupons = await coupon.countDocuments(); 
+      const totalPages= Math.ceil(totalCoupons / limit) 
+
+      res.render('admin/coupon', {
+          couponData,
+          error: null,
+          currentPage: page,
+          totalPages: totalPages,
+          limit: limit
+      });
+  } catch (error) {
+      console.error(error.message);
+      res.render('admin/coupon', { couponData: [], error: 'Internal Server Error. Please try again.' });
+  }
+};
 
  module.exports = {
     loadLogin,
@@ -152,7 +256,15 @@ try{
     loadDashboard,
     logout,
     loaduserList,
-    ToggleblockUser
-    // adminDashboard,
+    ToggleblockUser,
+    loadOrder,
+    loadOrderDetails,
+    orderPending,
+    orderShipped,
+    orderDelivered,
+    orderReturned,
+    orderCancelled,
+    loadCoupon
+
    
  }
