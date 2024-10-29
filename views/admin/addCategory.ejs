@@ -286,21 +286,11 @@
         <% } %>
     </div>
 </div>
-<footer class="main-footer font-xs">
-    <div class="row pb-30 pt-15">
-        <div class="col-sm-6">
-            <script>
-                document.write(new Date().getFullYear())
-            </script> ©, Evara - HTML Ecommerce Template.
-        </div>
-        <div class="col-sm-6">
-            <div class="text-sm-end">
-                All rights reserved
-            </div>
-        </div>
-    </div>
-</footer>
+<%- include('../layouts/adminFooter.ejs') -%>
+
 </main>
+
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     function confirmBlock(categoryId) {
@@ -332,6 +322,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = `/admin/ToggleblockCategory?catid=${categoryId}`;
+                
             }
         });
     }
@@ -454,3 +445,4 @@
 <% } %>
 </body>
 </html>
+ 

@@ -1,0 +1,267 @@
+<%- include('../layouts/userHeader.ejs') -%>
+<style>
+    .btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+</style>
+
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/home" rel="nofollow">Home</a>
+                    <span></span> Shop
+                    <span></span> Wishlist
+                </div>
+            </div>
+        </div>
+
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-14">
+                        <div class="table-responsive">
+                            <table class="table shopping-summery text-center">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col" colspan="2">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stock Status</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wishlist-body">
+                                    <% if (wishlist && wishlist.product.length > 0) { %>
+                                        <% for (let i = 0; i < wishlist.product.length; i++) { %>
+                                            <tr data-product-id="<%= wishlist.product[i].productId._id %>">
+                                                <!-- Product Image -->
+                                                <td class="image product-thumbnail">
+                                                    <% if (wishlist.product[i].productId && wishlist.product[i].productId.images && wishlist.product[i].productId.images.length > 0) { %>
+                                                        <img src="/uploads/<%= wishlist.product[i].productId.images[0] %>" alt="#">
+                                                    <% } else { %>
+                                                        <img src="/uploads/default.jpg" alt="No image available">
+                                                    <% } %>
+                                                </td>
+                                
+                                                <!-- Product Description -->
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name">
+                                                        <a href="#"><%= wishlist.product[i].productId.productName %></a>
+                                                    </h5>
+                                                </td>
+                                
+                                                <!-- Product Price -->
+                                                <td class="price" data-title="Price">
+                                                    <span>$<%= wishlist.product[i].productId.productPrice %></span>
+                                                </td>
+                                
+                                                <!-- Stock Status -->
+                                                <td class="text-center" data-title="Stock">
+                                                    <% if (wishlist.product[i].productId.countStock === 0) { %>
+                                                        <span class="text-danger font-weight-bold">Out of stock</span>
+                                                    <% } else { %>
+                                                        <span class="color3 font-weight-bold">
+                                                            <%= wishlist.product[i].productId.countStock %> in stock
+                                                        </span>
+                                                    <% } %>
+                                                </td>
+                                
+                                                <!-- Add to Cart Button -->
+                                                <td class="text-right" data-title="Cart">
+                                                    <% if (wishlist.product[i].productId.countStock === 0) { %>
+                                                        <button class="btn btn-sm btn-secondary" disabled>
+                                                            <i class="fi-rs-headset mr-5"></i>Out of stock
+                                                        </button>
+                                                    <% } else { %>
+                                                        <a class="btn btn-sm btn-primary" role="button" onclick="addToCart('<%= wishlist.product[i].productId._id %>')">
+                                                            <i class="fi-rs-shopping-bag mr-5"></i>Add to cart
+                                                        </a>
+                                                    <% } %>
+                                                </td>
+                                
+                                                <!-- Remove Button -->
+                                                <td class="action" data-title="Remove">
+                                                    <a href="#" onclick="removeFromWishlist('<%= wishlist.product[i].productId._id %>')">
+                                                        <i class="fi-rs-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <% } %>
+                                    <% } else { %>
+                                        <tr id="empty-message">
+                                            <td colspan="6" class="text-center">Your wishlist is empty.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <%- include('../layouts/userFooter.ejs') -%>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <h5 class="mb-5">Now Loading</h5>
+                    <div class="loader">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+<script>
+
+function removeFromWishlist(productId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to remove this product from your wishlist?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/removeWishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: productId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Product removed from wishlist:', data);
+                
+                // Remove the corresponding row from the table
+                const rowToRemove = document.querySelector(`tr[data-product-id="${productId}"]`);
+                if (rowToRemove) {
+                    rowToRemove.remove();
+                }
+
+                // Check if the wishlist is now empty
+                const wishlistBody = document.getElementById('wishlist-body');
+                if (wishlistBody.children.length === 0) {
+                    wishlistBody.innerHTML = `
+                        <tr id="empty-message">
+                            <td colspan="6" class="text-center">Your wishlist is empty.</td>
+                        </tr>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+    });
+}
+       </script>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      
+      <script>
+       function addToCart(productId) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    fetch('/addtoCart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId })
+    })
+    .then(response => {
+        console.log('Fetch response status:', response.status); // Debugging line
+
+        if (!response.ok) {
+            throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Fetch response data:', data); // Debugging line
+
+        if (!data.success) {
+            // Display error message using SweetAlert
+            swal({
+                title: "Error",
+                text: data.message,
+                icon: "error",
+                button: "OK",
+            });
+        } else {
+            // Display success message using SweetAlert
+            swal({
+                title: "Success",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            });
+
+            // Remove the product from the wishlist in the DOM
+            const wishlistItem = document.querySelector(`tr[data-product-id="${productId}"]`);
+            if (wishlistItem) {
+                wishlistItem.remove();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Display catch error message using SweetAlert
+        swal({
+            title: "Error",
+            text: 'An error occurred. Please try again.',
+            icon: "error",
+            button: "OK",
+        });
+    });
+}
+    </script>
+      
+
+    <!-- Vendor JS-->
+    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/plugins/slick.js"></script>
+    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="assets/js/plugins/wow.js"></script>
+    <script src="assets/js/plugins/jquery-ui.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="assets/js/plugins/magnific-popup.js"></script>
+    <script src="assets/js/plugins/select2.min.js"></script>
+    <script src="assets/js/plugins/waypoints.js"></script>
+    <script src="assets/js/plugins/counterup.js"></script>
+    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="assets/js/plugins/images-loaded.js"></script>
+    <script src="assets/js/plugins/isotope.js"></script>
+    <script src="assets/js/plugins/scrollup.js"></script>
+    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
+    <!-- Template  JS -->
+    <script src="assets/js/maind134.js?v=3.4"></script>
+    <script src="assets/js/shopd134.js?v=3.4"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:05 GMT -->
+</html>

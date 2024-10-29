@@ -3,7 +3,7 @@
 
 const userSchema=mongoose.Schema({
 
-name:{
+   name:{
   type:String,
   required: true
     },

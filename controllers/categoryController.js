@@ -50,20 +50,7 @@ const loadCategory = async (req,res) =>{
       res.status(500).send("Error in adding Categroy")
     }
   }
-//   const categoryData =  async(req,res)=>{
 
-//     console.log("hiiiiiiii");
-//     try{
-// const categoryData= await cat.find()
-//   console.log(categoryData,"cat data is here");
-//          if(categoryData){
-//         res.render('admin/addCategory',{categories : categoryData})
-//          }
-//   } 
-//     catch(error){
-//       console.log(error.message);
-//     }
-  // }
   const loadeditCategory = async(req,res)=>{
     try {
       console.log("kittyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
@@ -78,7 +65,8 @@ const editCategory= async (req,res)=>{
   try{
 
     const { catName,description} = req.body
-    console.log("edit details got",req.body)
+    
+    console.log("edit details got",req.body);  
     
     const existingCategory = await category.findOne({_id: { $ne: req.query.id }, catName: { $regex: new RegExp('^' + catName + '$', 'i') } });
     if(existingCategory){
@@ -94,6 +82,8 @@ const editCategory= async (req,res)=>{
 
      }
 
+    
+
   }catch(error){
 console.log(error); 
   }
@@ -102,36 +92,29 @@ const ToggleblockCategory= async (req,res)=>{
   try{
 
 
-    console.log("sanam kityyyyyyyyyyyyyyyyyyyyy")
+  
     const catid= req.query.catid
+    console.log("Category ID:", catid);
     const categories = await category.findOne({_id:catid}); 
+
+    console.log(categories)
+
     categories.is_Active =!categories.is_Active
     await categories.save()
+
+    console.log("Category status updated successfully");
+    
     res.redirect("/admin/addCategory")
 
 
   } catch(error){
-console.log(error);
+    console.log(error.message);
+    res.status(500).send("Server Error");
+
   }
 }
 
 
-  const filterCategory = async (req, res) => {
-    try {
-        const categoryId = req.query.id;
-
-        if (!categoryId) {
-            return res.status(400).send('Category ID is required');
-        }
-
-        const products = await product.find({ category: categoryId });
-
-        res.render('homePage', { products }); // Assuming you have a view called 'filteredProducts'
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
-};
 
 
 
@@ -143,10 +126,12 @@ console.log(error);
     loadCategory,
     addCategory,
     ToggleblockCategory,
-    // categoryData
+    
     loadeditCategory,
     editCategory,
-    filterCategory
+
+    
+    
   
   
   }

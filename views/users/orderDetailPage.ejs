@@ -1,0 +1,257 @@
+
+<style>
+    .btn-red {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-red:hover {
+    background-color: darkred;
+    color: white;
+}
+.btn-profile {
+    background-color: #28a745; /* Green color for the button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.btn-profile:hover {
+    background-color: #218838; /* Darker green for hover effect */
+}
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .success-message {
+        text-align: center;
+    }
+
+    .success-message h1 {
+        color: #28a745;
+    }
+
+    .order-details {
+        margin-top: 30px;
+    }
+
+    .order-details ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .order-details ul li {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .actions .btn {
+        text-decoration: none;
+        color: #fff;
+        background-color: #007bff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin: 0 10px;
+    }
+
+    .actions .btn-secondary {
+        background-color: #6c757d;
+    }
+    </style>
+<main>
+
+    <div class="container">
+        <h2>Order Details</h2>
+        <div class="order-info">
+            <p><strong>Customer Name:</strong> <%= user.name %></p>
+            <p><strong>Order Status:</strong> <%= order.orderStatus %></p>
+            <p><strong>Order Date:</strong> <%= order.orderDate.toDateString() %></p>
+            
+            <p><strong>Shipping Address:</strong></p>
+            <ul>
+                <li><strong>Address:</strong> <%= address.houseName %>
+                 <%= address.city %>
+                <%= address.state %> </li>
+
+                <li><strong>Phone Number:</strong> <%= address.mobile %></li>
+                <li><strong>Pincode:</strong> <%= address.pincode %></li>
+            </ul>
+            <p><strong>Products:</strong></p>
+            <ul>
+                <% order.product.forEach(products => { %>
+                    <li data-product-id="<%= products.productId._id %>">
+                        <div class="product-info">
+                        <img src="<%= './uploads/' + products.productId.images[1] %>" alt="<%= products.productId.name %>" width="100" height="100">
+
+                            
+                            <div class="product-details">
+                                <p>
+                                    <%= products.productId.productName %> <%= products.quantity %> x ₹<%= (products.price || 0).toFixed(2) %>
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                <% }) %>
+                </ul>
+                
+                
+                <p><strong>Total:</strong> ₹<span id="total"><%= order.totalAmount.toFixed(2) %></span></p>
+                
+                <div class="order-actions">
+                    
+                    <% if (order.orderstatus !== 'Cancelled'  && order.orderStatus !== 'Returned') { %>
+                        <% if (order.orderStatus === 'Delivered') { %>
+                            <button id="returnOrderBtn" class="btn btn-return-order btn-red" data-order-id="<%= order._id %>">
+                                Return Product
+                            </button>
+                            <br>
+                        <% } else { %>
+                            <button id="cancelOrderBtn" class="btn btn-cancel-order btn-red" data-order-id="<%= order._id %>">
+                                Cancel Order
+                            </button>
+                        <% } %>
+                    <% } else if (order.status === 'Return') { %>
+                        <p><strong>Status:</strong> This order has been returned.</p>
+                    <% } else { %>
+                        <p><strong>Status:</strong> This order has been cancelled.</p>
+                    <% } %>
+                    <a href="/userProfile" class="btn btn-profile">Go to User Profile</a>
+
+            </div>    
+              
+        </div>
+        
+    </div>
+    
+</main>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+    
+        if (cancelOrderBtn) {
+            cancelOrderBtn.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to cancel this order.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, cancel it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/cancelOrder/<%= order._id %>`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data === 'Order cancelled successfully') {
+                                Swal.fire(
+                                    'Cancelled!',
+                                    'Your order has been cancelled.',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    'There was a problem cancelling your order.',
+                                    'error'
+                                );
+                            }
+                        }).catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                'There was a problem cancelling your order.',
+                                'error'
+                            );
+                        });
+                    }
+                });
+            });
+        }
+    });
+    </script>
+    <script>
+        document.getElementById('returnOrderBtn')?.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to return this product.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, return it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    Swal.fire(
+                        'Returned!',
+                        'Your product return request has been submitted.',
+                        'success'
+                    ).then(() => {
+                        window.location.reload();
+                    });
+        
+                    // Send return request to the server
+                    fetch(`/returnOrder/<%= order._id %>`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            Swal.fire(
+                                'Error!',
+                                data.message || 'There was a problem returning your product.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem returning your product.',
+                            'error'
+                        );
+                    });
+                }
+            });
+        });
+        </script>
+
+

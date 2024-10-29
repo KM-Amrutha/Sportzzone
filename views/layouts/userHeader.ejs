@@ -26,12 +26,20 @@
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        .crossed {
+  text-decoration: line-through;
+  color: red; /* Change this color if needed */
+}
     .single-slider-img img {
         width: 100%;
         height: 100%;
@@ -97,6 +105,74 @@
 .btn-danger {
     background-color: rgb(172, 5, 5);
     color: white;
+}
+.btn {
+  display: inline-block; /* Ensure the button is inline-block */
+  padding: 10px 15px; /* Add some padding */
+  background-color: #007bff; /* Change background color */
+  color: #fff; /* Text color */
+  text-decoration: none; /* Remove underline */
+  border-radius: 5px; /* Round corners */
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Change color on hover */
+}
+/* Parent container for search input and dropdown */
+.search-style-2 {
+  position: relative; /* Ensures dropdown is positioned relative to search bar */
+  width: 100%; /* Take the full width available without shrinking */
+}
+
+/* Search input styling */
+#search-input {
+  width: 100%; /* Make the input field take the full width of the container */
+  padding: 10px;
+  box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/* Dropdown suggestions */
+.dropdown-suggestions {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 90%; /* Match the width of the input */
+  position: absolute;
+  top: 100%; /* Position right below the input */
+  left: 0; /* Align to the left edge of the input */
+  z-index: 100;
+}
+
+/* Style the dropdown items */
+.dropdown-suggestions li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* Highlight effect on hover */
+.dropdown-suggestions li:hover {
+  background-color: #f0f0f0;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  padding: 10px 15px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: #000;
+}
+
+.pagination a.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 </style>
 </head>
@@ -216,7 +292,7 @@
                                     </div>
                                     <div class="product-extra-link2">
                                         <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/loadWishlist"><i class="fi-rs-heart"></i></a>
                                         <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                     </div>
                                 </div>
@@ -272,7 +348,7 @@
                                             </ul>
                                         </li>
                                         <% } else { %>
-                                        <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/login">Login</a></li>
+                                        <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/loadLogin">Login</a></li>
                                         <% } %>
                                     </ul>
                                 </div>
@@ -287,16 +363,23 @@
                         <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
+
                         <div class="search-style-2">
-                            <form action="#">
-                                
-                                <input type="text" placeholder="Search for items...">
+                            <form action="/" method="get" id="search-form">
+                              <input type="text" name="search" id="search-input" placeholder="Search for items..." autocomplete="off">
+                              <button type="submit">Search</button>
                             </form>
-                        </div>
+                          
+                            <!-- Dropdown for "Show All Products" -->
+                            <ul id="search-suggestions" class="dropdown-suggestions" style="display: none;">
+                              <li id="show-all" style="cursor: pointer;">Show All Products</li>
+                            </ul>
+                          </div>
+
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/loadWishlist">
                                         <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
                                         <span class="pro-count blue">4</span>
                                     </a>
@@ -306,7 +389,7 @@
                                         <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
                                         <span class="pro-count blue">2</span>
                                     </a>
-                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <!-- <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
                                             <li>
                                                 <div class="shopping-cart-img">
@@ -331,7 +414,7 @@
                                                 <a href="#">Checkout</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -392,7 +475,7 @@
                                         <!-- </ul> -->
                                     </li>
                                     
-                                    <li><a href="#"> Whishlist </i></a>
+                                    <li><a href="loadWishlist"> Whishlist </i></a>
                                         <!-- <ul class="sub-menu">
                                             <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
                                             <li><a href="blog-category-list.html">Blog Category List</a></li>
@@ -431,14 +514,12 @@
                             </nav>
                         </div>
                     </div>
-                    <div class="hotline d-none d-lg-block">
-                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-                    </div>
+                    
                     <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/loadWishlist">
                                     <img alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
                                     <span class="pro-count white">4</span>
                                 </a>
@@ -664,9 +745,15 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

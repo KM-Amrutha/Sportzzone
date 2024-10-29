@@ -1,0 +1,409 @@
+<%- include('../layouts/adminHeader.ejs') -%>
+
+<style>
+/* Custom SweetAlert Styles */
+.custom-swal-popup {
+  background-color: #f4f4f9; /* Light gray */
+  color: #333; /* Dark gray text */
+}
+
+.custom-swal-icon {
+  color: #ff5722; /* Orange icon color */
+}
+
+.custom-swal-button {
+  background-color: #009688; /* Teal background */
+  color: #fff;
+  border-radius: 50px;
+  border: none;
+}
+
+.custom-swal-button:hover {
+  background-color: #00796b; /* Darker teal on hover */
+}
+
+/* Premium Button Styles */
+.premium-button {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #ff4081; /* Pink background */
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+  border: 3px solid #f50057; /* Dark pink border */
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.premium-button:hover {
+  background-color: #f50057; /* Darker pink on hover */
+  color: #000;
+  border-color: #c51162;
+}
+
+/* Modal container */
+#myModal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9); /* Light semi-transparent white background */
+  overflow: auto;
+}
+
+/* Modal content */
+.modal-content {
+  background-color: #282828; /* Dark background */
+  color: #fff;
+  border-radius: 15px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  margin: 20% auto;
+  padding: 30px;
+  text-align: left;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Close button */
+.close {
+  color: #ff4081;
+  cursor: pointer;
+  font-size: 22px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+.close:hover {
+  color: #ff1744;
+}
+
+/* Form styles */
+#discountForm {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 10px;
+  color: #fff;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="submit"] {
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 2px solid #009688; /* Teal border */
+  border-radius: 8px;
+  font-size: 18px;
+  background-color: #333;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  background-color: #ff5722;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #e64a19; /* Darker orange on hover */
+}
+
+input[type="date"] {
+  padding: 12px;
+  border: 2px solid #ff4081; /* Pink border */
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #222;
+  color: #fff;
+  outline: none;
+}
+
+input[type="date"]::placeholder {
+  color: #ccc;
+}
+
+input[type="date"]:focus {
+  border-color: #ff1744; /* Red border on focus */
+}
+    
+    </style>
+
+<!-- <main class="main-wrap"> -->
+    <section class="content-main">
+        <div class="content-header">
+          <div>
+            <h2 class="content-title card-title">Apply Offers</h2>
+            <p>Add offer for users .</p>
+          </div>
+        
+        </div>
+        <div class="card mb-4">
+          <div class="card-body">
+            <% if(locals.categories) { %>
+              <div class="table-responsive">
+                <div class="d-flex justify-content-center">
+
+
+                  <table class="table table-hover">
+                    <thead style="background-color:#f8f9fa; color: black">
+                      <tr>
+                          <th scope="col">Category</th>
+                          <th scope="col">Offer Percentage</th>
+                          <th scope="col">Expiry Date</th>
+                          <th scope="col">Status</th>
+                          <th scope="col">Change status</th>
+                          <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% for(let i = 0; i < categories.length; i++) { %>
+                      <tr class="align-middle">
+                        <td class="align-middle">
+                          <h6 class="mb-0"><%=categories[i].catName%></h6>
+                        </td>
+                        <td class="align-middle">
+                          <h6><%=categories[i].offer%>%</h6>
+                        </td>
+                        <td class="align-middle">
+                          <h6><%= new Date(categories[i].expirationDate).toLocaleDateString() %></h6>
+                        </td>
+                        <td class="align-middle">
+                          <% if (categories[i].OfferisActive) { %>
+                          <span class="badge rounded-pill alert-success">Active</span>
+                          <% } else { %>
+                          <span class="badge rounded-pill alert-danger">Blocked</span>
+                          <% } %>
+                        </td>
+                        <td class="align-middle">
+                          <!-- Block/Unblock Button -->
+                          <% if (categories[i].OfferisActive) { %>
+                          <button class="btn btn-danger btn-sm" onclick="toggleOfferStatus('<%= categories[i]._id %>', false)">Block</button>
+                          <% } else { %>
+                          <button class="btn btn-success btn-sm" onclick="toggleOfferStatus('<%= categories[i]._id %>', true)">Unblock</button>
+                          <% } %>
+                        </td>
+                        <td class="align-middle">
+                          <a class="btn btn-dark btn-sm" onclick="showModal('<%= categories[i]._id %>')">Apply</a>
+                        </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                    
+                  </table>
+                </div>
+              </div>
+              <% } %>
+
+              
+              <div id="myModal" class="modal">
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <form id="discountForm">
+                      <label for="discount">Discount Percentage:</label>
+                      <input type="number" id="discount" name="discount" ><br>
+                      <label for="expiry">Expiry Date:</label>
+                      <input type="date" id="expiry" name="expiry"  required><br>
+                      <input type="submit" value="Submit">
+                    </form>
+                  </div>
+                </div>
+               
+                
+          </div>
+        </div>
+
+         <!-- pagination -->
+  <div class="pagination-area mt-30 mb-50">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+  
+      </section>
+      <!-- </main> -->
+
+<%- include('../layouts/adminFooter.ejs') -%>
+
+<!-- Modal Structure -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 style="color: #fff; font-weight: bold;">Apply Discount</h2>
+      <form id="discountForm">
+        <label for="discount">Discount Percentage</label>
+        <input type="text" id="discount" name="discount" placeholder="Enter Discount">
+  
+        <label for="expiry">Expiry Date</label>
+        <input type="date" id="expiry" name="expiry">
+  
+        <input type="submit" value="Apply Discount">
+      </form>
+    </div>
+  </div>
+
+  <script>
+
+const modal = document.getElementById('myModal');
+const closeBtn = document.getElementsByClassName('close')[0];
+
+// Attach the form submit event listener
+const form = document.getElementById('discountForm');
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const discount = document.getElementById('discount').value;
+  const expiry = document.getElementById('expiry').value;
+  const categoryId = form.dataset.categoryId; // Use categoryId set when modal is opened
+
+  const data = {
+    discount: discount,
+    expiry: expiry,
+    categoryId: categoryId,
+  };
+
+  fetch('/admin/applyOffer', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    credentials: 'include' // Include session cookies
+  })
+  .then((response) => {
+    if (!response.ok) {
+      return response.json().then(data => { throw new Error(data.message) });
+    }
+    return response.json();
+  })
+  .then((data) => {
+    Swal.fire({
+      text: 'Offer Applied Successfully',
+      icon: 'success',
+      confirmButtonText: 'Okay',
+      customClass: {
+        popup: 'custom-swal-popup',
+        icon: 'custom-swal-icon',
+        confirmButton: 'custom-swal-button',
+      },
+    });
+    setTimeout(() => {
+      window.location.href = "/admin/offers"; // Navigate to offers after success
+    }, 1500);
+    modal.style.display = 'none';
+  })
+  .catch((error) => {
+    // Show SweetAlert for validation errors
+    Swal.fire({
+      text: error.message,
+      icon: 'error',
+      confirmButtonText: 'Try Again',
+      customClass: {
+        popup: 'custom-swal-popup',
+        icon: 'custom-swal-icon',
+        confirmButton: 'custom-swal-button',
+      },
+    });
+  });
+});
+
+function showModal(categoryId) {
+  modal.style.display = 'block';
+
+  // Set categoryId in form dataset to use during form submission
+  form.dataset.categoryId = categoryId;
+}
+
+window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+});
+
+closeBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+    
+  </script>
+  
+  <!-- Toggle Offer Status Function -->
+  <script>
+    function toggleOfferStatus(categoryId, newStatus) {
+      fetch('/admin/toggleOfferStatus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryId, isActive: newStatus }),
+        credentials: 'include'  // Include session cookies for authentication
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            text: newStatus ? 'Offer Unblocked Successfully' : 'Offer Blocked Successfully',
+            icon: 'success',
+            confirmButtonText: 'Okay',
+            customClass: {
+              popup: 'custom-swal-popup',
+              icon: 'custom-swal-icon',
+              confirmButton: 'custom-swal-button',
+            },
+          });
+          setTimeout(() => {
+            window.location.reload(); // Reload the page to reflect status change
+          }, 1500);
+        } else {
+          Swal.fire({
+            text: 'An error occurred. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'Okay',
+            customClass: {
+              popup: 'custom-swal-popup',
+              icon: 'custom-swal-icon',
+              confirmButton: 'custom-swal-button',
+            },
+          });
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+
+
+
+<script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+<script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+<!-- Main Script -->
+<script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+
+
+</body>
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
+
+</html>

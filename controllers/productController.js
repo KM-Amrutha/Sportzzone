@@ -8,15 +8,32 @@ const path = require('path')
 const mongoose = require('mongoose');
 
 
-const productListview = async (req,res) =>{
-    try{
-      const products = await Product.find()
-      res.render('admin/productlist',{products})
+
+const productListview = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;  
+    const limit = 4
+    const skip = (page - 1) * limit; 
+
   
-    }catch(error){
-      console.log(error.message);
-    }
-  };
+    const products = await Product.find()
+      .skip(skip)
+      .limit(limit);
+    const totalProducts = await Product.countDocuments();
+   const  totalPages = Math.ceil(totalProducts / limit)
+
+    res.render('admin/productlist', {
+      products,
+      currentPage: page,
+      totalPages: totalPages,
+      limit:limit
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(500).send('Server Error');
+  }
+};
 
   const loadaddProduct = async(req,res)=>{
     console.log("load Add product success")

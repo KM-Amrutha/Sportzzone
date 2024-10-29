@@ -15,11 +15,51 @@
     <meta property="og:image" content="">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
+
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/maind134.css?v=3.4">
+
+    <style>
+       .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-lg-3, .col-md-4, .col-sm-6 {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-cart-wrap {
+  flex: 1; /* Allow product cards to expand equally */
+  display: flex;
+  flex-direction: column;
+}
+
+.product-img-action-wrap, .product-content-wrap {
+  flex-grow: 1; /* Allow image and content to expand properly */
+}
+
+/* Fix any padding or margin issues */
+.product-cart-wrap {
+  padding: 0 !important;
+  margin-bottom: 30px;
+}
+.crossed {
+  text-decoration: line-through;
+  color: red; 
+}
+
+
+      </style>
+
 </head>
 
 <body>
+
     <!-- Quick view -->
     <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -179,16 +219,20 @@
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
-                                <!-- <li>
-                                    <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
-                                    <ul class="language-dropdown">
-                                        <li><a href="#"><img src="/assets/imgs/theme/flag-fr.png" alt="">Français</a></li>
-                                        <li><a href="#"><img src="/assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                        <li><a href="#"><img src="/assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
+                                <% if(locals.user) { %>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<%= user.name %>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                        <li><a class="dropdown-item" href="/userProfile"><i class="material-icons md-settings"></i>Account</a></li>
+                                        <li><div class="dropdown-divider"></div></li>
+                                        <li><a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a></li>
                                     </ul>
-                                </li> -->
-                                <li><i class="fi-rs-user"></i><a href="/login">Log In </a></li>
-                                <li><i class="fi-rs-user"></i><a href="/logout">Log out</a></li>
+                                </li>
+                                <% } else { %>
+                                <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/login">Login</a></li>
+                                <% } %>
                             </ul>
                         </div>
                     </div>
@@ -210,15 +254,12 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
-                                        <img class="svgInject" alt="Evara" src="/assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                    <a href="/loadWishlist">
+                                        
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="shop-cart.html">
-                                        <img alt="Evara" src="/assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                    <a class="mini-cart-icon" href="/getCart">
                                     </a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
@@ -293,11 +334,11 @@
                                        
                                     </li>
                                     
-                                    <li><a href="#"> Shop </a></li>
+                                    <li><a href="/users/productShopPage"> Shop </a></li>
 
 
 
-                                    <li class="position-static"><a href="#">Whish List </a>
+                                    <li class="position-static"><a href="/loadWishlist">Whish List </a>
                                     </li>
                                         <!-- <ul class="mega-menu">
                                             <li class="sub-mega-menu sub-mega-menu-width-22">
@@ -392,9 +433,9 @@
 
 
 
-                    <div class="hotline d-none d-lg-block">
+                    <!-- <div class="hotline d-none d-lg-block">
                         <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-                    </div>
+                    </div> -->
                     <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
@@ -627,128 +668,137 @@
     </div>
 
 
+   <main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/home" rel="nofollow">Home</a>
+                <span></span> Shop
+            </div>
+        </div>
+    </div>
 
-    <main class="main">
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="shop-product-fillter">
-                            <div class="totall-product">
-                                <p> We found <strong class="text-brand">100</strong> items for you!</p>
-                            </div>
-                            <div class="sort-by-product-area">
-                                <div class="sort-by-cover">
-                                    <div class="sort-by-product-wrap">
-                                        
-                                        <div class="sort-by-dropdown-wrap">
-                                            <span> Sort by <i class="fi-rs-angle-small-down"></i></span>
-                                        </div>
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shop-product-fillter">
+                        <div class="totall-product">
+                            <p>We found <strong class="text-brand"><%=product.length%></strong> items for you!</p>
+                        </div>
+                        <div class="sort-by-product-area">
+                            <div class="sort-by-cover">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <span><i class="fi-rs-apps-sort"></i>Sort :</span>
                                     </div>
-                                    <div class="sort-by-dropdown">
-                                        <ul>
-                                            <li><a href="#">Price: Low to High</a></li>
-                                            <li><a href="#">Price: High to Low</a></li>
-                                        </ul>
+                                    <div class="sort-by-dropdown-wrap">
+                                        <span> by<i class="fi-rs-angle-small-down"></i></span>
                                     </div>
+                                </div>
+                                <div class="sort-by-dropdown">
+                                    <ul>
+                                        <li><a href="/AtoZ">Aa to Zz</a></li>
+                                        <li><a href="/ZtoA">Zz to Aa</a></li>
+                                        <li><a href="/lowtoHigh">Low to High</a></li>
+                                        <li><a href="/hightoLow">High to Low</a></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <% if (locals.product) { %>
-                            <% if (locals.category) { %>
-                             
-                           
-                            <div class="row product-grid-3">
-                                <% for (let i = 0; i < product.length; i++) { %>
-                                    <div class="col-lg-3 col-md-4">
-                                        <div class="product-cart-wrap mb-30">
-                                            <div class="product-img-action-wrap">
-                                                <div class="product-img product-img-zoom">
-                                                    <a href="/productDetail?id=<%= product[i]._id %>">
-                                                        <% if (product[i].images) { %>
-                                                            <img class="default-img" src="../uploads/<%= product[i].images[0] %>" alt="">
-                                                            <% if (product[i].images.length > 1) { %>
-                                                                <img class="hover-img" src="../uploads/<%= product[i].images[1] %>" alt="">
-                                                            <% } %>
-                                                        <% } else { %>
-                                                            <img class="default-img" src="../uploads/default-image.jpg" alt="No image available">
+                    <% if (product && product.length > 0) { %>
+                        <div class="row"> <!-- Use a single row for all products -->
+                            <% for (let i = 0; i < product.length; i++) { %>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4"> <!-- 4 items per row on large screens -->
+                                    <div class="product-cart-wrap mb-30">
+                                        <div class="product-img-action-wrap">
+                                            <div class="product-img product-img-zoom">
+                                                <a href="/productDetail?id=<%= product[i]._id %>">
+                                                    <% if (product[i].images && product[i].images.length > 0) { %>
+                                                        <img class="default-img" src="../uploads/<%= product[i].images[0] %>" alt="">
+                                                        <% if (product[i].images.length > 1) { %>
+                                                            <img class="hover-img" src="../uploads/<%= product[i].images[1] %>" alt="">
                                                         <% } %>
-                                                    </a>
-                                                </div>
-                                                <div class="product-action-1">
-                                                    <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
-                                                        <i class="fi-rs-search"></i>
-                                                    </a>
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html">
-                                                        <i class="fi-rs-heart"></i>
-                                                    </a>
-                                                    <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html">
-                                                        <i class="fi-rs-shuffle"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="hot">New</span>
-                                                </div>
+                                                    <% } else { %>
+                                                        <img class="default-img" src="../uploads/default-image.jpg" alt="No image available">
+                                                    <% } %>
+                                                </a>
                                             </div>
-                                            <div class="product-content-wrap">
-                                                <div class="product-category">
-                                                    <a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].catName %></a>
-                                                </div>
-                                                <h2><a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
-                                                <div class="rating-result" title="90%">
-                                                    <span>
-                                                        <span>90%</span>
-                                                    </span>
-                                                </div>
-                                                <% if (product[i].countStock == 0) { %>
-                                                    <div class="product-price">
-                                                        <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
-                                                    </div>
+
+                                            <div class="product-action-1">
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtoWishlist('<%= product[i]._id %>')">
+                                                    <i class="fi-rs-heart"></i>
+                                                </a>
+                                            </div>
+                                            
+                                            <div class="product-badges product-badges-position product-badges-mrg">
+                                                <span class="hot">New</span>
+                                            </div>
+                                        </div>
+                                        <div class="product-content-wrap">
+                                            <div class="product-category">
+                                                <% if (product[i].productCategory) { %>
+                                                    <a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productCategory.catName %></a>
                                                 <% } else { %>
-                                                    <div class="product-price">
-                                                        <span>Rs.<%= product[i].productPrice %></span>
-                                                    </div>
-                                                    <div class="product-stock">
-                                                        <span>Stock.<%= product[i].countStock %></span>
-                                                    </div>
-
-
-                                                    <div class="product-action-1 show">
-                                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick= "addToCart('<%=product[i]._id%>')">
-                                                            <i class="fi-rs-shopping-bag-add"></i>
-                                                        </a>
-                                                    </div>
+                                                    <span>No category available</span>
                                                 <% } %>
+                                            </div>
+                                            <h2><a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
+
+                                            <% if (product[i].countStock == 0) { %>
+                                                <div class="product-price">
+                                                    <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
+                                                <% } else { %>
+                                                    <% if (product[i].productCategory && product[i].productCategory.OfferisActive) { %>
+                                                        <span>Rs.<%= product[i].offerPrice %></span>
+                                                <span class="old-price crossed">Rs.<%= product[i].productPrice %></span>
+                                                <span><%= product[i].productCategory.offer %>%Off</span>
+                                                    <% } else { %>
+                                                        <span>Rs.<%= product[i].productPrice %></span>
+                                                    <% } %>
+                                                </div>
+                                            <% } %>
+                                            <div class="product-stock">
+                                                <span>Stock: <%= product[i].countStock %></span>
+                                            </div>
+                                            <div class="product-action-1 show">
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart(event, '<%= product[i]._id %>')">
+                                                    <i class="fi-rs-shopping-bag-add"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                <% } %>
-                            </div>
-                        <% } %>
-                        <% } %>
-
-                        <!--pagination-->
-                        <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
-
-
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-start">
-                                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                                    <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+                                </div>
+                            <% } %>
+                        </div> <!-- End of products row -->
+                    <% } else { %>
+                        <p>No products available.</p> <!-- Message for no products -->
+                    <% } %>
                 </div>
             </div>
-        </section>
-    </main>
-   <%- include('../layouts/userFooter.ejs') -%>
+        </div>
+    </section>
+</main>
+
+
+        <!-- Pagination outside the section -->
+        <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    
+    
+    <%- include('../layouts/userFooter.ejs') -%>
+    
     <!-- Preloader Start -->
     <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
@@ -765,48 +815,101 @@
         </div>
     </div>
 
-    <script>
-        function addToCart(productId) {
-            event.preventDefault(); // Prevent the default form submission behavior
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+   <script>
+    function addToCart(event, productId) {
+    event.preventDefault(); // Prevent the default link behavior
+
+    fetch('/addtoCart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            productId: productId
+        })
+    })
+    .then(response => {
+        if (response.status === 401) { // If the user is not logged in
+            return response.json().then(data => {
+                toastr.error(data.message); // Show the error message as toastr
+            });
+        } 
         
-            fetch('/addtoCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    productId
-                })
-            })
-            .then(response => {
-                console.log('Fetch response status:', response.status); // Debugging line
-        
-                if (!response.ok) {
-                    throw new Error(`Failed to add item to cart. Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Fetch response data:', data); // Debugging line
-        
-                if (!data.success) {
-                    toastr.error(data.message); // Display error message if adding to cart fails
-                } else {
-                    toastr.success(data.message); // Display success message
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An error occurred. Please try again.');
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.message); // Handle other errors
             });
         }
-        </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        toastr.success('Toastr is working!');
+        return response.json(); // Process the successful response
+    })
+    .then(data => {
+        if (data.success) {
+            toastr.success(data.message); // Show success message
+        } else {
+            toastr.error(data.message);  // Handle any other error messages
+        }
+    })
+    .catch(error => {
+        toastr.error(error.message); // Show any caught errors
     });
-</script>
+}
+   </script>
+    
+    <script>
+        function addtoWishlist(productId) {
+            $.ajax({
+                url: '/wishlist/add',
+                method: 'POST',
+                data: { productId: productId },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: response.message, // "Product added to wishlist"
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Info',
+                            text: response.message, // "Product is already in wishlist"
+                            icon: 'info',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error adding product to wishlist',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+    </script>
+
+<!-- Include jQuery first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<!-- Toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- <script>
+    window.onload = function() {
+        toastr.success('Products sorted successfully');
+    };
+</script> -->
 
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
