@@ -86,6 +86,7 @@ user_route.get('/loadCheckout',auth.isLogin,auth.isBlocked,cartController.isCart
 user_route.post('/placeOrder',auth.isLogin,auth.isBlocked,cartController.placeOrder);
 
 user_route.post('/onlinepay',auth.isLogin,cartController.onlinepay);
+user_route.patch('/saveOrder', auth.isLogin, cartController.saveOrder);
 
 user_route.get('/loadOrderPage',auth.isLogin,auth.isBlocked,orderController.loadOrderPage);
 user_route.get('/orderDetailPage',auth.isLogin,auth.isBlocked,orderController.orderDetailPage);

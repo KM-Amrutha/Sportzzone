@@ -118,19 +118,55 @@ try {
 const loadHome = async (req, res) => {
   try {
     const userid = req.session.user_id;
+    let searchQuery = req.query.search || ""; 
+    let page = parseInt(req.query.page) || 1; 
+    let limit = 8; 
+    let skip = (page - 1) * limit;
 
-    const productData = await products.find({ is_Active: true }).populate('productCategory');
+    const productFilter = searchQuery
+      ? {
+          is_Active: true,
+          $or: [
+            { productName: { $regex: searchQuery, $options: 'i' } },
+            { productDescription: { $regex: searchQuery, $options: 'i' } }
+          ]
+        }
+      : { is_Active: true }; 
+
+    const productData = await products.find(productFilter)
+      .populate('productCategory')
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit); 
+
+    const totalProducts = await products.countDocuments(productFilter); // Ensure this line correctly counts documents based on the filter
+    const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
+
     const userData = await User.findById(userid);
     const categories = await category.find({ is_Active: true });
 
+    const noProductsFound = productData.length === 0;
+
     if (userData || !userid) {
-      res.render('users/homePage', { user: userData, category: categories, product: productData });
+      res.render('users/homePage', {
+        user: userData,
+        category: categories,
+        product: productData,
+        noProductsFound,
+        currentPage: page,
+        totalPages, // Pass totalPages to EJS
+        searchQuery // Pass searchQuery to EJS for displaying search results
+      });
     } 
-  } 
-  catch (error) {
+  } catch (error) {
     console.log(error.message);
+    res.status(500).send('Internal Server Error');
   }
+
+
 };
+
+
 
 //Registration
 const loadRegister = async(req,res )=>{
@@ -196,13 +232,11 @@ const insertUser = async(req,res)=>{
 const loadLogin = async (req, res) => {
   try {
     const message = req.query.message || '';  
-    console.log("Login page message:", message); 
     res.render('users/login', { message });
   } catch (error) {
     console.log(error.message);
   }
 };
-
 
 const verifyLogin = async (req, res) => {
   try {
@@ -220,11 +254,46 @@ const verifyLogin = async (req, res) => {
 
         console.log(userData.name);
         
-        const productData = await products.find({ is_Active: true }).populate('productCategory');
+        // Pagination and search logic
+        let searchQuery = req.query.search || ""; 
+        let page = parseInt(req.query.page) || 1; 
+        let limit = 8; 
+        let skip = (page - 1) * limit;
+
+        const productFilter = searchQuery
+          ? {
+              is_Active: true,
+              $or: [
+                { productName: { $regex: searchQuery, $options: 'i' } },
+                { productDescription: { $regex: searchQuery, $options: 'i' } }
+              ]
+            }
+          : { is_Active: true }; 
+
+        const productData = await products.find(productFilter)
+          .populate('productCategory')
+          .sort({ date: -1 })
+          .skip(skip)
+          .limit(limit);
+
+        const totalProducts = await products.countDocuments(productFilter); // Total products count
+        const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
+
         const categories = await category.find({ is_Active: true });
-        
-        res.render('users/homePage', { product: productData, category: categories });
-        
+
+        const noProductsFound = productData.length === 0;
+
+        // Render the homepage with pagination and search
+        res.render('users/homePage', {
+          user: userData,
+          product: productData,
+          category: categories,
+          noProductsFound,
+          currentPage: page,
+          totalPages,  // Pass totalPages to EJS for pagination
+          searchQuery  // Pass search query to EJS for search functionality
+        });
+
       } else {
         res.render('users/login', { message: "Your password is wrong." });
       }
@@ -236,7 +305,6 @@ const verifyLogin = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 
 const userLogout = async(req,res)=>{
 try {
