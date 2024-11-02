@@ -17,28 +17,39 @@ let instance = new Razorpay({
 
 
 const loadOrderPage = async (req, res) => {
-    try {
-      const userid = req.session.user_id;
-      const orderId = req.query.id; 
-   
-      const order = await Orders.findOne({_id: orderId, userId: userid }).populate('product.productId');
+  try {
+    const userid = req.session.user_id;
+    const userData = await User.findOne({ _id: userid });
+    const orderId = req.query.id;
+
+    const order = await Orders.findOne({ _id: orderId, userId: userid }).populate('product.productId');
+
+    
+    const addressData = await Address.findOne({ userId: userid });
+    const cartData = await Cart.findOne({ userId: userid });
+
+    const couponDiscount = order ? order.couponDiscount : 0;
+
+    const cartLength = cartData ? cartData.product.length : 0;
+
+    // Render the orderSuccess page with the fetched data
+    res.render("users/orderSuccess", {
+      order,
+      user: userData,
+      address: addressData,
+      cartData,
+      cartLength,
+      couponDiscount
+    });
+
+  } catch (error) {
+    console.error('Error loading order page:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
   
-      const userData = await User.findOne({ _id: userid });
-      const addressData = await Address.findOne({ userId: userid });
-      
-      res.render("users/orderSuccess", {
-        order, 
-        user: userData,
-        address: addressData,
-       // cartData,
-       // cartLength: cartLength,
-      });
-  
-    } catch (error) {
-      console.error('Error loading order page:', error.message);
-      res.status(500).send('Internal Server Error');
-    }
-  };
   
   const orderDetailPage = async(req,res)=>{
     try{

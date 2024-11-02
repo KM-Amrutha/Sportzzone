@@ -1184,10 +1184,90 @@ const onlinepay = async(req,res)=>{
 
     
 
+const loadOrderPage = async (req, res) => {
+    try {
+      const userid = req.session.user_id;
+      const orderId = req.query.id; 
+   
+      const order = await Orders.findOne({_id: orderId, userId: userid }).populate('product.productId');
+  
+      const userData = await User.findOne({ _id: userid });
+      const addressData = await Address.findOne({ userId: userid });
+      
+      res.render("users/orderSuccess", {
+        order, 
+        user: userData,
+        address: addressData,
+       // cartData,
+       // cartLength: cartLength,
+      });
+  
+    } catch (error) {
+      console.error('Error loading order page:', error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  };
 
 
-
-
-
+//    normal cartupdate fuction modify aakuna munpulla code, down il anu preshnamm..
+<script>
+    const updateCart = async (req, res) => {
+        try {
+            const { productId, direction } = req.body;
+            const currentUserId = req.session.user_id;
+            let userCart = await cart.findOne({ userId: currentUserId });
+    
+            const cartItemIndex = userCart.product.findIndex(item => item.productId.toString() === productId);
+    
+            if (cartItemIndex !== -1) {
+                const currentProduct = await products.findById(productId).populate('productCategory');
+    
+                const categoryOfferActive = currentProduct.productCategory.OfferisActive;
+                const priceToSave = categoryOfferActive ? currentProduct.offerPrice : currentProduct.productPrice;
+        
+    
+                const maxQuantityPerPerson = 5;
+    
+                if (direction === 'up') {
+                    if (userCart.product[cartItemIndex].quantity < maxQuantityPerPerson &&
+                        userCart.product[cartItemIndex].quantity < currentProduct.countStock) {
+    
+                        userCart.product[cartItemIndex].quantity++;
+                        userCart.product[cartItemIndex].price = priceToSave;
+    
+                    } else if (userCart.product[cartItemIndex].quantity >= maxQuantityPerPerson) {
+                        return res.json({ error: 'Cannot add more than the maximum allowed quantity and maximum quantity' });
+                    } else {
+                        return res.json({ error: 'Item is out of stock' });
+                    }
+                } else if (direction === 'down') {
+                    if (userCart.product[cartItemIndex].quantity > 1) {
+    
+                        userCart.product[cartItemIndex].quantity--;
+                        userCart.product[cartItemIndex].price = priceToSave;
+                        
+                        console.log('Quantity decreased:', userCart.product[cartItemIndex]);
+                    }
+                }
+    
+                await userCart.save();
+                console.log('Cart after update:', userCart);
+    
+                return res.json({ 
+                    success: true, 
+                    cart: userCart,
+                    message: 'Cart updated successfully'
+                });
+            } else {
+                console.log('Product not found in cart');
+                return res.status(404).json({ error: 'Product not found in cart' });
+            }
+        } catch (error) {
+            console.error('Error in updateCart:', error);
+            return res.status(500).json({ error: 'Server error' });
+        }
+    };
+    
+    
 
 

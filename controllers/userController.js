@@ -310,7 +310,7 @@ const userLogout = async(req,res)=>{
 try {
      delete req.session.user_id;
      delete req.session.userData; 
-     res.redirect('/login');
+     res.redirect('/loadLogin');
 
 }
 catch(error){
@@ -1075,30 +1075,28 @@ const ZtoA = async(req,res)=>{
 const loadWishlist = async (req, res) => {
   try {
       const userId = req.session.user_id;
-
-      // Check if the user is logged in
       if (!userId) {
-          // Redirect to the login page with a message
-          console.log('User not logged in, redirecting to login with message');
-          return res.redirect(`/loadLogin?message=${encodeURIComponent('Please log in to view your wishlist')}`);
+          return res.redirect('/loadLogin');
       }
 
-      // Continue to load wishlist if logged in
-      console.log('User is logged in, loading wishlist');
-      const userData = await User.findOne({ _id: userId });
-      const wishlist = await Wishlist.findOne({ userId: userId })
-          .populate({
-              path: 'product.productId', 
-              model: 'Product', 
-              select: 'images productName productPrice countStock'
-          });
+      const userData = await User.findById(userId);
+      const wishlist = await Wishlist.findOne({ userId })
+          .populate('product.productId', 'images productName productPrice offerPrice countStock');
 
       const wishlistLength = wishlist ? wishlist.product.length : 0;
-      res.render("users/wishlist", { wishlist, name: userData.name, wishlistLength });
+
+      res.render("users/wishlist", { 
+          wishlist, 
+          name: userData.name, 
+          wishlistLength 
+      });
   } catch (error) {
       console.error('Error loading wishlist:', error.message);
+      res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 const addtoWishlist = async (req, res) => {
   try {
