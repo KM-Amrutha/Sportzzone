@@ -43,6 +43,7 @@
                                                     let price = cartData.product[i].productId.offerPrice && cartData.product[i].productId.offerPrice < cartData.product[i].productId.productPrice 
                                                         ? cartData.product[i].productId.offerPrice 
                                                         : cartData.product[i].productId.productPrice; 
+
                                                     total += price * cartData.product[i].quantity; 
                                                 %>
                                                 <td class="price" data-title="Price">
@@ -58,15 +59,14 @@
                                                     <div class="detail-qty border radius m-auto">
                                                 
                                                         <a href="#" class="qty-down" onclick="decreaseQuantity(
-                                                            '<%= cartData.product[i]._id %>', 
-                                                            '<%= cartData.product[i].productId._id %>', 
-                                                            '<%= cartData.product[i].productId.countStock %>', 
-                                                            '<%= cartData.product[i].productId.productPrice %>', 
-                                                            '<%= cartData.product[i].productId.offerPrice %>', 
-                                                            '<%= cartData.product[i].productId.productCategory && cartData.product[i].productId.productCategory.OfferisActive ? cartData.product[i].productId.productCategory.OfferisActive : false %>' 
-                                                        )">
-                                                            <i class="fi-rs-angle-small-down"></i>
-                                                        </a>
+    '<%= cartData.product[i]._id %>', 
+    '<%= cartData.product[i].productId._id %>', 
+    '<%= cartData.product[i].productId.productPrice %>', 
+    '<%= cartData.product[i].productId.offerPrice %>', 
+    '<%= cartData.product[i].productId.productCategory && cartData.product[i].productId.productCategory.OfferisActive ? true : false %>' 
+)">
+    <i class="fi-rs-angle-small-down"></i>
+</a>
                                                         
                                                     
                                                         <span class="qty-val" id="qty_<%= cartData.product[i]._id %>">
@@ -90,6 +90,9 @@
                                                 <td class="text-right" data-title="Cart" style="padding-right: 20px;">
                                                     <span id="subTotal_<%= cartData.product[i]._id %>">₹<%= (price * cartData.product[i].quantity).toFixed(2) %></span>
                                                 </td>
+
+
+
                                                 <td class="action" data-title="Remove">
                                                     <a class="text-muted remove-item" onclick="removeCartItem('<%= cartData.product[i].productId._id %>')">
                                                         <i class="fi-rs-trash"></i>
@@ -128,48 +131,12 @@
         </section>
     </main>
 
-
-    <script>
-
-function increaseQuantity(id, productId, stockAvailable, price, offerPrice, OfferisActive) {
-    var currSubtotal = document.getElementById(`subTotal_${id}`);
-    var currentQuantityElement = document.getElementById(`qty_${id}`);
-    var currentQuantityValue = parseInt(currentQuantityElement.innerText);
-
-    var maxQuantityPerPerson = 5;
-
-    if (currentQuantityValue < maxQuantityPerPerson && currentQuantityValue < stockAvailable) {
-        currentQuantityValue++;
-        currentQuantityElement.innerText = currentQuantityValue;
-
-        const currentPrice = OfferisActive ? offerPrice : price; // Use offerPrice if active
-        currSubtotal.innerText = `₹${(currentQuantityValue * currentPrice).toFixed(2)}`;
-
-        updateGrandTotal();
-        updateCart(productId, 'up');
-    } else {
-        toastr.error('Cannot add more than the maximum allowed or available stock.');
-    }
-}
-
-function decreaseQuantity(id, productId, price, offerPrice, OfferisActive) {
-    const currSubtotal = document.getElementById(`subTotal_${id}`);
-    const currentQuantityElement = document.getElementById(`qty_${id}`);
-    let currentQuantityValue = parseInt(currentQuantityElement.innerText);
-
-    if (currentQuantityValue > 1) {
-        currentQuantityValue--;
-        currentQuantityElement.innerText = currentQuantityValue;
-
-        const currentPrice = OfferisActive ? offerPrice : price; // Use offerPrice if active
-        currSubtotal.innerText = `₹${(currentQuantityValue * currentPrice).toFixed(2)}`;
-
-        updateGrandTotal();
-        updateCart(productId, 'down');
-    }
-};
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
 
 
+ <script>
 
 function updateGrandTotal() {
     let total = 0;
@@ -209,6 +176,80 @@ async function updateCart(productId, direction) {
         toastr.error('An unexpected error occurred.');
     }
 };
+
+
+function increaseQuantity(id, productId, stockAvailable, price, offerPrice, OfferisActive) {
+    var currSubtotal = document.getElementById(`subTotal_${id}`);
+    var currentQuantityElement = document.getElementById(`qty_${id}`);
+    var currentQuantityValue = parseInt(currentQuantityElement.innerText);
+
+
+    console.log('Increase Quantity Clicked');
+    console.log('Current Quantity:', currentQuantityValue);
+    console.log('Stock Available:', stockAvailable);
+
+    var maxQuantityPerPerson = 5;
+
+    if (currentQuantityValue < maxQuantityPerPerson && currentQuantityValue < stockAvailable) {
+        currentQuantityValue++;
+        currentQuantityElement.innerText = currentQuantityValue;
+
+        // Determine which price to use
+        const currentPrice = OfferisActive ? offerPrice : price;
+
+
+        
+        console.log('Using Price:', currentPrice);
+        
+        currSubtotal.innerText = `₹${(currentQuantityValue * currentPrice).toFixed(2)}`;
+
+        updateGrandTotal();
+        updateCart(productId, 'up');
+    } else {
+        toastr.error('Cannot add more than the limit and the available stock..!!');
+    }
+}
+
+// function decreaseQuantity(id, productId, price, offerPrice, OfferisActive) {
+//     const currSubtotal = document.getElementById(`subTotal_${id}`);
+//     const currentQuantityElement = document.getElementById(`qty_${id}`);
+//     let currentQuantityValue = parseInt(currentQuantityElement.innerText);
+
+//     if (currentQuantityValue > 1) {
+//         currentQuantityValue--;
+//         currentQuantityElement.innerText = currentQuantityValue;
+
+//         const currentPrice = OfferisActive ? offerPrice : price; // Use offerPrice if active
+//         currSubtotal.innerText = `₹${(currentQuantityValue * currentPrice).toFixed(2)}`;
+
+//         updateGrandTotal();
+//         updateCart(productId, 'down');
+//     }
+// };
+
+function decreaseQuantity(id, productId, price, offerPrice, OfferisActive) {
+    const currSubtotal = document.getElementById(`subTotal_${id}`);
+    const currentQuantityElement = document.getElementById(`qty_${id}`);
+    let currentQuantityValue = parseInt(currentQuantityElement.innerText);
+
+    console.log('Decrease Quantity Clicked');
+    console.log('Current Quantity:', currentQuantityValue);
+    console.log('Using Price:', OfferisActive ? offerPrice : price); // Log the current price being used
+
+    if (currentQuantityValue > 1) {
+        currentQuantityValue--;
+        currentQuantityElement.innerText = currentQuantityValue;
+
+        // Determine which price to use
+        const currentPrice = OfferisActive ? offerPrice : price; // Use offerPrice if active
+        currSubtotal.innerText = `₹${(currentQuantityValue * currentPrice).toFixed(2)}`;
+
+        updateGrandTotal();
+        updateCart(productId, 'down');
+    }
+}
+
+
 
         async function removeCartItem(productId) {
             Swal.fire({

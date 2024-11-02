@@ -5,6 +5,19 @@
     font-size: 12px;
     line-height: 1.5;
 }
+.add-to-cart-btn {
+    background-color: rgb(31, 157, 31);
+    border-color: rgb(42, 169, 42);
+    color: rgb(34, 20, 20);
+    white-space: nowrap;
+}
+
+.add-to-cart-btn:hover,
+.add-to-cart-btn:focus {
+    background-color: rgb(41, 199, 112);
+    border-color: rgb(16, 155, 79);
+}
+
 </style>
 
     <main class="main">
@@ -46,19 +59,25 @@
                                                     <% } %>
                                                 </td>
                                 
-                                                <!-- Product Description -->
+                                            
                                                 <td class="product-des product-name">
                                                     <h5 class="product-name">
                                                         <a href="#"><%= wishlist.product[i].productId.productName %></a>
                                                     </h5>
                                                 </td>
                                 
-                                                <!-- Product Price -->
                                                 <td class="price" data-title="Price">
-                                                    <span>$<%= wishlist.product[i].productId.productPrice %></span>
+                                                    <% if (wishlist.product[i].productId.offerPrice && wishlist.product[i].productId.offerPrice < wishlist.product[i].productId.productPrice) { %>
+                                                        <!-- Show offerPrice first and productPrice crossed out next to it -->
+                                                        <span>Rs.<%= wishlist.product[i].productId.offerPrice.toFixed(2) %></span>
+                                                        &nbsp;
+                                                        <span style="text-decoration: line-through; color: red;">Rs.<%= wishlist.product[i].productId.productPrice.toFixed(2) %></span>
+                                                    <% } else { %>
+                                                        <!-- If no offer is active, show only productPrice -->
+                                                        <span>Rs.<%= wishlist.product[i].productId.productPrice.toFixed(2) %></span>
+                                                    <% } %>
                                                 </td>
-                                
-                                                <!-- Stock Status -->
+                                                
                                                 <td class="text-center" data-title="Stock">
                                                     <% if (wishlist.product[i].productId.countStock === 0) { %>
                                                         <span class="text-danger font-weight-bold">Out of stock</span>
@@ -76,7 +95,7 @@
                                                             <i class="fi-rs-headset mr-5"></i>Out of stock
                                                         </button>
                                                     <% } else { %>
-                                                        <a class="btn btn-sm btn-primary" role="button" onclick="addToCart('<%= wishlist.product[i].productId._id %>')">
+                                                        <a class="btn btn-sm btn-primary add-to-cart-btn" role="button" onclick="addToCart('<%= wishlist.product[i].productId._id %>')">
                                                             <i class="fi-rs-shopping-bag mr-5"></i>Add to cart
                                                         </a>
                                                     <% } %>

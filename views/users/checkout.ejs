@@ -192,6 +192,7 @@
                                 <h4>Your Orders</h4>
                             </div>
                             <div class="table-responsive order_table text-center">
+                               
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -200,61 +201,61 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% if (locals.cartData && cartData.product.length> 0) { %>
-                                            <% let total=0; %>
-                                                <% for (let i=0; i < cartData.product.length; i++) { %>
-                                                    <tr>
-                                                        <td class="image product-thumbnail">
-                                                            <img src="/uploads/<%= cartData.product[i].productId.images[0] %>" alt="#">
-                                                            
-                                                        </td>
-                                                        <td>
-                                                            <h5><a href="shop-product-full.html">
-                                                                    <%= cartData.product[i].productId.productName %>
-                                                                </a></h5>
-                                                            <span class="product-qty">x <%=
-                                                                    cartData.product[i].quantity %></span>
-                                                        </td>
-                                                        <td>Rs.<%= cartData.product[i].productId.productPrice *
-                                                                cartData.product[i].quantity %>
-                                                        </td>
-                                                    </tr>
-                                                    <% total +=cartData.product[i].productId.productPrice *
-                                                        cartData.product[i].quantity; %>
-                                                        <% } %>
-                                                                <tr>
-                                                                    <th>Total</th>
-                                                                    <td colspan="2" class="product-subtotal"><span
-                                                                            class="font-xl text-brand fw-900"
-                                                                            id="GrandTotal">Rs.<%= total.toFixed(2) %>
-                                                                                </span></td>
-                                                                </tr>
-                                                            <% }else{%>
-                                                                <tr>
-                                                                    <td class="image product-thumbnail">
-                                                                        
-                                                                            <img src="/uploads/<%=cartData.product[i].productId.images[0]%>" alt="#">
-                                                                    </td>
-                                                                    <td>
-                                                                        <h5><a href="shop-product-full.html">
-                                                                                <%= product.productName %>
-                                                                            </a></h5>
-                                                                        <span class="product-qty"></span>
-                                                                    </td>
-                                                                    <td>Rs.<%=product.productPrice %>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Total</th>
-                                                                    <td colspan="2" class="product-subtotal"><span
-                                                                            class="font-xl text-brand fw-900"
-                                                                            id="GrandTotal"> $
-                                                                            <%=product.productPrice.toFixed(2) %>
-                                                                                </span></td>
-                                                                </tr>
-                                                                <% } %>
+                                        <% if (locals.cartData && cartData.product.length > 0) { %>
+                                            <% let total = 0; %>
+                                            <% for (let i = 0; i < cartData.product.length; i++) { %>
+                                                <tr>
+                                                    <td class="image product-thumbnail">
+                                                        <img src="/uploads/<%= cartData.product[i].productId.images[0] %>" alt="#">
+                                                    </td>
+                                                    <td>
+                                                        <h5><a href="shop-product-full.html">
+                                                                <%= cartData.product[i].productId.productName %>
+                                                            </a></h5>
+                                                        <span class="product-qty"> X <%= cartData.product[i].quantity %></span>
+                                                    </td>
+                                                    <td>
+                                                        <% 
+                                                        
+                                                            let price = cartData.product[i].productId.offerPrice && cartData.product[i].productId.offerPrice < cartData.product[i].productId.productPrice 
+                                                                ? cartData.product[i].productId.offerPrice 
+                                                                : cartData.product[i].productId.productPrice; 
+                                                        %>
+                                                        Rs. <%= (price * cartData.product[i].quantity).toFixed(2) %>
+                                                    </td>
+                                                </tr>
+                                                <% total += price * cartData.product[i].quantity; %>
+                                            <% } %>
+                                            <tr>
+                                                <th>Grand Total</th>
+                                                <td colspan="2" class="product-subtotal">
+                                                    <span class="font-xl text-brand fw-900" id="GrandTotal">Rs. <%= total.toFixed(2) %></span>
+                                                </td>
+                                            </tr>
+                                        <% } else { %>
+                                            <tr>
+                                                <td class="image product-thumbnail">
+                                                    <img src="/uploads/<%= product.productId.images[0] %>" alt="#">
+                                                </td>
+                                                <td>
+                                                    <h5><a href="shop-product-full.html">
+                                                            <%= product.productId.productName %>
+                                                        </a></h5>
+                                                    <span class="product-qty"></span>
+                                                </td>
+                                                <td>Rs. <%= product.productId.productPrice %></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Grand Total</th>
+                                                <td colspan="2" class="product-subtotal">
+                                                    <span class="font-xl text-brand fw-900" id="GrandTotal">Rs. <%= product.productId.productPrice.toFixed(2) %></span>
+                                                </td>
+                                            </tr>
+                                        <% } %>
                                     </tbody>
                                 </table>
+                                
+                                
                                 <% if (cartData.product) { %>
                                     <input type="hidden" id="buyNowProductId" value="<%= cartData.productId %>">
                                   <% } %>
@@ -469,12 +470,12 @@
                                     showConfirmButton: false,
                                     timer: 2000
                                 }).then(() => {
-                                    window.location.href = '/loadOrderPage';
+                                    window.location.href =  `/loadOrderPage?id=${data.order._id}`;
                                 });
                             });
                         },
                         "theme": {
-                            "color": "#F37254"
+                        "color": "#90EE90"
                         }
                     };
                     const rzp = new Razorpay(options);
@@ -513,7 +514,7 @@
                         showConfirmButton: false,
                         timer: 2000
                     }).then(() => {
-                        window.location.href = `/loadOrderPage?id=${data.orderId}`;
+                        window.location.href = `/loadOrderPage?id=${data.order._id}`;
                     });
                 }
             });

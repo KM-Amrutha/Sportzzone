@@ -30,25 +30,31 @@ const onlinepay = async (req, res) => {
         const userId = req.session.user_id;
         
         let productDataToSave;
+        let addresses = await Address.findById(req.body.address);
         const cartData = await cart.findOne({ userId });
 
-        console.log('Razorpay Key ID:', RAZORPAY_ID_KEY);
-        console.log('Razorpay Key Secret:', RAZORPAY_SECRET_KEY);  
 
         if (!cartData || !cartData.product || cartData.product.length === 0) {
             return res.status(400).json({ message: "Cart is empty or not found." });
         }
+
+        function generateOrderId() {
+            const timestamp = Date.now().toString();
+            const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let orderId = 'ORD';
+            while (orderId.length < 6) {
+                const randomIndex = Math.floor(Math.random() * randomChars.length);
+                orderId += randomChars.charAt(randomIndex);
+            }
+            return orderId + timestamp.slice(-6);
+        }
+
+        const newOrderId = generateOrderId();
         
 
-        console.log("Before Payment - Buy Now Product ID:", req.session.buyNowProductId);
+
         if (req.session.buyNowProductId) {
-
-            console.log("Buy Now Product ID:", req.session.buyNowProductId);
-
-            const product = await products.findById(req.session.buyNowProductId);
-            
-            console.log("product vanneeeee", product);
-
+            const product = await products.findById(req.session.buyNowProductId)
             if (product) {
                 productDataToSave = [{
                     productId: product._id,
@@ -76,13 +82,15 @@ const onlinepay = async (req, res) => {
 
         // Save order in the system with "pending" status
         const newOrder = new Orders({
+            orderId:newOrderId,
             userId,
+            address: addresses,
             paymentMethod: req.body.paymentMethod,
             paymentStatus: 'Pending',
-            totalAmount: req.body.amount, // amount should be in paise
+            totalAmount: req.body.amount,
             couponDiscount,
-            product: productDataToSave,
-            address: await Address.findById(req.body.address),
+            product: productDataToSave
+            
         });
 
         await newOrder.save();
@@ -199,60 +207,48 @@ const addToCart = async (req, res) => {
 const updateCart = async (req, res) => {
     try {
         const { productId, direction } = req.body;
-        console.log('Product ID:', productId, 'Direction:', direction);
-
         const currentUserId = req.session.user_id;
-        console.log('User ID:', currentUserId);
-
         let userCart = await cart.findOne({ userId: currentUserId });
-        console.log('User Cart:', userCart);
-
-        if (!userCart) {
-            console.log('Cart not found');
-            return res.status(404).json({ error: 'Cart not found' });
-        }
 
         const cartItemIndex = userCart.product.findIndex(item => item.productId.toString() === productId);
-        console.log('Cart Item Index:', cartItemIndex);
 
         if (cartItemIndex !== -1) {
             const currentProduct = await products.findById(productId).populate('productCategory');
-            console.log('Current Product:', currentProduct);
-
-            if (!currentProduct) {
-                console.log('Product not found');
-                return res.status(404).json({ error: 'Product not found' });
-            }
-
             const categoryOfferActive = currentProduct.productCategory.OfferisActive;
-            console.log('Category Offer Active:', categoryOfferActive);
 
-            const priceToSave = categoryOfferActive ? currentProduct.offerPrice : currentProduct.productPrice;
-            console.log('Price to Save:', priceToSave);
+            // Set the base price to offerPrice if the offer is active, else productPrice
+            const basePrice = categoryOfferActive ? currentProduct.offerPrice : currentProduct.productPrice;
+
+            // console.log('Base price before update:', basePrice); 
 
             const maxQuantityPerPerson = 5;
 
             if (direction === 'up') {
+                // Increase logic
                 if (userCart.product[cartItemIndex].quantity < maxQuantityPerPerson &&
                     userCart.product[cartItemIndex].quantity < currentProduct.countStock) {
+                    
                     userCart.product[cartItemIndex].quantity++;
-                    userCart.product[cartItemIndex].price = priceToSave;
-                    console.log('Quantity increased:', userCart.product[cartItemIndex]);
+                    userCart.product[cartItemIndex].price = basePrice * userCart.product[cartItemIndex].quantity;
+
+                    // console.log('Price after increase:', userCart.product[cartItemIndex].price); // Log updated price after increase
                 } else if (userCart.product[cartItemIndex].quantity >= maxQuantityPerPerson) {
-                    return res.json({ error: 'Cannot add more than the maximum allowed quantity of 5 per person.' });
+                    return res.json({ error: 'Cannot add more than the maximum allowed quantity' });
                 } else {
                     return res.json({ error: 'Item is out of stock' });
                 }
             } else if (direction === 'down') {
+                // Decrease logic
                 if (userCart.product[cartItemIndex].quantity > 1) {
                     userCart.product[cartItemIndex].quantity--;
-                    userCart.product[cartItemIndex].price = priceToSave;
-                    console.log('Quantity decreased:', userCart.product[cartItemIndex]);
+                    userCart.product[cartItemIndex].price = basePrice * userCart.product[cartItemIndex].quantity;
+
+                    // console.log('Price after decrease:', userCart.product[cartItemIndex].price); // Log updated price after decrease
                 }
             }
 
             await userCart.save();
-            console.log('Cart after update:', userCart);
+            // console.log('Cart after update:', userCart);
 
             return res.json({ 
                 success: true, 
@@ -268,6 +264,8 @@ const updateCart = async (req, res) => {
         return res.status(500).json({ error: 'Server error' });
     }
 };
+
+
 
 
 const getCart = async (req, res) => {
