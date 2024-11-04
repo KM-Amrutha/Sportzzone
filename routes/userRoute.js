@@ -31,7 +31,7 @@ user_route.use(express.static('public'));
 
 user_route.get('/',userController.homewithoutLogin);
 
-user_route.get('/users/productShop',auth.isBlockedoornot,userController.guestShopPage);
+user_route.get('/productShop',auth.isBlockedoornot,userController.guestShopPage);
 user_route.get('/productDetail',auth.isBlockedoornot,userController.guestProductDetailPage);
 
 
@@ -65,7 +65,7 @@ user_route.post('/newPassword',auth.isLogout,userController.verifyPassword)
 //----------------------------category-----------//
 
 
-user_route.get("/users/productShopPage",auth.isLogin,auth.isBlocked,userController.loadshopPage);
+user_route.get("/productShopPage",userController.loadshopPage);
 
 user_route.get('/productDetail',auth.isLogin,auth.isBlocked,userController.productdetailPage);
 
@@ -87,6 +87,8 @@ user_route.post('/placeOrder',auth.isLogin,auth.isBlocked,cartController.placeOr
 
 user_route.post('/onlinepay',auth.isLogin,cartController.onlinepay);
 user_route.patch('/saveOrder', auth.isLogin, cartController.saveOrder);
+user_route.post('/addtoWallet',auth.isLogin,auth.isBlocked,cartController.addtowallet);
+
 
 user_route.get('/loadOrderPage',auth.isLogin,auth.isBlocked,orderController.loadOrderPage);
 user_route.get('/orderDetailPage',auth.isLogin,auth.isBlocked,orderController.orderDetailPage);
@@ -120,7 +122,7 @@ user_route.post('/selectCoupon', auth.isLogin, cartController.selectCoupon);
 
 //wishlist----------------//
 
-user_route.get('/loadWishlist',auth.isLogin,userController.loadWishlist);
+user_route.get('/loadWishlist',auth.isLogin,auth.isBlocked,userController.loadWishlist);
 user_route.post('/wishlist/add', auth.isLogin, userController.addtoWishlist);
 user_route.post('/removeWishlist', auth.isLogin, userController.removeWishlist);
 

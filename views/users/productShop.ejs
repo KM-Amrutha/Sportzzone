@@ -216,10 +216,13 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
                                 <% if(locals.user) { %>
+                                    <%= console.log(user,"user in  product details");
+                                     %>
                                 <li class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<%= user.name %>
@@ -231,11 +234,13 @@
                                     </ul>
                                 </li>
                                 <% } else { %>
-                                <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/login">Login</a></li>
+                                    
+                                <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/loadLogin">Login</a></li>
                                 <% } %>
                             </ul>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -246,11 +251,11 @@
                         <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
-                        <div class="search-style-2">
+                        <!-- <div class="search-style-2">
                                 
                                 <input type="text" placeholder="Search for items...">
                             
-                        </div>
+                        </div> -->
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
@@ -259,7 +264,7 @@
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/getCart">
+                                    <a class="mini-cart-icon" href="getCart">
                                     </a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
@@ -312,130 +317,20 @@
                         <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
 
-
-                    <div class="header-nav d-none d-lg-flex">
-
-
-                        <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categori-button-active" href="#">
-                                <span class="fi-rs-apps"></span> Browse Categories
-                            </a>
-                           
-                        </div>
-
-
-
-
-
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                    <div class="header-nav d-flex justify-content-center w-100">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2">
                             <nav>
-                                <ul>
-                                    <li><a class="active" href="/home">Home </a>
-                                       
-                                    </li>
-                                    
-                                    <li><a href="/users/productShopPage"> Shop </a></li>
-
-
-
-                                    <li class="position-static"><a href="/loadWishlist">Whish List </a>
-                                    </li>
-                                        <!-- <ul class="mega-menu">
-                                            <li class="sub-mega-menu sub-mega-menu-width-22">
-                                                <a class="menu-title" href="#">Women's Fashion</a>
-                                                <ul>
-                                                    <li><a href="shop-product-right.html">Dresses</a></li>
-                                                    <li><a href="shop-product-right.html">Blouses & Shirts</a></li>
-                                                    <li><a href="shop-product-right.html">Hoodies & Sweatshirts</a></li>
-                                                    <li><a href="shop-product-right.html">Wedding Dresses</a></li>
-                                                    <li><a href="shop-product-right.html">Prom Dresses</a></li>
-                                                    <li><a href="shop-product-right.html">Cosplay Costumes</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="sub-mega-menu sub-mega-menu-width-22">
-                                                <a class="menu-title" href="#">Men's Fashion</a>
-                                                <ul>
-                                                    <li><a href="shop-product-right.html">Jackets</a></li>
-                                                    <li><a href="shop-product-right.html">Casual Faux Leather</a></li>
-                                                    <li><a href="shop-product-right.html">Genuine Leather</a></li>
-                                                    <li><a href="shop-product-right.html">Casual Pants</a></li>
-                                                    <li><a href="shop-product-right.html">Sweatpants</a></li>
-                                                    <li><a href="shop-product-right.html">Harem Pants</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="sub-mega-menu sub-mega-menu-width-22">
-                                                <a class="menu-title" href="#">Technology</a>
-                                                <ul>
-                                                    <li><a href="shop-product-right.html">Gaming Laptops</a></li>
-                                                    <li><a href="shop-product-right.html">Ultraslim Laptops</a></li>
-                                                    <li><a href="shop-product-right.html">Tablets</a></li>
-                                                    <li><a href="shop-product-right.html">Laptop Accessories</a></li>
-                                                    <li><a href="shop-product-right.html">Tablet Accessories</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="sub-mega-menu sub-mega-menu-width-34">
-                                                <div class="menu-banner-wrap">
-                                                    <a href="shop-product-right.html"><img src="/assets/imgs/banner/menu-banner.jpg" alt="Evara"></a>
-                                                    <div class="menu-banner-content">
-                                                        <h4>Hot deals</h4>
-                                                        <h3>Don't miss<br> Trending</h3>
-                                                        <div class="menu-banner-price">
-                                                            <span class="new-price text-success">Save to 50%</span>
-                                                        </div>
-                                                        <div class="menu-banner-btn">
-                                                            <a href="shop-product-right.html">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="menu-banner-discount">
-                                                        <h3>
-                                                            <span>35%</span>
-                                                            off
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul> -->
-                                    
-                                    <li><a href="/getCart"> Cart </a>
-                                        <!-- <ul class="sub-menu">
-                                            <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
-                                            <li><a href="blog-category-list.html">Blog Category List</a></li>
-                                            <li><a href="blog-category-big.html">Blog Category Big</a></li>
-                                            <li><a href="blog-category-fullwidth.html">Blog Category Wide</a></li>
-                                            <li><a href="#">Single Post <i class="fi-rs-angle-right"></i></a>
-                                                <ul class="level-menu level-menu-modify">
-                                                    <li><a href="blog-post-left.html">Left Sidebar</a></li>
-                                                    <li><a href="blog-post-right.html">Right Sidebar</a></li>
-                                                    <li><a href="blog-post-fullwidth.html">No Sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul> -->
-                                    </li>
-                                    <li><a href="#">Contact </a>
-                                        <!-- <ul class="sub-menu">
-                                            <li><a href="page-about.html">About Us</a></li>
-                                            <li><a href="page-contact.html">Contact</a></li>
-                                            <li><a href="page-account.html">My Account</a></li>
-                                            <li><a href="page-login-register.html">login/register</a></li>
-                                            <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
-                                            <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
-                                            <li><a href="page-terms.html">Terms of Service</a></li>
-                                            <li><a href="page-404.html">404 Page</a></li>
-                                        </ul> -->
-                                    </li>
-                                    <li>
-                                        <a href="page-contact.html">About</a>
-                                    </li>
+                                <ul class="d-flex justify-content-center">
+                                    <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a></li>
+                                    <li><a href="/productShop">Shop</a></li>
+                                    <li><a href="/loadWishlist">Wishlist</a></li>
+                                    <li><a href="/getCart">Cart</a></li>
+                                    <li><a href="page-about.html">About</a></li>
                                 </ul>
                             </nav>
                         </div>
                     </div>
-
-
-
-                    <!-- <div class="hotline d-none d-lg-block">
-                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-                    </div> -->
+                    
                     <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
@@ -707,9 +602,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
                     <% if (product && product.length > 0) { %>
-                        <div class="row"> <!-- Use a single row for all products -->
+
+                        <div class="row product-grid-3"> <!-- Adjusted product grid layout -->
                             <% for (let i = 0; i < product.length; i++) { %>
                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4"> <!-- 4 items per row on large screens -->
                                     <div class="product-cart-wrap mb-30">
@@ -726,17 +623,21 @@
                                                     <% } %>
                                                 </a>
                                             </div>
-
-                                            <div class="product-action-1">
+                        
+                                            <div class="product-action-1 show">
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtoWishlist('<%= product[i]._id %>')">
                                                     <i class="fi-rs-heart"></i>
                                                 </a>
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart(event, '<%= product[i]._id %>')">
+                                                    <i class="fi-rs-shopping-bag-add"></i>
+                                                </a>
                                             </div>
-                                            
+                        
                                             <div class="product-badges product-badges-position product-badges-mrg">
-                                                <span class="hot">New</span>
+                                                <span class="hot">New</span> <!-- Optional product badge -->
                                             </div>
                                         </div>
+                        
                                         <div class="product-content-wrap">
                                             <div class="product-category">
                                                 <% if (product[i].productCategory) { %>
@@ -745,40 +646,44 @@
                                                     <span>No category available</span>
                                                 <% } %>
                                             </div>
+                        
                                             <h2><a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
-
+                        
                                             <% if (product[i].countStock == 0) { %>
                                                 <div class="product-price">
                                                     <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
-                                                <% } else { %>
-                                                    <% if (product[i].productCategory && product[i].productCategory.OfferisActive) { %>
-                                                        <span>Rs.<%= product[i].offerPrice %></span>
-                                                <span class="old-price crossed">Rs.<%= product[i].productPrice %></span>
-                                                <span><%= product[i].productCategory.offer %>%Off</span>
-                                                    <% } else { %>
-                                                        <span>Rs.<%= product[i].productPrice %></span>
-                                                    <% } %>
                                                 </div>
+                                            <% } else { %>
+                                                <% if (product[i].productCategory || product[i].productCategory.OfferisActive) { %>
+                                                    <div class="product-price">
+                                                        <span>₹<%= product[i].offerPrice %></span>
+                                                        <span class="old-price" style="color: #ff0000;">₹<%= product[i].productPrice %></span>
+                                                
+                                                        <span><%= product[i].productCategory.offer %>%Off</span>
+                                                    </div>
+                                                <% } else { %>
+                                                    <div class="product-price">
+                                                        <span>₹<%= product[i].productPrice %></span>
+                                                    </div>
+                                                <% } %>
                                             <% } %>
+                        
                                             <div class="product-stock">
                                                 <span>Stock: <%= product[i].countStock %></span>
-                                            </div>
-                                            <div class="product-action-1 show">
-                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart(event, '<%= product[i]._id %>')">
-                                                    <i class="fi-rs-shopping-bag-add"></i>
-                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             <% } %>
                         </div> <!-- End of products row -->
-                    <% } else { %>
-                        <p>No products available.</p> <!-- Message for no products -->
-                    <% } %>
-                </div>
-            </div>
-        </div>
+                        
+                        <% } else { %>
+                            <p>No products available.</p> <!-- Message for no products -->
+                        <% } %>
+                        </div>
+                        </div>
+                        
+        
     </section>
 </main>
 
@@ -817,6 +722,33 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchSuggestions = document.getElementById('search-suggestions');
+        const showAllOption = document.getElementById('show-all');
+        const searchForm = document.getElementById('search-form');
+        
+        searchInput.addEventListener('focus', function() {
+          searchSuggestions.style.display = 'block';
+        });
+        
+        document.addEventListener('click', function(event) {
+          if (!searchForm.contains(event.target)) {
+            searchSuggestions.style.display = 'none';
+          }
+        });
+        
+        searchInput.addEventListener('input', function() {
+          searchSuggestions.style.display = 'block';
+        });
+        
+        showAllOption.addEventListener('click', function() {
+          searchInput.value = ''; 
+          searchForm.submit();
+        });
+        
+        </script>
+            
 
 
    <script>

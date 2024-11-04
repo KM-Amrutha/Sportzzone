@@ -8,7 +8,7 @@ const category = require('../models/categoryModel');
 const Cart = require('../models/cartModel');
 const Orders = require('../models/orderModel');
 const Wishlist = require('../models/wishlistModel');
-
+const Wallet = require('../models/walletModel');
 
 const OTP = require('../models/userOtpVerification');
 const nodemailer = require('nodemailer');
@@ -154,16 +154,14 @@ const loadHome = async (req, res) => {
         product: productData,
         noProductsFound,
         currentPage: page,
-        totalPages, // Pass totalPages to EJS
-        searchQuery // Pass searchQuery to EJS for displaying search results
+        totalPages, 
+        searchQuery 
       });
     } 
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
-
-
 };
 
 
@@ -554,14 +552,19 @@ const loadshopPage = async (req, res) => {
     let page = parseInt(req.query.page) || 1; 
 
     const productData = await products.find({is_Active: true})
+    .populate('productCategory')
       .skip((page - 1) * limit)
       .limit(limit);
 
     const categories = await category.find({is_Active: true});
     const count = await products.countDocuments({is_Active: true});
     const totalPages = Math.ceil(count / limit);
+const userId=req.session.user_id
 
+
+const userData=await User.findById(userId)
     res.render('users/productShop', {
+      user: userData,
       product: productData,
       category: categories,
       totalPages,
@@ -598,22 +601,25 @@ const userProfile = async (req, res) => {
     const cartData = await Cart.findOne({ userId });
     const cartLength = cartData ? cartData.product.length : 0;
 
-    
     const page = parseInt(req.query.page) || 1; 
     const limit = 8; 
     const skip = (page - 1) * limit;
-
-    
     const totalOrders = await Orders.countDocuments({ userId });
-    
-    
-    const orders = await Orders.find({ userId })
-      .populate('product.productId')
-      .skip(skip)
-      .limit(limit);
-
-    
     const totalPages = Math.ceil(totalOrders / limit);
+
+
+
+    const orders = await Orders.find({ userId })
+    .populate('product.productId')
+    .skip(skip)
+    .limit(limit);
+
+    let wallet = await Wallet.findOne({ userId });
+
+    if (!wallet) {
+        wallet = new Wallet({ userId, balance: 0 ,currency:"INR"});
+        await wallet.save();
+    }
 
     if (req.xhr) {
       // If AJAX request, send only orders data
@@ -621,7 +627,8 @@ const userProfile = async (req, res) => {
     }
 
     res.render('users/userProfile', {
-      userData,
+      user: userData,
+      wallet,
       addresses: addressData,
       cart: cartLength,
       order : orders,
@@ -1076,6 +1083,8 @@ const loadWishlist = async (req, res) => {
   try {
       const userId = req.session.user_id;
       if (!userId) {
+        console.log("ththtg");
+        
           return res.redirect('/loadLogin');
       }
 
@@ -1085,9 +1094,10 @@ const loadWishlist = async (req, res) => {
 
       const wishlistLength = wishlist ? wishlist.product.length : 0;
 
+
       res.render("users/wishlist", { 
           wishlist, 
-          name: userData.name, 
+          user: userData, 
           wishlistLength 
       });
   } catch (error) {

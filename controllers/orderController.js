@@ -5,6 +5,7 @@ const products = require('../models/productModel')
 const category = require('../models/categoryModel');
 const Cart = require('../models/cartModel');
 const Orders = require('../models/orderModel');
+const Wallet = require('../models/walletModel');
 const Razorpay = require('razorpay')
 
 const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
@@ -105,8 +106,29 @@ const loadOrderPage = async (req, res) => {
         }
 
         console.log(`Payment method: ${order.paymentMethod}, Payment status: ${order.paymentStatus}`);
+
+ 
+        //payment methods check cheyyanum wallet anel cash athil keranum
+
         if (order.paymentMethod === 'cash on delivery') {
             console.log('Cash on Delivery order, no refund needed.');
+        } else {
+          const wallet = await Wallet.findOne({ userId: userId });
+
+          if (!wallet) {
+              throw new Error('User wallet not found');
+          }
+
+          const totalAmount = parseFloat(order.totalAmount);
+          wallet.balance += totalAmount;
+          
+          wallet.transactionHistory.push({
+              amount: totalAmount,
+              type: 'Credit'
+          });
+
+          await wallet.save();
+
         }
 
         res.status(200).send('Order cancelled successfully');
@@ -119,28 +141,47 @@ const loadOrderPage = async (req, res) => {
 
 const returnOrder = async (req, res) => {
   try {
-      console.log("User is requesting a return");
+      
+    const userId = req.sessoin.user_id;
 
       const orderId = req.params.orderId;
+      const wallet = await Wallet.findOne({ userId: userId });
 
-      const order = await Orders.findById(orderId);
-      console.log(order);
+      const orderReturned = await Orders.findByIdAndUpdate(orderId, { $set: { orderStatus: 'Returned' } });
+      const returnedOrder = await Orders.findById( orderId );
       
-      
-      if (!order) {
+     
+      if (!returnedOrder) {
           return res.status(404).send("Order not found");
       }
+      const orderItems = returnedOrder.product;
 
-      if (order.orderStatus !== "Delivered") {
-          return res.status(400).send('Only delivered orders can be returned');
+      for (const item of orderItems) {
+        const product = await products.findById(item.productId);
+
+        if (product) {
+            product.countStock += item.quantity; // Increase product stock
+            await product.save();
+        }
+    }
+    if (returnedOrder && wallet) {
+      const totalAmount = parseFloat(returnedOrder.totalAmount);
+
+      // Check if totalAmount is not zero
+      if (totalAmount !== 0) {
+          wallet.balance += totalAmount;
+          wallet.transactionHistory.push({
+              amount: totalAmount,
+              type: 'Credit'
+          });
+          await wallet.save();
       }
-
-      order.orderStatus = "Returned";
-      await order.save();
-
-      console.log(order.orderStatus);
-
       
+        
+    }
+    else {
+      throw new Error('Returned order or user wallet not found');
+  }
       res.status(200).send('Order returned successfully');
   } catch (error) {
     console.error('Error returning product:', error);

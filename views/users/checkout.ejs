@@ -48,14 +48,15 @@
                         </div>
                     </div>
 
-
-                   
                     <div class="panel-body">
-                        <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
+                        <p class="mb-30 font-sm bold-text">If you have a coupon code, please apply it below.</p>
+                    
                         <div class="form-group">
                             <div class="input-group">
+                                <!-- Dropdown for selecting a coupon -->
                                 <div class="input-group-prepend">
-                                    <button class="btn dropdown-toggle" type="button" id="couponDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-outline-success dropdown-toggle apply-btn btn-custom" type="button" id="couponDropdown"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Select Coupon
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="couponDropdown" id="couponDropdownMenu">
@@ -73,18 +74,20 @@
                                     </div>
                                 </div>
                     
-                                <!-- Manual coupon input field (if user wants to enter manually) -->
-                                <input type="text" class="form-control" placeholder="Enter Coupon Code..." id="couponCode">
+                                <!-- Input field for entering the coupon code -->
+                                <input type="text" class="form-control coupon-input custom-input" placeholder="Enter Coupon Code..." id="couponCode">
                     
-                                <!-- Apply Coupon Button -->
+                                <!-- Button for applying the coupon -->
                                 <div class="input-group-append">
-                                    <a class="btn btn-primary" id="applyCouponBtn" onclick="applyCoupon()">Apply Coupon</a>
+                                    <button class="btn btn-success apply-btn btn-custom" id="applyCouponBtn" onclick="applyCoupon()">Apply Coupon</button>
                                 </div>
                             </div>
                         </div>
+                    
                         <div id="couponNamePlaceholder"></div>
                     </div>
-
+                    
+                    
                     </div>     
                 </div>
 
@@ -128,13 +131,13 @@
                                 <% }); %>
                                 <% if (addresses.length < 3) { %>
                                     <div class="address-container">
-                                        <input type="button" value="Add Address" onclick="toggleAddressForm()" class="add-address" style="background-color:#046963; color: aliceblue; font-weight: bold;">
+                                        <input type="button" value="Add Address" onclick="toggleAddressForm()" class="btn-custom apply-btn add-address">
                                     </div>
                                 <% } %>
                             <% } else { %>
                                 <p>No address found.</p>
                                 <div class="address-container">
-                                    <input type="button" value="Add Address" onclick="toggleAddressForm()" class="add-address" style="background-color:#046963; color: aliceblue; font-weight: bold;">
+                                    <input type="button" value="Add Address" onclick="toggleAddressForm()" class="btn-custom apply-btn add-address">
                                 </div>
                             <% } %>
                     
@@ -302,7 +305,7 @@
 
                                 </div>
                             </div>
-                            <button onclick="placeOrder()" id="placeOrderBtn"  class="btn btn-fill-out btn-block mt-30">Place Order</button>
+                            <button onclick="placeOrder()" id="placeOrderBtn"  class="btn-custom btn-fill-out apply-btn btn-block mt-30">Place Order</button>
                         </div>
                     </div>
                 </div>
@@ -402,6 +405,15 @@
     });
 </script>
 
+<script>
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    placeOrderBtn.addEventListener('click', function (event) {
+        event.preventDefault();
+        placeOrder(); 
+    });
+    </script>
+    
+
 
 <script>
     function placeOrder() {
@@ -447,8 +459,6 @@
                         "description": "Order Payment",
                         "order_id": data.razorpayOrder.id,
                         "handler": function (response) {
-
-                            console.log('Razorpay Payment Response:', response);
 
                             const paymentData = {
                                 ...orderData,
@@ -514,7 +524,8 @@
                         showConfirmButton: false,
                         timer: 2000
                     }).then(() => {
-                        window.location.href = `/loadOrderPage?id=${data.order._id}`;
+                    
+                        window.location.href =  `/loadOrderPage?id=${data.order._id}`;
                     });
                 }
             });
@@ -522,17 +533,7 @@
     }
     </script>
     
-    <script>
-    const placeOrderBtn = document.getElementById('placeOrderBtn');
-    placeOrderBtn.addEventListener('click', function (event) {
-        event.preventDefault();
-        placeOrder(); 
-    });
-    </script>
-    
-
-
-
+   
 
 <script>
      function selectCoupon(couponCode) {
@@ -629,8 +630,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const couponid = data._id;
                 const discountAmount = data.discountAmount;
                 const originalTotal = parseFloat(document.getElementById('GrandTotal').innerText.replace('$', ''));
-                // const discountPercent = parseFloat(discountAmount) / 100; // Convert discount amount to percentage
-                const discountedTotal = originalTotal - discountAmount // Applying discount    
+            
+                const discountedTotal = originalTotal - discountAmount
                 console.log(couponid)
                 console.log(discountedTotal);
                 

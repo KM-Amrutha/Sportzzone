@@ -91,6 +91,9 @@ admin_route.post('/applyOffer',adminAuth.isLogin,oderController.applyOffer);
 
 admin_route.post('/toggleOfferStatus',adminAuth.isLogin,oderController.toggleOfferStatus);
 
+admin_route.get('/loadSalesReport',adminAuth.isLogin,adminController.loadSalesReport);
+admin_route.post('/salesReportSearch', adminAuth.isLogin,adminController.salesReportSearch);
+
 
 
 admin_route.get("*",function(req,res){

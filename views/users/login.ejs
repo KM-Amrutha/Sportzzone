@@ -88,8 +88,8 @@
         <h1>Login</h1>
         
         <form action="/login" method="POST">
-            <input type="email" id="email" placeholder="Enter your email" name="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" value="review@yopmail.com" required title="Please Check your Email Address">
-            <input type="password" id="password" placeholder="Enter your password" name="password" value="review@1234" pattern=".{8,}" required title="Please Check your Password">
+            <input type="email" id="email" placeholder="Enter your email" name="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required title="Please Check your Email Address">
+            <input type="password" id="password" placeholder="Enter your password" name="password" pattern=".{8,}" required title="Please Check your Password">
 
             <a class="forget" href="/forgot-Password">Forgot password?</a>
             <a href="/register">New user? Register here</a>

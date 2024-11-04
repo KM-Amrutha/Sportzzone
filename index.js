@@ -78,19 +78,7 @@ app.use((err,req,res,next)=>{
   res.status(500).send("internal server error")
 })
 
-// app.use(express.static(path.join(__dirname,"public")))
 
-// app.use('/upload',express.static(path.join('public/assets/images')))
-
-
-
-// app.post('/registration',function(req,res){
-//   res.render("registration")
-// })
-
-// app.post('/registration',function(req,res){
-//   res.send(req.body)
-// })
    const port=2002
    
   app.listen(port,function(){

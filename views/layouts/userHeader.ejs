@@ -60,6 +60,12 @@
     
 </style>
 <style>
+    .credit {
+        color: #28a745; /* Green for credit */
+    }
+    .debit {
+        color: #dc3545; /* Red for debit */
+    }
     /* Style for the form labels */
     .form-label {
         font-size: 16px;
@@ -82,7 +88,7 @@
     /* Style for the Save Address button */
     .btn-fill-out {
         background-color: #18de96;
-        color: #fff;
+        color: #0ac323;
         padding: 12px;
         border-radius: 8px;
         transition: all 0.3s ease;
@@ -93,30 +99,30 @@
         color: #fff;
     }
     .btn {
-    background-color: rgb(26, 205, 113);
-    color: white; /* Optional: Change text color to white for better visibility */
+    background-color: rgb(15, 164, 40);
+    color: rgb(30, 24, 24); /* Optional: Change text color to white for better visibility */
 }
 
 .btn-primary {
     background-color: rgb(25, 173, 52);
-    color: white;
+    color: rgb(19, 15, 15);
 }
 
 .btn-danger {
     background-color: rgb(172, 5, 5);
-    color: white;
+    color: rgb(22, 20, 20);
 }
 .btn {
   display: inline-block; /* Ensure the button is inline-block */
   padding: 10px 15px; /* Add some padding */
-  background-color: #007bff; /* Change background color */
-  color: #fff; /* Text color */
+  background-color: #1acd0ed8; /* Change background color */
+  color: #0d0b0b; /* Text color */
   text-decoration: none; /* Remove underline */
   border-radius: 5px; /* Round corners */
 }
 
 .btn:hover {
-  background-color: #0056b3; /* Change color on hover */
+  background-color: #159417; /* Change color on hover */
 }
 /* Parent container for search input and dropdown */
 .search-style-2 {
@@ -136,7 +142,7 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
-  border: 1px solid #ccc;
+  border: 1px solid #0fee21;
   background-color: white;
   width: 90%; /* Match the width of the input */
   position: absolute;
@@ -174,6 +180,93 @@
   color: white;
   border-color: #007bff;
 }
+.btn-custom, .custom-input {
+        height: 42px; /* Adjust this height as needed */
+    }
+    .btn-custom {
+        border: 2px solid #28a745; /* Green border */
+        background-color: rgb(27, 126, 7);
+        color: #0d7124; /* Green text */
+        border-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* Input field style */
+    .custom-input {
+        border: 2px solid #28a745; /* Green border for input */
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        width: 100%;
+    }
+
+    /* Apply coupon button style */
+    .apply-btn {
+        background-color: #28a745; /* Green background */
+        color: rgb(5, 85, 2);
+        border: 2px solid #28a745; /* Green border */
+        border-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+    }
+    .btn-custom:hover, .apply-btn:hover {
+        background-color: #218838; /* Lighter green on hover */
+        color: white; /* White text on hover */
+    }
+
+    /* Input placeholder text color */
+    ::placeholder {
+        color: #28a745; /* Green placeholder text */
+        opacity: 1; /* Override browser default opacity */
+    }
+
+    /* Ensure the input group items align horizontally */
+    .input-group .btn-custom, 
+    .input-group .custom-input, 
+    .input-group .apply-btn {
+        height: 42px;
+    }
+
+.bold-text {
+    font-weight: 700; /* Adjust the number for bolder text (500-900), 700 is bold */
+    font-size: 16px;  /* Optional: Adjust the font size if needed */
+}
+
+
+/* Style for dropdown button to ensure it keeps the arrow */
+.dropdown-toggle::after {
+    margin-left: 10px;  /* Add some space between text and arrow */
+    vertical-align: 0.255em;
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-left: 0.3em solid transparent;
+    content: "";
+}
+a.btn-custom, .dropdown-item.btn-custom {
+    background-color: #28a745 !important;  /* Override existing styles with !important */
+    color: rgb(48, 199, 83) !important;               /* Text color with high priority */
+    border: none !important;               /* Remove any default border */
+    padding: 15px 30px !important;         /* Button padding for a bigger size */
+    margin: 10px !important;               /* Space between buttons */
+    text-align: center !important;         /* Center text */
+    font-size: 18px !important;            /* Large font size */
+    border-radius: 8px !important;         /* Slightly rounded corners */
+    display: inline-block !important;      /* Ensure buttons behave like buttons, not links */
+    transition: background-color 0.3s ease !important; /* Smooth hover transition */
+    cursor: pointer !important;            /* Show pointer on hover */
+    text-decoration: none !important;      /* Remove underline from links */
+}
+
+a.btn-custom:hover, .dropdown-item.btn-custom:hover {
+    background-color: #3ce573 !important; 
+     /* Light green color on hover */
+}
+
+.input-group-prepend, .input-group-append {
+        display: flex;
+        align-items: center;
+    }
+    
 </style>
 </head>
 
@@ -337,6 +430,7 @@
                                 <div class="header-info header-info-right">
                                     <ul>
                                         <% if(locals.user) { %>
+                                    
                                         <li class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<%= user.name %>
@@ -429,43 +523,15 @@
                         <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
 
-                    <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categori-button-active" href="#">
-                                <span class="fi-rs-apps"></span> Browse Categories
-                            </a>
-                           
-                        </div>
-
-
-
-
-
-
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                    <div class="header-nav d-flex justify-content-center w-100">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2">
                             <nav>
-                                <ul>
-                                    <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a>
-                                       
-                                    </li>
-                                    
-
-                                    <li><a href="/users/productShop">Shop </a>
-
-                                       
-                                    
-                                    <li><a href="loadWishlist"> Whishlist </i></a>
-                                       
-                                    </li>
-                                    <li> <a href="getCart"> Cart  </i></a>
-                                       
-                                    </li>
-                                    
-
-                                    <li>
-                                        <a href="page-about.html">About</a>
-                                    </li>
-
+                                <ul class="d-flex justify-content-center"> 
+                                    <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a></li>
+                                    <li><a href="/productShopPage">Shop</a></li>
+                                    <li><a href="/loadWishlist">Wishlist</a></li>
+                                    <li><a href="/getCart">Cart</a></li>
+                                    <li><a href="page-about.html">About</a></li>
                                 </ul>
                             </nav>
                         </div>

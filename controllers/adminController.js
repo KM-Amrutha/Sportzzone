@@ -250,6 +250,39 @@ const loadCoupon = async (req, res) => {
   }
 };
 
+const loadSalesReport = async(req, res) => {
+  try {
+
+    const orderList = await Orders.find({ paymentStatus: "Received", orderStatus: "Delivered" })
+      .sort({ orderDate: -1 })
+      .populate('userId');
+
+    res.render('admin/salesReport', { orderList });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+const salesReportSearch = async(req,res)=>{
+  try{
+    const { start, end } = req.body; 
+    const endOfDay = new Date(end);
+     endOfDay.setHours(23, 59, 59, 999);
+   
+    const orderList = await Orders.find({
+        paymentStatus: 'Recieved', orderStatus: 'Delivered',
+        orderDate: { $gte: new Date(start), $lte: endOfDay }
+    }).populate('userId');
+
+   
+    res.render('admin/salesReport', { orderList,start,end }); 
+
+  } catch(error){
+    console.error(error.message);
+  }
+}
+
+
  module.exports = {
     loadLogin,
     verifyLogin,
@@ -264,7 +297,8 @@ const loadCoupon = async (req, res) => {
     orderDelivered,
     orderReturned,
     orderCancelled,
-    loadCoupon
+    loadCoupon,
+    loadSalesReport,
+    salesReportSearch
 
-   
  }

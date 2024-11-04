@@ -294,7 +294,10 @@ const getCart = async (req, res) => {
                 : item.productId.productPrice * item.quantity;
         });
 
-        res.render("users/cart", { cartData, name: userData.name, cartLength, totalPrice });
+        res.render("users/cart", { cartData,
+             user: userData, 
+             cartLength, 
+             totalPrice });
 
     } catch (error) {
         console.error(error);
@@ -388,7 +391,6 @@ const loadCheckout = async (req, res) => {
 
 const placeOrder = async (req, res) => {
     try {
-
         const userId = req.session.user_id;
         const { couponCode, paymentMethod } = req.body;
 
@@ -414,7 +416,6 @@ const placeOrder = async (req, res) => {
         }
 
         const newOrderId = generateOrderId();
-        console.log("11");
         let couponDiscount = 0;
 
         if (appliedCoupon) {
@@ -424,13 +425,9 @@ const placeOrder = async (req, res) => {
         let productDataToSave;
         if (req.session.buyNowProductId) {
             const buyNowProduct = await products.findById(req.session.buyNowProductId);
-
-            // Handle missing product in "buy now"
             if (!buyNowProduct) {
                 return res.status(400).json({ message: "Product not found." });
             }
-            console.log("22");
-
             const offerPrice = buyNowProduct.offer ? buyNowProduct.offer.offerPrice : buyNowProduct.productPrice;
             productDataToSave = [{
                 productId: buyNowProduct._id,
@@ -448,17 +445,12 @@ const placeOrder = async (req, res) => {
             
             delete req.session.buyNowProductId;
             await req.session.save();
-
-            console.log("33");
         } else {
             productDataToSave = await Promise.all(userCart.product.map(async (item) => {
                 const product = await products.findById(item.productId);
-
-                // Handle missing product in cart
                 if (!product) {
                     return res.status(400).json({ message: `Product not found: ${item.productId}` });
                 }
-                console.log("44");
                 const offerPrice = product.offer ? product.offer.price : product.productPrice;
                 return {
                     productId: item.productId,
@@ -469,8 +461,6 @@ const placeOrder = async (req, res) => {
             }));
         }
 
-
-
         // Wallet Payment Logic
         let paymentStatus = "Pending";
         if (paymentMethod === "Wallet") {
@@ -478,18 +468,17 @@ const placeOrder = async (req, res) => {
             if (userWallet && userWallet.balance >= req.body.amount) {
                 paymentStatus = "Received";
                 userWallet.balance -= req.body.amount;
-                userWallet.history.push({ amount: req.body.amount, type: 'debit' });
+                userWallet.transactionHistory.push({ amount: req.body.amount, type: 'Debit', currency: 'INR' });
                 await userWallet.save();
             } else {
                 return res.status(400).json({ message: "Insufficient wallet balance" });
             }
         }
 
-        console.log("55");
         // Razorpay Payment Integration
         if (paymentMethod === "Razorpay") {
             const razorpayOrder = await instance.orders.create({
-                amount: req.body.amount , // amount in smallest currency unit
+                amount: req.body.amount,
                 currency: "INR",
                 receipt: newOrderId,
             });
@@ -509,14 +498,13 @@ const placeOrder = async (req, res) => {
             address,
             couponDiscount
         });
-        console.log("66");
+
         await order.save();
 
         // Update stock after placing order
         if (!req.session.buyNowProductId) {
             for (const item of productDataToSave) {
                 const orderProduct = await products.findById(item.productId);
-
                 if (orderProduct) {
                     if (orderProduct.countStock >= item.quantity) {
                         orderProduct.countStock -= item.quantity;
@@ -530,13 +518,23 @@ const placeOrder = async (req, res) => {
             // Clear the cart after successful order placement
             await cart.deleteOne({ userId });
         }
-        console.log("77");
-        res.status(200).json({ message: "Order Placed Successfully", orderId: order._id });
+
+        // Check if order was created successfully
+        if (!order || !order.orderId) {
+            return res.status(500).json({ message: "Failed to create order." });
+        }
+
+        // Respond with the custom order ID
+        res.status(200).json({ 
+            message: "Order Placed Successfully", 
+             order // Access the generated orderId here
+        });
     } catch (error) {
         console.error("Error in placeOrder:", error.message);
         res.status(500).json({ message: "Something went wrong!" });
     }
 };
+
 
 
 
@@ -792,6 +790,48 @@ const selectCoupon = async (req, res) => {
     }
 };
 
+const addtowallet = async (req, res) => {
+    try {
+        let amount = req.body.amount ; 
+        const userId = req.session.user_id;
+        // Create Razorpay order
+        const order = await instance.orders.create({
+            amount: amount*100, 
+            currency: "INR",    
+            receipt: req.session.user_id
+        });
+
+        // Update wallet balance
+        let wallet = await Wallet.findOne({ userId });
+        if (!wallet) {
+            wallet = new Wallet({ userId, balance: parseFloat(amount) });
+        } else {
+            wallet.balance += parseFloat(amount) ;
+
+        
+            wallet.transactionHistory.push({
+                amount: parseFloat(amount) ,
+                type: 'Credit',
+                currency:'INR',
+
+                createdAt: new Date()
+            });
+        }
+
+        await wallet.save();
+
+        console.log(amount, "amount added to wallet - from cart controller");
+        res.json({ order });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
+
 
 
 
@@ -810,7 +850,8 @@ module.exports= {
     removeCoupon,
     selectCoupon,
     onlinepay,
-    saveOrder
+    saveOrder,
+    addtowallet
 
 
 
