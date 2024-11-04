@@ -1269,5 +1269,231 @@ const loadOrderPage = async (req, res) => {
     };
     
     
+const placeOrder = async (req, res) => {
+    try {
+
+        const userId = req.session.user_id;
+        const { couponCode, paymentMethod } = req.body;
+
+        const userCart = await cart.findOne({ userId });
+        const address = await Address.find({ userId });
+
+        // Handle missing or empty cart
+        if (!userCart || userCart.product.length === 0) {
+            return res.status(400).json({ message: "Cart is empty or not found." });
+        }
+
+        const appliedCoupon = await coupon.findOne({ couponCode, OfferisActive: true, expirationDate: { $gte: Date.now() } });
+
+        function generateOrderId() {
+            const timestamp = Date.now().toString();
+            const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let orderId = 'ORD';
+            while (orderId.length < 6) {
+                const randomIndex = Math.floor(Math.random() * randomChars.length);
+                orderId += randomChars.charAt(randomIndex);
+            }
+            return orderId + timestamp.slice(-6);
+        }
+
+        const newOrderId = generateOrderId();
+        console.log("11");
+        let couponDiscount = 0;
+
+        if (appliedCoupon) {
+            couponDiscount = appliedCoupon.discountAmount;
+        }
+
+        let productDataToSave;
+        if (req.session.buyNowProductId) {
+            const buyNowProduct = await products.findById(req.session.buyNowProductId);
+
+            // Handle missing product in "buy now"
+            if (!buyNowProduct) {
+                return res.status(400).json({ message: "Product not found." });
+            }
+            console.log("22");
+
+            const offerPrice = buyNowProduct.offer ? buyNowProduct.offer.offerPrice : buyNowProduct.productPrice;
+            productDataToSave = [{
+                productId: buyNowProduct._id,
+                quantity: 1,
+                price: buyNowProduct.productPrice,
+                offerPrice: offerPrice
+            }];
+
+            if (buyNowProduct.countStock > 0) {
+                buyNowProduct.countStock -= 1;
+                await buyNowProduct.save();
+            } else {
+                return res.status(400).json({ message: `Insufficient stock for ${buyNowProduct.productName}` });
+            }
+            
+            delete req.session.buyNowProductId;
+            await req.session.save();
+
+            console.log("33");
+        } else {
+            productDataToSave = await Promise.all(userCart.product.map(async (item) => {
+                const product = await products.findById(item.productId);
+
+                // Handle missing product in cart
+                if (!product) {
+                    return res.status(400).json({ message: `Product not found: ${item.productId}` });
+                }
+                console.log("44");
+                const offerPrice = product.offer ? product.offer.price : product.productPrice;
+                return {
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    price: product.productPrice,
+                    offerPrice: offerPrice
+                };
+            }));
+        }
+
+
+
+        // Wallet Payment Logic
+        let paymentStatus = "Pending";
+        if (paymentMethod === "Wallet") {
+            const userWallet = await Wallet.findOne({ userId });
+            if (userWallet && userWallet.balance >= req.body.amount) {
+                paymentStatus = "Received";
+                userWallet.balance -= req.body.amount;
+                userWallet.transactionHistory.push({ amount: req.body.amount,
+                     type: 'Debit',
+                    currency:'INR' });
+                await userWallet.save();
+            } else {
+                return res.status(400).json({ message: "Insufficient wallet balance" });
+            }
+        }
+
+        console.log("55");
+        // Razorpay Payment Integration
+        if (paymentMethod === "Razorpay") {
+            const razorpayOrder = await instance.orders.create({
+                amount: req.body.amount , 
+                currency: "INR",
+                receipt: newOrderId,
+            });
+
+            // Store Razorpay orderId
+            req.session.razorpayOrderId = razorpayOrder.id;
+            paymentStatus = "Pending";
+        }
+
+        const order = new Orders({
+            orderId: newOrderId,
+            userId,
+            paymentMethod,
+            paymentStatus,
+            totalAmount: req.body.amount,
+            product: productDataToSave,
+            address,
+            couponDiscount
+        });
+        console.log("66");
+        await order.save();
+
+        // Update stock after placing order
+        if (!req.session.buyNowProductId) {
+            for (const item of productDataToSave) {
+                const orderProduct = await products.findById(item.productId);
+
+                if (orderProduct) {
+                    if (orderProduct.countStock >= item.quantity) {
+                        orderProduct.countStock -= item.quantity;
+                        await orderProduct.save();
+                    } else {
+                        return res.status(400).json({ message: `Insufficient stock for product: ${orderProduct.productName}` });
+                    }
+                }
+            }
+
+            // Clear the cart after successful order placement
+            await cart.deleteOne({ userId });
+        }
+        console.log("77");
+        res.status(200).json({ message: "Order Placed Successfully",
+            order: order.orderId
+            });
+    } catch (error) {
+        console.error("Error in placeOrder:", error.message);
+        res.status(500).json({ message: "Something went wrong!" });
+    }
+};
+    
+
+<div class="row"> <!-- Use a single row for all products -->
+                            <% for (let i = 0; i < product.length; i++) { %>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4"> <!-- 4 items per row on large screens -->
+                                    <div class="product-cart-wrap mb-30">
+                                        <div class="product-img-action-wrap">
+                                            <div class="product-img product-img-zoom">
+                                                <a href="/productDetail?id=<%= product[i]._id %>">
+                                                    <% if (product[i].images && product[i].images.length > 0) { %>
+                                                        <img class="default-img" src="../uploads/<%= product[i].images[0] %>" alt="">
+                                                        <% if (product[i].images.length > 1) { %>
+                                                            <img class="hover-img" src="../uploads/<%= product[i].images[1] %>" alt="">
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <img class="default-img" src="../uploads/default-image.jpg" alt="No image available">
+                                                    <% } %>
+                                                </a>
+                                            </div>
+
+                                            <div class="product-action-1">
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtoWishlist('<%= product[i]._id %>')">
+                                                    <i class="fi-rs-heart"></i>
+                                                </a>
+                                            </div>
+                                            
+                                            <div class="product-badges product-badges-position product-badges-mrg">
+                                                <span class="hot">New</span>
+                                            </div>
+                                        </div>
+                                        <div class="product-content-wrap">
+                                            <div class="product-category">
+                                                <% if (product[i].productCategory) { %>
+                                                    <a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productCategory.catName %></a>
+                                                <% } else { %>
+                                                    <span>No category available</span>
+                                                <% } %>
+                                            </div>
+                                            <h2><a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
+
+                                            <% if (product[i].countStock == 0) { %>
+                                                <div class="product-price">
+                                                    <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
+                                                <% } else { %>
+                                                    <% if (product[i].productCategory && product[i].productCategory.OfferisActive) { %>
+                                                        <span>Rs.<%= product[i].offerPrice %></span>
+                                                <span class="old-price crossed">Rs.<%= product[i].productPrice %></span>
+                                                <span><%= product[i].productCategory.offer %>%Off</span>
+                                                    <% } else { %>
+                                                        <span>Rs.<%= product[i].productPrice %></span>
+                                                    <% } %>
+                                                </div>
+                                            <% } %>
+                                            <div class="product-stock">
+                                                <span>Stock: <%= product[i].countStock %></span>
+                                            </div>
+                                            <div class="product-action-1 show">
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart(event, '<%= product[i]._id %>')">
+                                                    <i class="fi-rs-shopping-bag-add"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div> <!-- End of products row -->
+                    <% } else { %>
+                        <p>No products available.</p> <!-- Message for no products -->
+                    <% } %>
+                </div>
+            </div>
 
 
