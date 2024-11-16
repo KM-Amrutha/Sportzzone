@@ -114,7 +114,8 @@
                             
                             <div class="product-details">
                                 <p>
-                                    <%= products.productId.productName %> <%= products.quantity %> x ₹<%= (products.productId.productPrice || 0).toFixed(2) %>
+                                    <%= products.productId.productName %> <%= products.quantity %> x
+                                    ₹<%= (products.displayPrice || 0).toFixed(2) %>
                                     
                                 </p>
                             </div>

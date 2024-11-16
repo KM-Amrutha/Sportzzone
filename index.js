@@ -5,7 +5,8 @@ const session = require('express-session');
 const nocache= require('nocache')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const flash = require('connect-flash')
 
 
 //load environmental variables..
@@ -54,6 +55,8 @@ app.use(session({
   
 }));
 
+app.use(flash());
+
 
 //for user routes------------------
 
@@ -79,7 +82,7 @@ app.use((err,req,res,next)=>{
 })
 
 
-   const port=2002
+   const port=2003
    
   app.listen(port,function(){
     console.log(`http://localhost:${port}`);

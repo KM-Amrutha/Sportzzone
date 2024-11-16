@@ -9,7 +9,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #eceff1; /* Light gray background */
+            background-color: #05090c; /* Light gray background */
             margin: 0;
             padding: 0;
             display: flex;
@@ -27,7 +27,7 @@
         }
 
         .registration-form {
-            background-color: #ffffff; /* White background */
+            background-color: #f3eb0b; /* White background */
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -48,11 +48,11 @@
         }
 
         input:focus {
-            border-color: #55acee; /* Light blue border on focus */
+            border-color: #13de45; /* Light blue border on focus */
         }
 
         input[type="submit"] {
-            background-color: #55acee; /* Light blue submit button */
+            background-color: #3abe16f0; /* Light blue submit button */
             color: #fff; /* White text */
             padding: 14px 20px;
             border: none;
@@ -63,7 +63,7 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #3c8dbc; /* Darker shade of blue on hover */
+            background-color: #84d916; /* Darker shade of blue on hover */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
@@ -78,24 +78,27 @@
             text-align: center;
             margin-top: 10px;
             text-decoration: none;
-            color: #3498db; /* Blue color for the login link */
+            color: #289108; /* Blue color for the login link */
             transition: color 0.3s;
         }
 
         a:hover {
-            color: #2c7ebf; /* Darker shade of blue on hover */
+            color: #0aeb76; /* Darker shade of blue on hover */
             text-decoration: underline;
         }
 
         .form-icon {
             font-size: 50px;
-            color: #55acee;
+            color: #91cf0b;
             margin-bottom: 20px;
         }
     </style>
     <style>
         .error-message {
             color: red;
+        }
+        .message {
+            color: red
         }
     </style>
 </head>
@@ -104,6 +107,9 @@
     <div class="registration-form">
         <div class="form-icon"></div>
         <h1>User Registration</h1>
+        <% if (typeof message !== 'undefined') { %>
+            <p><%= message %></p>
+        <% } %>
         <form action="/register" id="form" method="post">
             <input type="text" name="name" placeholder="Enter name" required>
             <div class="error" id="nameError" style="color: rgb(234, 34, 34);"></div>
@@ -121,10 +127,11 @@
             <h3 class="text-center text-danger" id="loginErrorMessage"></h3>
         </form>
         <a href="/">Already have an account? Login</a>
-        <% if (typeof message !== 'undefined') { %>
-            <p><%= message %></p>
-        <% } %>
+        
     </div>
+
+
+
     </body>
     <script>
     function validateForm() {
@@ -159,17 +166,21 @@
     }
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <%if(locals.emailExists){%>
-    <script>
-      Swal.fire({
-        icon: 'warning',
-        title: 'Email already exists!',
-        timer: 10000,
-      })
-    </script>
-    <%}%>
+<%if(locals.emailExists){%>
+  <script>
+    Swal.fire({
+      icon: 'warning',
+      title: 'Email already exists!',
+      timer: 10000,
+    })
+  </script>
+  <%}%>
+
+
+
 
       <script>
         window.onload = () => {

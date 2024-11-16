@@ -28,6 +28,7 @@
     
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    
 
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -184,14 +185,21 @@
         height: 42px; /* Adjust this height as needed */
     }
     .btn-custom {
-        border: 2px solid #28a745; /* Green border */
-        background-color: rgb(27, 126, 7);
-        color: #0d7124; /* Green text */
-        border-radius: 0.25rem;
-        padding: 0.5rem 1rem;
-        text-align: center;
-        white-space: nowrap;
-    }
+    padding: 15px 40px; /* Adjust for desired length */
+    background-color: #0fac24; /* Your preferred button color */
+    color: rgb(13, 12, 12); /* White text */
+    border: none; /* Remove border */
+    font-size: 16px; /* Adjust font size if needed */
+    text-transform: uppercase; /* Optional: Makes text uppercase */
+    cursor: pointer; /* Adds a pointer cursor on hover */
+}
+
+.btn-custom:hover {
+    background-color: #066c23; /* Adjust hover color if needed */
+    color: white; /* Keep white text on hover */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+}
+
 
     /* Input field style */
     .custom-input {
@@ -244,7 +252,7 @@
 }
 a.btn-custom, .dropdown-item.btn-custom {
     background-color: #28a745 !important;  /* Override existing styles with !important */
-    color: rgb(48, 199, 83) !important;               /* Text color with high priority */
+    color: rgb(238, 246, 240) !important;               /* Text color with high priority */
     border: none !important;               /* Remove any default border */
     padding: 15px 30px !important;         /* Button padding for a bigger size */
     margin: 10px !important;               /* Space between buttons */
@@ -266,6 +274,10 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
         display: flex;
         align-items: center;
     }
+
+    .header-top, .header-middle, .header-bottom {
+    border: 2px solid black;
+}
     
 </style>
 </head>
@@ -402,6 +414,8 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
         </div>
         </div>
     </div>
+
+
     <header class="header-area header-style-4 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -450,6 +464,8 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
                             </div>
                 </div>
             </div>
+
+
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="header-wrap">
@@ -773,6 +789,7 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 

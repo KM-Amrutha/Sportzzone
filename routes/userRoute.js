@@ -67,7 +67,7 @@ user_route.post('/newPassword',auth.isLogout,userController.verifyPassword)
 
 user_route.get("/productShopPage",userController.loadshopPage);
 
-user_route.get('/productDetail',auth.isLogin,auth.isBlocked,userController.productdetailPage);
+user_route.get('/productDetail',userController.productdetailPage);
 
 user_route.get('/filterbyCategory',userController.filterbyCategory);
 user_route.get('/allCategory',userController.allCategory);
@@ -80,13 +80,15 @@ user_route.post('/addToCart',auth.isLogin,auth.isBlocked,cartController.addToCar
 user_route.post('/updatecart', cartController.updateCart);
 user_route.post('/removeFromCart',auth.isLogin,auth.isBlocked,cartController.removeFromCart);
 user_route.get('/loadCheckout',auth.isLogin,auth.isBlocked,cartController.isCartempty,cartController.loadCheckout);
+user_route.post('/clearCart',auth.isLogin,auth.isBlocked,cartController.clearCart);
 
 
 //--------------order--------------//
 user_route.post('/placeOrder',auth.isLogin,auth.isBlocked,cartController.placeOrder);
 
 user_route.post('/onlinepay',auth.isLogin,cartController.onlinepay);
-user_route.patch('/saveOrder', auth.isLogin, cartController.saveOrder);
+user_route.post('/verifyPayment',auth.isLogin,auth.isBlocked,cartController.verifyPayment);
+
 user_route.post('/addtoWallet',auth.isLogin,auth.isBlocked,cartController.addtowallet);
 
 

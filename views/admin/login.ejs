@@ -61,12 +61,12 @@
   }
 
   input:focus {
-    border-color: #007bff;
+    border-color: #0db531;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
   }
 
   input[type="submit"] {
-    background-color: #007bff;
+    background-color: #059b23;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -79,7 +79,20 @@
     background-color: #0056b3;
     transform: translateY(-2px);
   }
+
+  .password-field {
+    position: relative;
+  }
+
+  .password-field i {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="login-container">
   <h1>Login</h1>
@@ -91,10 +104,25 @@
   <form action="" method="POST">
     <input type="email" name="email" placeholder="Email" required pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$">
     <br>
-    <input type="password" name="password" placeholder="Password" required>
+    <div class="password-field">
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <i class="fa fa-eye" id="togglePassword"></i>
+    </div>
     <br>
     <input type="submit" value="Login">
   </form>
 </div>
 
 <% include('../layouts/footer.ejs') %>
+
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>

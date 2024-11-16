@@ -61,10 +61,20 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand">₹<%=product.productPrice%></span></ins>
+                                                <% if (product.productCategory && product.productCategory.OfferisActive && product.offerPrice < product.productPrice) { %>
+                                                    <ins><span class="text-brand">₹<%=product.offerPrice%></span></ins>
+                                                    <span class="old-price crossed font-md ml-15">Rs.<%= product.productPrice %></span>
+                                                    <span class="save-price  font-md color3 ml-15"><%= product.productCategory.offer %>%Off</span>
+                                                    
+    
+                                                  <% } else { %>
+                                                    <span>Rs.<%= product.productPrice %></span>
+                                                  <% } %>
+
+                                            
                                                 
-                                                <ins><span class="old-price font-md ml-15">$200.00</span></ins>
-                                                <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                                
+                                              
 
                                                 <div class="product-stock">
                                                     <span>Stock.<%= product.countStock %></span>
@@ -97,9 +107,11 @@
                                             </div> -->
                                             <div class="product-extra-link2">
                                     
+                                               
                                                 <button type="submit" class="button button-add-to-cart" onclick= "addToCart('<%=product._id%>')" >Add to cart</button>
+                                                
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtoWishlist('<%= product._id%>')"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                             
                                             </div>
                                         </div>
@@ -145,39 +157,40 @@
     </div>
 
     <script>
-        function addToCart(productId) {
-        event.preventDefault(); 
+       function addToCart(productId) {
+    event.preventDefault(); 
     
-        fetch('/addtoCart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                productId, 
-                quantity: 1 
-            })
+    fetch('/addtoCart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            productId, 
+            quantity: 1 
         })
-        .then(response => {
-    
-            if (!response.ok) {
+    })
+    .then(response => {
+        if (!response.ok) {
             throw new Error(`Failed to add item to cart. Status: ${response.status}`);
         }
-           return response.json()
-           
-        })
-        .then(data=>{
-            if(!data.success){
-                toastr.error(data.message)
-            }else{
-                toastr.success(data.message)
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response Data:', data); // Debugging: log the response data
+
+        if (!data.success) {
+            toastr.error(data.message || 'An error occurred while adding the item to cart');
+        } else {
+            toastr.success(data.message || 'Product added to cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        toastr.error('Error: Unable to add product to cart');
+    });
+}
+
     </script>  
 
     <script>

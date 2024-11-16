@@ -23,14 +23,7 @@ admin_route.use(session({
 
 admin_route.use(bodyParser.json());
 admin_route.use(bodyParser.urlencoded({extended:true}));
-
-// admin_route.set('views','./views/admin'); 
-// admin_route.set('view engine','ejs');
-// admin_route.set('views', path.join(__dirname, '../views/admin'));
-
-
-//routes for admin panel                                                                                                                                                                                                                                                +
-
+                                                                                                                                                                                                                                             
 
 admin_route.get('/',adminController.loadLogin);
 admin_route.post('/',adminController.verifyLogin);
@@ -94,6 +87,7 @@ admin_route.post('/toggleOfferStatus',adminAuth.isLogin,oderController.toggleOff
 admin_route.get('/loadSalesReport',adminAuth.isLogin,adminController.loadSalesReport);
 admin_route.post('/salesReportSearch', adminAuth.isLogin,adminController.salesReportSearch);
 
+admin_route.get('/salesData',adminAuth.isLogin,adminController.salesData);
 
 
 admin_route.get("*",function(req,res){

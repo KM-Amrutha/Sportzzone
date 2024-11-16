@@ -14,7 +14,6 @@ const orderSchema = new mongoose.Schema({
             productStatus:{type:String,enum:["Order Placed","Cancelled","Returned"],default:"Order Placed"}
             
 }],
-
 address: {
     name: { type: String },
     mobile: { type: Number },

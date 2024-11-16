@@ -192,6 +192,7 @@ const insertUser = async(req,res)=>{
              mobile,
               password: passwordHash,
               is_admin:0,
+              is_Verified: false,
               
           }); 
 
@@ -319,8 +320,12 @@ catch(error){
 
 // New OTP verification methods
 const loadVerifyOTP = async (req, res) => {
+  let message = req.query.message ||'';
   try {
-      res.render('users/verify-otp', { email: req.query.email });
+      res.render('users/verify-otp', { 
+        email: req.query.email,
+      message:message });
+
   } catch (error) {
       console.log(error.message);
   }
@@ -339,9 +344,11 @@ const verifyOTP = async (req, res) => {
     let otpData = await OTP.findOne({ userId: user._id, otp, otpExpires: { $gt: Date.now() } });
 
     if (otpData) {
-      res.render('users/login');
+      
+      res.render('users/login', { message: 'OTP verified successfully. You can now log in.' });
     } else {
-      return res.json({ success: false, message: 'Invalid OTP or OTP expired' });
+
+      return res.json({ success: false, message: 'In alid OTP or OTP expired' });
     }
   } catch (error) {
     console.error(error);
@@ -469,7 +476,7 @@ const verifyPassword = async(req,res)=>{
       userData.password = hashedPassword;
       await userData.save();
      if(userData){
-      res.redirect('/login');
+      res.redirect('/loadLogin');
      }
     }
      else {
@@ -529,22 +536,36 @@ const guestShopPage = async (req, res) => {
 };
 
 
-const guestProductDetailPage = async(req,res)=>{
-  try{
-    const id= req.query.id
-    console.log(id,"yjuyjuy req ");
-      const userId= req.session.userId
-      const loginData= await User.findById(userId)
+const guestProductDetailPage = async(req, res) => {
+  try {
+    console.log("guestproductdeetailspage");
+    const id = req.query.id;  // This retrieves the product ID from the query string
+    
+    const userId = req.session.userId;
+    const loginData = await User.findById(userId);
+    const categories = await category.find({ is_Active: true });
 
-     const productData = await products.findById(id)
-console.log(productData);
-   if(productData){
-    res.render('users/productDetail',{product:productData,loginData})
-   }
-  }catch(error){
+    // Find the specific product by ID
+    const productData = await products.findOne({ _id: id, is_Active: true })
+      .populate('productCategory');  // Assuming the productCategory field is properly set in your schema
+
+    console.log(productData);
+    
+    if (productData) {
+      res.render('users/productDetail', {
+        product: productData,  // Passing the single product data
+        user: loginData,
+        category: categories
+      });
+    } else {
+      res.status(404).send('Product not found');  // Handle the case when no product is found
+    }
+  } catch (error) {
     console.error(error.message);
+    res.status(500).send('Internal Server Error');
   }
 };
+
 
 const loadshopPage = async (req, res) => {
   try {
@@ -578,14 +599,22 @@ const userData=await User.findById(userId)
 
 const productdetailPage = async(req,res)=>{
   try{
-    const id= req.query.id
-      const userId= req.session.userId
-      const loginData= await User.findById(userId)
+    console.log("productdetailpage")
+      const userId= req.session.user_id
+      const userData= await User.findById(userId);
+      const categories = await category.find({is_Active: true});
 
-     const productData = await products.findById(id)
-console.log(productData);
+      const productData = await products.find({is_Active: true})
+    .populate('productCategory')
+
+console.log(productData.productCategory);
+
    if(productData){
-    res.render('users/productDetail',{product:productData,loginData})
+    res.render('users/productDetail',
+      {product:productData,
+      user:userData,
+      category:categories
+    })
    }
   }catch(error){
     console.error(error)
@@ -611,6 +640,7 @@ const userProfile = async (req, res) => {
 
     const orders = await Orders.find({ userId })
     .populate('product.productId')
+    .sort({ orderDate: -1 })
     .skip(skip)
     .limit(limit);
 
