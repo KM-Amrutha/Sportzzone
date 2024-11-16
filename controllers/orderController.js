@@ -21,19 +21,24 @@ const loadOrderPage = async (req, res) => {
   try {
     const userid = req.session.user_id;
     const userData = await User.findOne({ _id: userid });
-    const orderId = req.query.id;
+    const addressData = await Address.findOne({ userId: userid });
+    const cartData = await Cart.findOne({ userId: userid }).populate('product.productId');
 
+    const orderId = req.query.id;
     const order = await Orders.findOne({ _id: orderId, userId: userid }).populate('product.productId');
 
-    
-    const addressData = await Address.findOne({ userId: userid });
-    const cartData = await Cart.findOne({ userId: userid });
+    if (!order) {
+      return res.status(404).send('Order not found');
+    }
+    order.product = order.product.map(product => {
+      const offerPrice = product.productId.offerPrice;
+      product.displayPrice = offerPrice || product.productId.productPrice;
+      return product;
+    });
 
     const couponDiscount = order ? order.couponDiscount : 0;
-
     const cartLength = cartData ? cartData.product.length : 0;
 
-    // Render the orderSuccess page with the fetched data
     res.render("users/orderSuccess", {
       order,
       user: userData,
@@ -49,20 +54,21 @@ const loadOrderPage = async (req, res) => {
   }
 };
 
-
   
   
   const orderDetailPage = async(req,res)=>{
     try{
       const userid = req.session.user_id;
+      const userData = await User.findOne({ _id: userid });
+      const addressData = await Address.findOne({ userId: userid });
       const orderId = req.query.id; 
    
       const order = await Orders.findOne({_id: orderId, userId: userid }).populate('product.productId');
-  
-      const userData = await User.findOne({ _id: userid });
-      const addressData = await Address.findOne({ userId: userid });
-      
-      console.log('Address Data:', addressData); 
+       order.product = order.product.map(product => {
+        const offerPrice = product.productId.offerPrice;
+        product.displayPrice = offerPrice || product.productId.productPrice;
+        return product;
+    });
       
       res.render("users/orderDetailPage", {
         order, 
@@ -70,8 +76,6 @@ const loadOrderPage = async (req, res) => {
         address: addressData,
        
       });
-  
-  
     } catch(error){
       console.error(error.message)
     }
@@ -104,10 +108,6 @@ const loadOrderPage = async (req, res) => {
                 await productItem.save();
             }
         }
-
-        console.log(`Payment method: ${order.paymentMethod}, Payment status: ${order.paymentStatus}`);
-
- 
         //payment methods check cheyyanum wallet anel cash athil keranum
 
         if (order.paymentMethod === 'cash on delivery') {
@@ -281,10 +281,10 @@ const toggleOfferStatus = async (req, res) => {
   try {
     const { categoryId, isActive } = req.body;
 
-    // Update the category's offer status
+    
     const updatedCategory = await category.findByIdAndUpdate(
       categoryId,
-      { OfferisActive: isActive },  // Use OfferisActive to represent the offer's active status
+      { OfferisActive: isActive },  
       { new: true }
     );
 
@@ -292,30 +292,30 @@ const toggleOfferStatus = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Category not found' });
     }
 
-    // Get all products in the category
+
     const productsToUpdate = await products.find({ productCategory: categoryId });
 
     if (productsToUpdate.length === 0) {
       return res.status(404).json({ success: false, message: 'No products found for this category' });
     }
 
-    // Update the offer price for each product in the category based on the offer's active status
+    
     for (const product of productsToUpdate) {
       if (isActive) {
-        // If the offer is active, calculate the new offer price based on the category's offer discount
-        const discount = updatedCategory.offer;  // Assuming offer contains the discount percentage
+        
+        const discount = updatedCategory.offer; 
         const updatedPrice = Math.round(product.productPrice * ((100 - discount) / 100));
         product.offerPrice = updatedPrice;
       } else {
-        // If the offer is inactive, reset the offer price to the original product price
+    
         product.offerPrice = product.productPrice;
       }
 
-      // Save the updated product
+      
       await product.save();
     }
 
-    // Respond with success
+    
     res.json({ success: true, message: `Offer ${isActive ? 'activated' : 'deactivated'} successfully`, category: updatedCategory });
   } catch (error) {
     console.error(error);
@@ -323,13 +323,7 @@ const toggleOfferStatus = async (req, res) => {
   }
 };
 
-const onlinePay = async(req,res)=>{
-  try{
 
-  } catch(error){
-    console.error(error.message)
-  }
-};
 
 
 
@@ -341,10 +335,5 @@ const onlinePay = async(req,res)=>{
    offers,
    applyOffer,
    toggleOfferStatus,
-  
-
-   onlinePay
-
-
    
 }

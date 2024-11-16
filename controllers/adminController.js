@@ -57,47 +57,230 @@ try{
  else{
     res.render('admin/login',{message:"Email and password is incorrect"});
  }  
-
   }
-
 }catch(error){
     console.error(error.message);
     res.render('admin/login',{message:"an error occured,please try again later"})
 }
-
-
 }
 
+// const loadDashboard = async(req,res)=>{
+//  try {
+//   const orderList= await Orders.find().sort({orderDate:-1}).populate('userId')
+//   const totalOrders= await Orders.find().populate('userId')
+//   const totalProducts= await Product.find()
+//   const categories= await category.find()
 
+//   const salesData= await Orders.find({ paymentStatus: 'Recieved', orderStatus: 'Delivered' }).sort({orderDate:-1}).populate('userId')
+
+//   // const userData =  await  User.findById(req.session.admin_id);
+// //most ordered products
+
+// const mostOrderedProducts = await Orders.aggregate([
+//   { $unwind: "$product" },
+//   { $group: { _id: "$product.productId", totalQuantity: { $sum: "$product.quantity" } } },
+//   { $sort: { totalQuantity: -1 } },
+//   { $limit: 5 },
+//   { $lookup: { from: "product", localField: "_id", foreignField: "_id", as: "product" } }, // Populate product details
+//   { $unwind: "$product" },
+//   { $project: { _id: "$product._id", title: "$product.title", totalQuantity: 1 } }
+// ]).limit(10);
+
+//     res.render('admin/adminHome', {user:userData})
  
 
+// }catch(error){
+//     console.log(error.message);
+// }
+// }
 
-const loadDashboard = async(req,res)=>{
- try {
+const loadDashboard = async (req, res) => {
+  try {
+    const userData =  await  User.findById(req.session.admin_id);
+    const orderList = await Orders.find().sort({ orderDate: -1 }).populate('userId');
+    const totalOrders = await Orders.find().populate('userId');
+    const totalProducts = await Product.find();
+    const categories = await category.find();
 
-  const userData =  await  User.findById(req.session.admin_id);
+    const salesData = await Orders.find({
+      paymentStatus: 'Received',
+      orderStatus: 'Delivered'
+    }).sort({ orderDate: -1 }).populate('userId');
 
-    res.render('admin/adminHome', {user:userData})
- 
 
-}catch(error){
-    console.log(error.message);
-}
-}
-const loaduserList = async(req,res)=>{
-  
-    try{
-       
-       const user = await User.find({ is_admin: { $ne: 1 } });
-       
-      res.render("admin/userList",{user })
-       
-    }
-    catch(error){
-      console.error(error)
-      res.status(500).send('Internal server error on userlist ')
-    }
-}
+
+    // console.log('orderlist:',orderList.length);
+    // console.log('totalOrders:',totalOrders);
+    // console.log('totalproducts:',totalProducts);
+    // console.log('categories:', categories);
+    // console.log('salesData',salesData);
+
+    // Most Ordered Products Aggregation
+    const mostOrderedProducts = await Orders.aggregate([
+      { $unwind: "$product" },
+      {
+        $group: {
+          _id: "$product.productId",
+          totalQuantity: { $sum: "$product.quantity" },
+        },
+      },
+      { $sort: { totalQuantity: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          _id: "$productDetails._id",
+          productName: "$productDetails.productName",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+
+    // Top-Selling Categories Aggregation
+    const topSellingCategories = await Orders.aggregate([
+      { $unwind: "$product" }, // Unwind the product array
+      {
+        $lookup: {
+          from: "products",
+          localField: "product.productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" }, // Unwind the productDetails
+      {
+        $group: {
+          _id: "$productDetails.productCategory", // Group by product category
+          totalQuantity: { $sum: "$product.quantity" }, // Sum the quantities for each category
+        },
+      },
+      { $sort: { totalQuantity: -1 } }, // Sort by total quantity
+      { $limit: 5 }, // Limit to top 5 categories
+      {
+        $lookup: {
+          from: "categories", // Join with categories collection
+          localField: "_id", // _id refers to productCategory
+          foreignField: "_id", // Match with category _id
+          as: "categoryDetails",
+        },
+      },
+      { $unwind: "$categoryDetails" }, // Unwind categoryDetails
+      {
+        $project: {
+          categoryName: "$categoryDetails.name", // Get category name
+          totalQuantity: 1, // Keep total quantity
+        },
+      },
+    ]);
+
+
+    // console.log("Most ordered products:", mostOrderedProducts);
+        // console.log("Top selling Categories:",topSellingCategories)
+
+    // Monthly Sales Data Aggregation
+    const deliveredOrders = await Orders.find({
+      orderStatus: 'Delivered',
+      paymentStatus: 'Received',
+    });
+
+    // Initialize monthly sales data array with zeros for each month (Jan to Dec)
+    const monthlySalesData = new Array(12).fill(0);
+
+    deliveredOrders.forEach(order => {
+      const monthIndex = new Date(order.orderDate).getMonth(); // Get the month (0-11)
+      monthlySalesData[monthIndex] += parseFloat(order.totalAmount); // Add the order's total amount to the corresponding month
+    });
+
+// Top-Selling Months Aggregation
+const topSellingMonths = await Orders.aggregate([
+  {
+    $match: {
+      orderStatus: 'Delivered',
+      paymentStatus: 'Received',
+    },
+  },
+  {
+    $group: {
+      _id: { $month: "$orderDate" }, // Group by month
+      totalSales: { $sum: "$totalAmount" }, // Sum total sales for each month
+    },
+  },
+  { $sort: { totalSales: -1 } }, // Sort by total sales in descending order
+]);
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+// Map the month index to month names
+const formattedTopSellingMonths = topSellingMonths.map(item => ({
+  month: monthNames[item._id - 1], // Convert month index (1-12) to month name
+  totalSales: item.totalSales,
+}));
+
+// console.log("Top-Selling Months:", formattedTopSellingMonths);
+
+
+
+
+    // Send the data to the frontend (or render the dashboard view if using templates)
+    res.render("admin/adminHome", {
+      user:userData,
+      orderList,
+      totalOrders: totalOrders.length,
+      totalProducts: totalProducts.length,
+      mostOrderedProducts,
+      topSellingCategories,
+      categories,
+      salesData,
+      monthlySalesData: JSON.stringify(monthlySalesData), // Pass the sales data to the front end
+      topSellingMonth:formattedTopSellingMonths
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error loading dashboard",
+      error: error.message,
+    });
+  }
+};
+
+
+
+const loaduserList = async (req, res) => {
+  try {
+    
+      const limit = 10; 
+      const page = parseInt(req.query.page) || 1; 
+      const skip = (page - 1) * limit; 
+
+      const user = await User.find({ is_admin: { $ne: 1 } })
+          .skip(skip)
+          .limit(limit);
+
+      const totalUsers = await User.countDocuments({ is_admin: { $ne: 1 } });
+      const totalPages = Math.ceil(totalUsers / limit);
+      res.render('admin/userList', {
+          user, 
+          currentPage: page, 
+          totalPages,
+          limit
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal server error on user list');
+  }
+};
+
 
 
 const ToggleblockUser = async (req,res)=>{
@@ -143,8 +326,11 @@ const loadOrder = async (req, res) => {
     
     const orders = await Orders.find()
       .populate('product.productId')
+      .sort({ orderDate: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+
+      orders.sort((a,b)=>b-a);
 
     
     res.render("admin/order", { 
@@ -280,7 +466,65 @@ const salesReportSearch = async(req,res)=>{
   } catch(error){
     console.error(error.message);
   }
+};
+
+///////////////////////////////////////////////////FRO CREATING CHART///////////////////////////////////////
+
+const salesData = async (req,res)=>{
+  try{
+
+    const orders = Orders.find({
+       paymentStatus: 'Recieved',
+      orderStatus: 'Delivered'
+    }).select('orderDate totalAmount');
+
+    const monthlySales = {}; 
+    const weeklySales = {}; 
+    const yearlySales = {};
+
+
+    orders.forEach(order => {
+
+
+      const orderDate = new Date(order.orderDate);
+      console.log('orderDate:', orderDate);
+      const week = `${orderDate.getFullYear()}-${orderDate.getMonth() + 1}-${Math.floor((orderDate.getDate() - 1) / 7) + 1}`;
+      console.log("week:",week);
+
+      const month = orderDate.getMonth()+1;
+      console.log("month:",month);
+      // Week format: YYYY-MM-WW
+      const year = orderDate.getFullYear();
+      console.log("year:",year);// Full year (e.g., 2023)    
+     
+
+      // Monthly sales
+      monthlySales[month] = (monthlySales[month] || 0) + parseFloat(order.totalAmount);
+      console.log("monthly sales:",monthlySales)
+
+      // Weekly sales
+      weeklySales[week] = (weeklySales[week] || 0) + parseFloat(order.totalAmount);
+      console.log("weekly sales:",weeklySales)
+
+      // Yearly sales
+      yearlySales[year] = (yearlySales[year] || 0) + parseFloat(order.totalAmount);
+      console.log("yearly sales:",yearlySales)
+  });
+
+  // Return sales data
+  res.json({
+      monthly: monthlySales,
+      weekly: weeklySales,
+      yearly: yearlySales
+  });
+  }
+  catch(error){
+    console.error(error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+
+  }
 }
+
 
 
  module.exports = {
@@ -299,6 +543,7 @@ const salesReportSearch = async(req,res)=>{
     orderCancelled,
     loadCoupon,
     loadSalesReport,
-    salesReportSearch
+    salesReportSearch,
+    salesData
 
  }

@@ -321,7 +321,7 @@
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2">
                             <nav>
                                 <ul class="d-flex justify-content-center">
-                                    <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a></li>
+                                    <li><a class="active" href="/">Home <i class="fi-rs-angle-down"></i></a></li>
                                     <li><a href="/productShop">Shop</a></li>
                                     <li><a href="/loadWishlist">Wishlist</a></li>
                                     <li><a href="/getCart">Cart</a></li>
@@ -654,7 +654,7 @@
                                                     <span style="display: inline-block; padding: 2px 16px; background-color: #ff0000; color: #ffffff; font-weight: bold; border-radius: 4px;">Currently Unavailable</span>
                                                 </div>
                                             <% } else { %>
-                                                <% if (product[i].productCategory || product[i].productCategory.OfferisActive) { %>
+                                                <% if (product[i].productCategory && product[i].productCategory.OfferisActive && product[i].offerPrice < product[i].productPrice) { %>
                                                     <div class="product-price">
                                                         <span>₹<%= product[i].offerPrice %></span>
                                                         <span class="old-price" style="color: #ff0000;">₹<%= product[i].productPrice %></span>

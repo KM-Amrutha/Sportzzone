@@ -31,16 +31,11 @@ const userSchema=mongoose.Schema({
     type:Boolean,
     default:true
    },
-  // is_verified:{
-  //   type:Number,
-  //   default:0
-  //    }
+  is_Verified:{
+    type:Boolean,
+    default:false
+     },
   otps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OTP' }],
-
-  // token:{
-  //   type:String,
-  //   default:''
-  // },
 
 },
 {
