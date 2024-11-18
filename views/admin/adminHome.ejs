@@ -7,7 +7,7 @@
                     <p>Whole data about your business here</p>
                 </div>
                 <div>
-                    <a href="/admin/loadSalesReport" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+                    <a href="/admin/loadSalesReport" class="btn btn-yellow"><i class="text-muted material-icons md-post_add"></i>Create report</a>
                 </div>
             </div>
 
@@ -16,7 +16,9 @@
                     <%if(locals.salesData){%>
                     <div class="card card-body mb-4">
                         <article class="icontext">
-                            <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary">&#8377;</i>
+                            </span>
                             <div class="text">
                                 <%let total=0%>
                                 <%salesData.forEach((item)=>{
@@ -107,152 +109,100 @@
               </div>
               <canvas id="salesChart" width="200" height="100"></canvas>
 
+
+
               <!-- TOP SELLING PRODUCTS -->
 
               <div class="card mb-4">
-                <header class="card-header">
-                    <h4 class="card-title">Top Selling Products </h4>
-                    
+                <header class="card-header custom-header">
+                    <h4 class="card-title">Top Selling Products</h4>    
                 </header>
+            
                 <div class="card-body">
-                    <div class="table-responsive">
-
-                        <!-- newtable -->
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <div class="table-responsive">
-                                    <table class="table align-middle table-nowrap mb-0">
-                                        <thead class="custom-table-header">
-                                            <tr>
-                                                 
-                                                <th>Product Name</th>
-                                                <th>Total Orders</th>  
-                                               
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% mostOrderedProducts.forEach(product => { %>
-                                                <tr>
-        
-                                                   
-                                                    
-                                                    <td><%= product.productName %></td> 
-                                                    <td><%= product.totalQuantity %></td>
-                                                  
-                                                </tr>
-                                            <% }); %>
-                                           
-                                           
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div> <!-- table-responsive end// -->
-                        </div>
-                    </div> <!-- table-responsive end// -->
-                </div>
-            </div>
-               
-           <!-- ////////////////////TOP SELLING CATEGORY////////////// -->
-           <div class="card mb-4">
-            <header class="card-header">
-                <h4 class="card-title">Top Selling Categories</h4>
-                
-            </header>
-            <div class="card-body">
-                <div class="table-responsive">
-
-                    <!-- newtable -->
-
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <div class="table-responsive">
-                                <table class="table align-middle table-nowrap mb-0">
-                                    <thead class="custom-table-header">
-                                        <tr>
-                                             
-                                            <th>Category Name</th>
-                                            <th>Total Orders</th>  
-                                           
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% topSellingCategories.forEach(cat => { %>
-                                            <tr>
-    
-                                              
-                                                
-                                                <td><%= cat.catName %></td> <!-- Product name -->
-                                                <td><%= cat.totalQuantity %></td> <!-- Total quantity ordered -->   
-                                              
-                                            </tr>
-                                        <% }); %>
-                                       
-                                       
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> <!-- table-responsive end// -->
-                    </div>
-
-                     <!-- newtable -->
-                   
-                    
-                </div> <!-- table-responsive end// -->
-            </div>
-        </div>
-
-
-<!-- ///////////////////////////TOP SELLING MONTHS -->
-
-<div class="card mb-4">
-    <header class="card-header">
-        <h4 class="card-title">Top Selling Months</h4>
-        
-    </header>
-    <div class="card-body">
-        <div class="table-responsive">
-
-            <!-- newtable -->
-
-            <div class="card-body">
-                <div class="table-responsive">
                     <div class="table-responsive">
                         <table class="table align-middle table-nowrap mb-0">
                             <thead class="custom-table-header">
                                 <tr>
-                                     
-                                    <th>month Name</th>
-                                    <th>Total Orders</th>  
-                                   
+                                    <th class="custom-column-header">Product Name</th>
+                                    <th class="custom-column-header">Total Orders</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% topSellingMonth.forEach(month => { %>
+                                <% mostOrderedProducts.forEach(product => { %>
                                     <tr>
-
-                                      
-                                        
-                                        <td><%= month.month%></td> <!-- Product name -->
-                                        <td><%= month.totalQuantity %></td> <!-- Total quantity ordered -->   
-                                      
+                                        <td class="custom-cell"><%= product.productName %></td> 
+                                        <td class="custom-cell"><%= product.totalQuantity %></td>
                                     </tr>
                                 <% }); %>
-                               
-                               
                             </tbody>
                         </table>
                     </div>
                 </div> <!-- table-responsive end// -->
             </div>
-
-             <!-- newtable -->
-           
             
-        </div> <!-- table-responsive end// -->
+           <!-- ////////////////////TOP SELLING CATEGORY////////////// -->
+           <div class="card mb-4">
+            <header class="card-header">
+                <h4 class="card-title custom-header">Top Selling Categories</h4>
+            </header>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle table-nowrap mb-0">
+                                <thead>
+                                    <tr class="custom-column-header">
+                                        <th>Category Name</th>
+                                        <th>Total Orders</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% topSellingCategories.forEach(cat => { %>
+                                        <tr>
+                                            <td class="custom-cell"><%= cat.categoryName %></td>
+                                            <td class="custom-cell"><%= cat.totalQuantity %></td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+<!-- ///////////////////////////TOP SELLING MONTHS -->
+
+<div class="card mb-4">
+    <header class="card-header">
+        <h4 class="card-title custom-header">Top Selling Months</h4>
+    </header>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap mb-0">
+                        <thead>
+                            <tr class="custom-column-header">
+                                <th>Month Name</th>
+                                <th>Total Orders</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% topSellingMonth.forEach(month => { %>
+                                <tr>
+                                    <td class="custom-cell"><%= month.month %></td>
+                                    <td class="custom-cell"><%= month.totalOrders %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- table-responsive end// -->
+        </div>
     </div>
 </div>
-
 
         </section>
         <%- include('../layouts/adminFooter.ejs') -%>
@@ -262,154 +212,110 @@
         <script src="script.js"></script>
 
 
+
         <script>
-            async function fetchSalesData() {
-  try {
-    const response = await fetch('/salesData');
-    const salesData = await response.json();
-    console.log('Fetched sales data:', salesData);
-    return salesData;
-  } catch (error) {
-    console.error('Error fetching sales data:', error);
-    return null;
-  }
-}
 
-async function updateChart(e){
-      
-      const sortingOption = e.target.value
-      const salesData = await fetchSalesData();
-
-      let filteredData;
-let labels, datasetsLabel, datasetsData, backgroundColor, borderColor;
-
-if (sortingOption === 'monthly') 
-{
-  labels = Object.keys(salesData.monthly);
-  datasetsLabel = 'Monthly Sales';
-  datasetsData = Object.values(salesData.monthly);
-  backgroundColor = 'rgba(54, 162, 235, 0.2)';
-  borderColor = 'rgba(54, 162, 235, 1)';
-} 
-else if (sortingOption === 'yearly') 
-{
-  labels = Object.keys(salesData.yearly);
-  datasetsLabel = 'Yearly Sales';
-  datasetsData = Object.values(salesData.yearly);
-  backgroundColor = 'rgba(255, 99, 132, 0.2)';
-  borderColor = 'rgba(255, 99, 132, 1)';
-} else {
-  labels = Object.keys(salesData.weekly);
-  datasetsLabel = 'Weekly Sales';
-  datasetsData = Object.values(salesData.weekly);
-  backgroundColor = 'rgba(75, 192, 192, 0.2)';
-  borderColor = 'rgba(75, 192, 192, 1)';
-}
-
-filteredData = {
-  labels: labels,
-  datasets: [{
-    label: datasetsLabel,
-    data: datasetsData,
-    backgroundColor: backgroundColor,
-    borderColor: borderColor,
-    borderWidth: 1
-  }]
-};
-
-const ctx = document.getElementById('salesChart').getContext('2d');
-//   ctx.data = filteredData
-
-if (window.salesChart) {
-  window.salesChart.destroy(); // Destroy existing chart if it exists
-}
-window.salesChart = new Chart(ctx, {
-  type: 'bar',
-  data: filteredData,
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-}); 
-  };
-
-
-  async function updateChartWithData() {
-  console.log('Updating chart with data...');
-  const salesData = await fetchSalesData();
-  if (!salesData) {
-    console.error('Failed to fetch sales data.');
-    return;
-  }
-
-  const selectedOption = document.getElementById('sorting').value;
-  console.log('Selected sorting option:', selectedOption);
-  sortingOption = selectedOption;
-
-  let filteredData;
-  let labels, datasetsLabel, datasetsData, backgroundColor, borderColor;
-
-  if (sortingOption === 'monthly') {
+        async function fetchSalesData() {
+            try {
+              const response = await fetch('/admin/salesData'); 
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              const salesData = await response.json();
+              
+              return salesData;
+            } catch (error) {
+        
+              return null;
+            }
+          }
+          
+          async function updateChart(e) {
+            const sortingOption = e.target.value;
+            const salesData = await fetchSalesData();
+            if (!salesData) {
+              console.error('Sales data is missing');
+              return;
+            }
+          
+            let labels, datasetsLabel, datasetsData, backgroundColor, borderColor;
+          
+            if (sortingOption === 'monthly') {
     labels = Object.keys(salesData.monthly);
     datasetsLabel = 'Monthly Sales';
     datasetsData = Object.values(salesData.monthly);
-    backgroundColor = 'rgba(54, 162, 235, 0.2)';
-    borderColor = 'rgba(54, 162, 235, 1)';
-  } else if (sortingOption === 'yearly') {
+    backgroundColor = 'rgba(255, 204, 0, 0.6)';  
+    borderColor = '#ffcc00';  
+} else if (sortingOption === 'yearly') {
     labels = Object.keys(salesData.yearly);
     datasetsLabel = 'Yearly Sales';
     datasetsData = Object.values(salesData.yearly);
-    backgroundColor = 'rgba(255, 99, 132, 0.2)';
-    borderColor = 'rgba(255, 99, 132, 1)';
-  } else {
+    backgroundColor = 'rgba(255, 223, 51, 0.6)';  
+    borderColor = 'rgba(255, 223, 51, 1)';    
+} else {
     labels = Object.keys(salesData.weekly);
     datasetsLabel = 'Weekly Sales';
     datasetsData = Object.values(salesData.weekly);
-    backgroundColor = 'rgba(75, 192, 192, 0.2)';
-    borderColor = 'rgba(75, 192, 192, 1)';
-  }
-
-  filteredData = {
-    labels: labels,
-    datasets: [{
-      label: datasetsLabel,
-      data: datasetsData,
-      backgroundColor: backgroundColor,
-      borderColor: borderColor,
-      borderWidth: 1
-    }]
-  };
-console.log("label",labels)
-  const ctx = document.getElementById('salesChart').getContext('2d');
-  
-  window.salesChart = new Chart(ctx, {
-    type: 'bar',
-    data: filteredData,
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+    backgroundColor = 'rgba(255, 204, 0, 0.6)'; 
+    borderColor = 'rgba(255, 204, 0, 1)';  
 }
 
-// Initial render with fetched data
-updateChartWithData();
 
 
+          
+            const filteredData = {
+              labels: labels,
+              datasets: [
+                {
+                  label: datasetsLabel,
+                  data: datasetsData,
+                  backgroundColor: backgroundColor,
+                  borderColor: borderColor,
+                  borderWidth: 1,
+                },
+              ],
+            };
+          
+            const ctx = document.getElementById('salesChart').getContext('2d');
+          
+            
+            if (window.salesChart instanceof Chart) {
+              window.salesChart.destroy(); 
+            }
+          
+            
+            window.salesChart = new Chart(ctx, {
+              type: 'bar',
+              data: filteredData,
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  },
+                },
+              },
+            });
+          }
+          
+          // Initial chart rendering
+          async function updateChartWithData() {
+            
+            const salesData = await fetchSalesData();
+            if (!salesData) {
+              console.error('Failed to fetch sales data.');
+              return;
+            }
+          
+            const selectedOption = document.getElementById('sorting').value;
+            console.log('Selected sorting option:', selectedOption);
+            await updateChart({ target: { value: selectedOption } });
+          }
+          
+          // Set up the initial chart rendering
+          updateChartWithData();
 
 
-
-
-        </script>
-
-
-
+          </script>
 
 
    

@@ -88,6 +88,7 @@ admin_route.get('/loadSalesReport',adminAuth.isLogin,adminController.loadSalesRe
 admin_route.post('/salesReportSearch', adminAuth.isLogin,adminController.salesReportSearch);
 
 admin_route.get('/salesData',adminAuth.isLogin,adminController.salesData);
+admin_route.get('/excelReport', adminAuth.isLogin,adminController.excelReport);
 
 
 admin_route.get("*",function(req,res){

@@ -24,6 +24,42 @@
 <!-- JavaScript Bundle with Popper -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8+YlI2Xk9GiymO8o4wHVkZStw6P21O8z+W35R+g8fzZ9qF8d4zZISgbTNm+D" crossorigin="anonymous"></script>
 
+
+
+<style>
+ .button-container {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 10px; /* Add space between the buttons */
+  align-items: stretch; /* Ensure buttons stretch to the same width */
+}
+
+.btn-green {
+  display: block; /* Ensure buttons behave like block elements */
+  width: 100%; /* Make buttons take full width */
+  text-align: center;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #100d0d;
+  background-color: #288d04; /* Green background */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-green:hover {
+  background-color: #05ac05; /* Darker green on hover */
+}
+
+form {
+  margin: 0;
+}
+
+
+</style>
+
 </head>
 
 <body>
@@ -53,8 +89,10 @@
                                                 <input type="date" class="form-control" id="birthday2" name="end">
                                             </div>
                                             <div class="col-auto">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <button type="submit" class="btn btn-green">Submit</button>
                                             </div>
+                                            
+                                            
                                         </form>
                                     </div>
                                 </div>
@@ -82,80 +120,64 @@
                                     <tbody>
 
                                         <%let totalDiscount=0%>
-                                        <%if(locals.orderList){%>
-                                            <% orderList.forEach((order)=>{%>
-                                                <%totalDiscount += parseInt(order.couponDiscount)%>
-                                             <tr>
-                                                 <td><%=order.orderId%></td>
-                                                 <td><b><%=order.userId.name%></b></td>
-                                                 <td><b><%=order. paymentMethod%></b></td>
-                                                 <td>₹<b> <%=order.couponDiscount%></b></td>
-                                                 <td>₹ <b><%=order.totalAmount%></b></td>
-                                                 <td class="col-date">
-                                                    
-                                                     <span class="fs-0"><%= order.orderDate.toLocaleDateString()%></span>
-                                                 
-                                             <%})%>
-                                             
-                                         <%}%>
-                                        
-
-
-
-
-                                       
-                                       
+                                        <% if(orderList && orderList.length > 0) { %>
+                                            <% orderList.forEach((order) => { %>
+                                                <tr>
+                                                    <td><%= order.orderId %></td>
+                                                    <td><b><%= order.userId.name %></b></td>
+                                                    <td><b><%= order.paymentMethod %></b></td>
+                                                    <td>₹<b> <%= order.couponDiscount %></b></td>
+                                                    <td>₹ <b><%= order.totalAmount %></b></td>
+                                                    <td class="col-date">
+                                                        <span class="fs-0"><%= order.orderDate.toLocaleDateString() %></span>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tr><td colspan="6">No orders found for the selected date range.</td></tr>
+                                        <% } %> 
                                     </tbody>
                                 </table>
                             </div> <!-- table-responsive.// -->
-                        </div> <!-- col end// -->
-                        <aside class="col-lg-3">
-                           <%if(locals.orderList){%>
-
-                          
-                            <div class="box bg-light" style="min-height:80%">
+                        </div>
+                         <!-- col end// -->
+                         <aside class="col-lg-3">
+                            <% if (locals.orderList) { %>
+                              <div class="box bg-light" style="min-height: 80%">
                                 <h6 class="mt-15">Transaction Details</h6>
                                 <hr>
-                                     <%if(locals.start){%>
-                                        <h6 class="mb-0">From Date:<%=start%></h6>
-                                        <p></p><br>
-                                        <h6 class="mb-0">To Date:<%=end%></h6>
-                                        <p></p><br>
-                                        <%}%>
-                                        <!-- <h6 class="mb-0">From Date:</h6>
-                                        <p>Not specified</p><br>
-                                        <h6 class="mb-0">To Date:</h6>
-                                        <p>Not specified</p><br> -->
-                                <%let total=0%>
-                                <%orderList.forEach((item)=>{
-                                    if(!isNaN(parseInt(item.totalAmount))){
-                                       total+= parseInt(item.totalAmount)
-                                   }
-                               })%>
-   
-
-
-                                <h6 class="mb-0">Total Amount:₹ <%=total.toLocaleString()%></h6>
-                                <!-- <span>Rs <%= total.toLocaleString() %></span> -->
+                                <% if (locals.start) { %>
+                                  <h6 class="mb-0">From Date: <%= start %></h6>
+                                  <p></p><br>
+                                  <h6 class="mb-0">To Date: <%= end %></h6>
+                                  <p></p><br>
+                                <% } %>
+                                <% let total = 0; %>
+                                <% orderList.forEach((item) => {
+                                  if (!isNaN(parseInt(item.totalAmount))) {
+                                    total += parseInt(item.totalAmount);
+                                  }
+                                }); %>
+                          
+                                <h6 class="mb-0">Total Amount: ₹ <%= total.toLocaleString() %></h6>
                                 <p></p><br>
-                                <span><h6 class="mb-0">Total Sales: <%=orderList.length%></h6></span>
-                                <p> </p><br>
-                                <br>
-                                <!-- <p>Total coupon discount:</p>
-                                <p class="h4">₹ <%=totalDiscount.toLocaleString()%></p>
-                                -->
-                                <br>
+                                <h6 class="mb-0">Total Sales: <%= orderList.length %></h6>
+                                <p></p><br><br>
                                 <p>Total Payment:</p>
-                                <p class="h4">₹ <%=total.toLocaleString()%></p>
+                                <p class="h4">₹ <%= total.toLocaleString() %></p>
                                 <hr>
-                                <button class="btn btn-light" id="print">Download Report</button>
-                                
-                            </div>
-
-                            <%}%>
-                            
-                                 
-                      </aside> <!-- col end// -->
+                                <div class="button-container">
+                                  <button class="btn btn-green" id="print">Download PDF</button>
+                                  <form action="/admin/excelReport" method="get" id="exportForm">
+                                    <input type="hidden" name="start" value="<%= start %>">
+                                    <input type="hidden" name="end" value="<%= end %>">
+                                    <button type="submit" class="btn btn-green">Excel Report</button>
+                                  </form>
+                                </div>
+                              </div>
+                            <% } %>
+                          </aside>
+                          
                     </div> <!-- row end// -->
                 </div> <!-- card-body // -->
             </div> <!-- card end// -->

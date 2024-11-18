@@ -96,6 +96,7 @@ user_route.get('/loadOrderPage',auth.isLogin,auth.isBlocked,orderController.load
 user_route.get('/orderDetailPage',auth.isLogin,auth.isBlocked,orderController.orderDetailPage);
 user_route.post('/cancelOrder/:id',auth.isLogin,auth.isBlocked,orderController.cancelOrder);
 user_route.post('/returnOrder/:orderId',auth.isLogin,auth.isBlocked,orderController.returnOrder);
+user_route.get('/invoicePdf',auth.isLogin,auth.isBlocked,orderController.invoicePdf);
 
 //---------------userprofile-----------//
 

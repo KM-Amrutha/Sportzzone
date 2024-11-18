@@ -8,6 +8,7 @@ const Product=require("../models/productModel");
 const category = require("../models/categoryModel");
 const Orders= require('../models/orderModel');
 const coupon = require('../models/couponModel');
+const xlsx = require('xlsx');
 
 
 
@@ -62,37 +63,7 @@ try{
     console.error(error.message);
     res.render('admin/login',{message:"an error occured,please try again later"})
 }
-}
-
-// const loadDashboard = async(req,res)=>{
-//  try {
-//   const orderList= await Orders.find().sort({orderDate:-1}).populate('userId')
-//   const totalOrders= await Orders.find().populate('userId')
-//   const totalProducts= await Product.find()
-//   const categories= await category.find()
-
-//   const salesData= await Orders.find({ paymentStatus: 'Recieved', orderStatus: 'Delivered' }).sort({orderDate:-1}).populate('userId')
-
-//   // const userData =  await  User.findById(req.session.admin_id);
-// //most ordered products
-
-// const mostOrderedProducts = await Orders.aggregate([
-//   { $unwind: "$product" },
-//   { $group: { _id: "$product.productId", totalQuantity: { $sum: "$product.quantity" } } },
-//   { $sort: { totalQuantity: -1 } },
-//   { $limit: 5 },
-//   { $lookup: { from: "product", localField: "_id", foreignField: "_id", as: "product" } }, // Populate product details
-//   { $unwind: "$product" },
-//   { $project: { _id: "$product._id", title: "$product.title", totalQuantity: 1 } }
-// ]).limit(10);
-
-//     res.render('admin/adminHome', {user:userData})
- 
-
-// }catch(error){
-//     console.log(error.message);
-// }
-// }
+};
 
 const loadDashboard = async (req, res) => {
   try {
@@ -107,15 +78,6 @@ const loadDashboard = async (req, res) => {
       orderStatus: 'Delivered'
     }).sort({ orderDate: -1 }).populate('userId');
 
-
-
-    // console.log('orderlist:',orderList.length);
-    // console.log('totalOrders:',totalOrders);
-    // console.log('totalproducts:',totalProducts);
-    // console.log('categories:', categories);
-    // console.log('salesData',salesData);
-
-    // Most Ordered Products Aggregation
     const mostOrderedProducts = await Orders.aggregate([
       { $unwind: "$product" },
       {
@@ -125,7 +87,7 @@ const loadDashboard = async (req, res) => {
         },
       },
       { $sort: { totalQuantity: -1 } },
-      { $limit: 5 },
+      { $limit: 10 },
       {
         $lookup: {
           from: "products",
@@ -144,9 +106,8 @@ const loadDashboard = async (req, res) => {
       },
     ]);
 
-    // Top-Selling Categories Aggregation
     const topSellingCategories = await Orders.aggregate([
-      { $unwind: "$product" }, // Unwind the product array
+      { $unwind: "$product" },
       {
         $lookup: {
           from: "products",
@@ -155,84 +116,72 @@ const loadDashboard = async (req, res) => {
           as: "productDetails",
         },
       },
-      { $unwind: "$productDetails" }, // Unwind the productDetails
+      { $unwind: "$productDetails" },
       {
         $group: {
-          _id: "$productDetails.productCategory", // Group by product category
-          totalQuantity: { $sum: "$product.quantity" }, // Sum the quantities for each category
+          _id: "$productDetails.productCategory",
+          totalQuantity: { $sum: "$product.quantity" },
         },
       },
-      { $sort: { totalQuantity: -1 } }, // Sort by total quantity
-      { $limit: 5 }, // Limit to top 5 categories
+      { $sort: { totalQuantity: -1 } },
+      { $limit: 10 },
       {
         $lookup: {
-          from: "categories", // Join with categories collection
-          localField: "_id", // _id refers to productCategory
-          foreignField: "_id", // Match with category _id
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
           as: "categoryDetails",
         },
       },
-      { $unwind: "$categoryDetails" }, // Unwind categoryDetails
+      { $unwind: "$categoryDetails" },
       {
         $project: {
-          categoryName: "$categoryDetails.name", // Get category name
-          totalQuantity: 1, // Keep total quantity
+          categoryName: "$categoryDetails.catName", 
+          totalQuantity: 1,
         },
       },
     ]);
-
-
-    // console.log("Most ordered products:", mostOrderedProducts);
-        // console.log("Top selling Categories:",topSellingCategories)
-
-    // Monthly Sales Data Aggregation
+    
+    
     const deliveredOrders = await Orders.find({
       orderStatus: 'Delivered',
       paymentStatus: 'Received',
     });
 
-    // Initialize monthly sales data array with zeros for each month (Jan to Dec)
+  
     const monthlySalesData = new Array(12).fill(0);
 
     deliveredOrders.forEach(order => {
       const monthIndex = new Date(order.orderDate).getMonth(); // Get the month (0-11)
-      monthlySalesData[monthIndex] += parseFloat(order.totalAmount); // Add the order's total amount to the corresponding month
+      monthlySalesData[monthIndex] += parseFloat(order.totalAmount); 
     });
 
-// Top-Selling Months Aggregation
-const topSellingMonths = await Orders.aggregate([
-  {
-    $match: {
-      orderStatus: 'Delivered',
-      paymentStatus: 'Received',
-    },
-  },
-  {
-    $group: {
-      _id: { $month: "$orderDate" }, // Group by month
-      totalSales: { $sum: "$totalAmount" }, // Sum total sales for each month
-    },
-  },
-  { $sort: { totalSales: -1 } }, // Sort by total sales in descending order
-]);
+    const topSellingMonths = await Orders.aggregate([
+      {
+        $match: {
+          orderStatus: 'Delivered',
+          paymentStatus: 'Received',
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$orderDate" }, 
+          totalOrders: { $sum: 1 }, 
+        },
+      },
+      { $sort: { totalOrders: -1 } },
+    ]);
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
-// Map the month index to month names
+
 const formattedTopSellingMonths = topSellingMonths.map(item => ({
-  month: monthNames[item._id - 1], // Convert month index (1-12) to month name
-  totalSales: item.totalSales,
+  month: monthNames[item._id - 1],
+  totalOrders: item.totalOrders,  
 }));
-
-// console.log("Top-Selling Months:", formattedTopSellingMonths);
-
-
-
-
-    // Send the data to the frontend (or render the dashboard view if using templates)
     res.render("admin/adminHome", {
       user:userData,
       orderList,
@@ -242,7 +191,7 @@ const formattedTopSellingMonths = topSellingMonths.map(item => ({
       topSellingCategories,
       categories,
       salesData,
-      monthlySalesData: JSON.stringify(monthlySalesData), // Pass the sales data to the front end
+      monthlySalesData: JSON.stringify(monthlySalesData),
       topSellingMonth:formattedTopSellingMonths
     });
   } catch (error) {
@@ -259,7 +208,7 @@ const formattedTopSellingMonths = topSellingMonths.map(item => ({
 const loaduserList = async (req, res) => {
   try {
     
-      const limit = 10; 
+      const limit = 8; 
       const page = parseInt(req.query.page) || 1; 
       const skip = (page - 1) * limit; 
 
@@ -439,42 +388,55 @@ const loadCoupon = async (req, res) => {
 const loadSalesReport = async(req, res) => {
   try {
 
-    const orderList = await Orders.find({ paymentStatus: "Received", orderStatus: "Delivered" })
+    const orderList = await Orders.find({
+       paymentStatus: "Received", orderStatus: "Delivered" })
       .sort({ orderDate: -1 })
       .populate('userId');
 
-    res.render('admin/salesReport', { orderList });
+    res.render('admin/salesReport', { orderList ,start: '', end: ''});
   } catch (error) {
     console.error(error.message);
   }
 };
 
-const salesReportSearch = async(req,res)=>{
-  try{
-    const { start, end } = req.body; 
-    const endOfDay = new Date(end);
-     endOfDay.setHours(23, 59, 59, 999);
-   
+
+const salesReportSearch = async (req, res) => {
+  try {
+    const { start, end } = req.body;
+
+  
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+  
+    const endOfDay = new Date(endDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    console.log('Parsed Start Date:', startDate.toISOString());
+    console.log('Parsed End Date:', endOfDay.toISOString());
+
+  
     const orderList = await Orders.find({
-        paymentStatus: 'Recieved', orderStatus: 'Delivered',
-        orderDate: { $gte: new Date(start), $lte: endOfDay }
+      paymentStatus: 'Received',
+      orderStatus: 'Delivered',
+      orderDate: { $gte: startDate, $lte: endOfDay }
     }).populate('userId');
 
-   
-    res.render('admin/salesReport', { orderList,start,end }); 
+    res.render('admin/salesReport', { orderList, start, end });
 
-  } catch(error){
-    console.error(error.message);
+  } catch (error) {
+    console.error('Error fetching sales report:', error.message);
+    res.status(500).send('Server error');
   }
 };
+
 
 ///////////////////////////////////////////////////FRO CREATING CHART///////////////////////////////////////
 
 const salesData = async (req,res)=>{
   try{
 
-    const orders = Orders.find({
-       paymentStatus: 'Recieved',
+    const orders = await Orders.find({
+       paymentStatus: 'Received',
       orderStatus: 'Delivered'
     }).select('orderDate totalAmount');
 
@@ -482,36 +444,26 @@ const salesData = async (req,res)=>{
     const weeklySales = {}; 
     const yearlySales = {};
 
+    if (!Array.isArray(orders)) {
+      console.error('Orders is not an array:', orders);
+      return res.status(500).json({ error: 'Orders data format is invalid' });
+    }
+
 
     orders.forEach(order => {
 
 
       const orderDate = new Date(order.orderDate);
-      console.log('orderDate:', orderDate);
+    
       const week = `${orderDate.getFullYear()}-${orderDate.getMonth() + 1}-${Math.floor((orderDate.getDate() - 1) / 7) + 1}`;
-      console.log("week:",week);
-
       const month = orderDate.getMonth()+1;
-      console.log("month:",month);
-      // Week format: YYYY-MM-WW
       const year = orderDate.getFullYear();
-      console.log("year:",year);// Full year (e.g., 2023)    
-     
-
-      // Monthly sales
+       
       monthlySales[month] = (monthlySales[month] || 0) + parseFloat(order.totalAmount);
-      console.log("monthly sales:",monthlySales)
-
-      // Weekly sales
       weeklySales[week] = (weeklySales[week] || 0) + parseFloat(order.totalAmount);
-      console.log("weekly sales:",weeklySales)
-
-      // Yearly sales
       yearlySales[year] = (yearlySales[year] || 0) + parseFloat(order.totalAmount);
-      console.log("yearly sales:",yearlySales)
-  });
 
-  // Return sales data
+  });
   res.json({
       monthly: monthlySales,
       weekly: weeklySales,
@@ -521,9 +473,66 @@ const salesData = async (req,res)=>{
   catch(error){
     console.error(error.message);
     res.status(500).json({ error: 'Internal Server Error' });
-
   }
-}
+};
+
+const excelReport = async (req, res) => {
+  try {
+    const { start, end } = req.query;
+
+    let query = {
+      paymentStatus: "Received",
+      orderStatus: "Delivered",
+    };
+
+    // Add date filtering only if both start and end dates are provided
+    if (start && end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      endDate.setHours(23, 59, 59, 999);
+
+      // Validate the dates
+      if (isNaN(startDate) || isNaN(endDate)) {
+        return res.status(400).send("Invalid date format");
+      }
+
+      query.orderDate = { $gte: startDate, $lte: endDate };
+    }
+
+    // Fetch orders based on the constructed query
+    const orders = await Orders.find(query).populate("userId");
+
+    // Prepare data for the Excel sheet
+    const reportData = orders.map((order) => ({
+      OrderID: order.orderId,
+      Name: order.userId.name,
+      PaymentMethod: order.paymentMethod,
+      CouponDiscount: order.couponDiscount,
+      TotalAmount: order.totalAmount,
+      OrderDate: order.orderDate.toISOString().split("T")[0], // Format to YYYY-MM-DD
+    }));
+
+    // Create a new workbook and sheet
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(reportData);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Sales Report");
+
+    // Write the Excel file to memory
+    const excelBuffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
+
+    // Set headers and send the file
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="sales-report-${start || "all"}-${end || "all"}.xlsx"`
+    );
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.send(excelBuffer);
+  } catch (error) {
+    console.error("Error exporting sales report:", error.message);
+    res.status(500).send("Server error");
+  }
+};
+
 
 
 
@@ -544,6 +553,7 @@ const salesData = async (req,res)=>{
     loadCoupon,
     loadSalesReport,
     salesReportSearch,
-    salesData
+    salesData,
+    excelReport
 
  }

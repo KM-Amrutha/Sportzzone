@@ -244,23 +244,13 @@
                                                 </tr>
                                             <% }) %>
                             
-                                            <!-- Coupon Discount Row -->
-                                            <% if (couponDiscount > 0) { %>
-                                                <tr>
-                                                    <th>Coupon Discount</th>
-                                                    <td colspan="2" class="product-subtotal">
-                                                        <span class="font-xl text-brand fw-900" style="color: green;">  Rs. <%= couponDiscount.toFixed(2) %></span>
-                                                    </td>
-                                                </tr>
-                                            <% } else { %>
-                                                <tr>
-                                                    <th>Coupon Discount</th>
-                                                    <td colspan="2" class="product-subtotal">
-                                                        <span class="font-xl text-brand fw-900">Rs. 0.00</span>
-                                                    </td>
-                                                </tr>
-                                            <% } %>
-                            
+                                            <tr>
+                                                <th>Coupon Discount</th>
+                                                <td colspan="2" class="product-subtotal" id="couponDiscountDisplay">
+                                                    <span class="font-xl text-brand fw-900">Rs. <%= couponDiscount.toFixed(2) %></span>
+                                                </td>
+                                            </tr>
+                                            
                                             <!-- Delivery Charge Row -->
                                             <tr>
                                                 <th>Delivery Charge</th>
@@ -273,7 +263,8 @@
                                             <tr>
                                                 <th>Grand Total</th>
                                                 <td colspan="2" class="product-subtotal">
-                                                    <span class="font-xl text-brand fw-900" id="GrandTotal">Rs. <%= (total - couponDiscount + 50).toFixed(2) %></span>
+                                                    <span class="font-xl text-brand fw-900" id="GrandTotal">
+                                                        Rs. <%= (total - couponDiscount + 50).toFixed(2) %></span>
                                                 </td>
                                             </tr>
                             
@@ -439,12 +430,16 @@
     });
 </script>
 
+
+
+
+
 <script>
-    const placeOrderBtn = document.getElementById('placeOrderBtn');
-    placeOrderBtn.addEventListener('click', function (event) {
-        event.preventDefault();
-        placeOrder();
-    });
+    // const placeOrderBtn = document.getElementById('placeOrderBtn');
+    // placeOrderBtn.addEventListener('click', function (event) {
+    //     event.preventDefault();
+    //     placeOrder();
+    // });
 
     function placeOrder() {
     const couponCode = document.getElementById('couponCode').value;
@@ -697,22 +692,85 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <script>
-    async function applyCoupon() {
+//     async function applyCoupon() {
+//     const couponCode = document.getElementById('couponCode').value;
+//     const grandTotalElement = document.getElementById('GrandTotal');
+//     const selectedAmountText = grandTotalElement.innerText;
+//     const selectedAmount = parseFloat(selectedAmountText.replace('Rs.', '').trim());
+
+//     try {
+//         const response = await fetch('/applyCoupon', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ couponCode, selectedAmount })
+//         });
+
+//         const data = await response.json();
+//         if (!response.ok || !data.success) {
+//             toastr.error(data.message);
+//             return;
+//         }
+
+//         const discountAmount = parseFloat(data.discountAmount);
+//         if (isNaN(discountAmount)) {
+//             toastr.error('Invalid discount amount.');
+//             return;
+//         }
+
+//         // Calculate the new discounted total only once
+//         const discountedTotal = selectedAmount - discountAmount;
+//         if (discountedTotal < 0) {
+//             toastr.error('Discounted total is invalid.');
+//             return;
+//         }
+
+//         // Update the Grand Total in the UI
+//         grandTotalElement.innerText = `Rs. ${discountedTotal.toFixed(2)}`;
+
+//         // Show the coupon name and allow removing the coupon
+//         document.getElementById('couponNamePlaceholder').innerHTML = `
+//             <span style="color: green;">Coupon Applied: ${data.couponName}</span>
+//             <button id="removeCouponBtn" style="background: none; border: none; cursor: pointer; color: green; font-size: 14px;">
+//                 <i class="fas fa-times"></i> Remove Coupon
+//             </button>
+//         `;
+
+//         // Disable the Apply Coupon button after applying the coupon
+//         document.getElementById('applyCouponBtn').disabled = true;
+//         document.getElementById('couponCode').disabled = true;
+
+//         // Add event listener for removing the coupon
+//         document.getElementById('removeCouponBtn').addEventListener('click', async function () {
+//             await fetch('/removeCoupon', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ couponCode })
+//             });
+//             location.reload(); // Reload the page to reset the coupon
+//         });
+
+//         toastr.success(data.message);
+//     } catch (error) {
+//         console.error('Error applying coupon:', error);
+//     }
+// }
+
+async function applyCoupon() {
     const couponCode = document.getElementById('couponCode').value;
     const grandTotalElement = document.getElementById('GrandTotal');
     const selectedAmountText = grandTotalElement.innerText;
     const selectedAmount = parseFloat(selectedAmountText.replace('Rs.', '').trim());
-
+    
     try {
         const response = await fetch('/applyCoupon', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ couponCode, selectedAmount })
         });
-
         const data = await response.json();
+
         if (!response.ok || !data.success) {
             toastr.error(data.message);
             return;
@@ -724,17 +782,19 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Calculate the new discounted total only once
+        
         const discountedTotal = selectedAmount - discountAmount;
-        if (discountedTotal < 0) {
-            toastr.error('Discounted total is invalid.');
-            return;
-        }
-
-        // Update the Grand Total in the UI
         grandTotalElement.innerText = `Rs. ${discountedTotal.toFixed(2)}`;
 
-        // Show the coupon name and allow removing the coupon
+    
+        const couponDiscountDisplay = document.getElementById('couponDiscountDisplay');
+        if (couponDiscountDisplay) {
+            couponDiscountDisplay.innerHTML = `
+                <span class="font-xl text-brand fw-900" style="color: green;">Rs. ${discountAmount.toFixed(2)}</span>
+            `;
+        }
+
+        // Show the coupon applied message
         document.getElementById('couponNamePlaceholder').innerHTML = `
             <span style="color: green;">Coupon Applied: ${data.couponName}</span>
             <button id="removeCouponBtn" style="background: none; border: none; cursor: pointer; color: green; font-size: 14px;">
@@ -742,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </button>
         `;
 
-        // Disable the Apply Coupon button after applying the coupon
+        // Disable the Apply Coupon button and input field after applying the coupon
         document.getElementById('applyCouponBtn').disabled = true;
         document.getElementById('couponCode').disabled = true;
 
