@@ -111,7 +111,7 @@ const onlinepay = async (req, res) => {
             receipt: `order_${new Date().getTime()}`, 
         });
        
-        console.log('razarpay instance il order create aavuo nokkan',razorpayOrder);
+        // console.log('razarpay instance il order create aavuo nokkan',razorpayOrder);
 
         
         const order = new Orders({
@@ -124,9 +124,7 @@ const onlinepay = async (req, res) => {
         }); 
         
         await order.save();
-        console.log(order.razorpayOrder);
-
-        console.log('ith onlinepay yude razorpay order nokkan vendi',order);
+        console.log('order placed:',order);
         
         
         res.json({ razorpayOrder, orderId: order._id });
@@ -387,7 +385,7 @@ const loadCheckout = async (req, res) => {
             addresses: addressData,
             cartLength, 
             grandTotal, 
-            couponDiscount, // Pass coupon discount
+            couponDiscount : couponDiscount, // Pass coupon discount
             deliveryCharge,  // Pass delivery charge
             availableCoupons: validCoupons 
         });
@@ -596,6 +594,8 @@ for (const item of userCart.product) {
             });
 
             await order.save();
+
+            console.log("placed order:",order)
 
             // Reduce product stock after order creation
             for (const item of productDataToSave) {
@@ -817,49 +817,103 @@ const removeCoupon = async (req, res) => {
 };
 
 
+// const selectCoupon = async (req, res) => {
+//     try {
+//         const userId = req.session.user_id;
+//         const userData = await User.findOne({ _id: userId });
+//         const addressData = await Address.find({ userId: userId });
+//         const cartData = await cart.findOne({ userId: userId }).populate('product.productId');
+//         const cartLength = cartData ? cartData.product.length : 0;
+
+//         // Recalculate grandTotal from the cart data
+//         let grandTotal = 0;
+//         if (cartData && cartData.product.length > 0) {
+//             cartData.product.forEach(item => {
+//                 grandTotal += item.productId.offerPrice < item.productId.productPrice ?
+//                 item.productId.offerPrice * item.quantity : item.productId.productPrice * item.quantity;
+//             });
+//         }
+//         const currentDate = new Date();
+//         const availableCoupons = await coupon.find({
+//             isActive: true,
+//             expirationDate: { $gte: currentDate }
+//         });
+//         const validCoupons = availableCoupons.filter(coupon => {
+//             const isMinPurchaseValid = grandTotal >= coupon.minimumPurchase;
+//             // const isUserEligible = !coupon.redeemedUsers.some(user => user.userId === String(userId));
+//             return isMinPurchaseValid
+//         });
+//         res.render('users/checkout', {
+//             name: userData.name,
+//             addresses: addressData || [],
+//             cartData,
+//             cartLength,
+//             availableCoupons: validCoupons,
+            
+//             grandTotal
+//         });
+
+//     } catch (error) {
+//         console.error('Error during coupon selection:', error.message);
+//         res.status(500).json({ success: false, message: "Server error" });
+//     }
+// };
+
+
 const selectCoupon = async (req, res) => {
     try {
-    
-
         const userId = req.session.user_id;
         const userData = await User.findOne({ _id: userId });
         const addressData = await Address.find({ userId: userId });
         const cartData = await cart.findOne({ userId: userId }).populate('product.productId');
         const cartLength = cartData ? cartData.product.length : 0;
 
-        // Recalculate grandTotal from the cart data
+        
         let grandTotal = 0;
+        let couponDiscount = 0;
         if (cartData && cartData.product.length > 0) {
             cartData.product.forEach(item => {
                 grandTotal += item.productId.offerPrice < item.productId.productPrice ?
-                item.productId.offerPrice * item.quantity : item.productId.productPrice * item.quantity;
+                    item.productId.offerPrice * item.quantity : item.productId.productPrice * item.quantity;
             });
         }
+
         const currentDate = new Date();
         const availableCoupons = await coupon.find({
             isActive: true,
             expirationDate: { $gte: currentDate }
         });
+
         const validCoupons = availableCoupons.filter(coupon => {
             const isMinPurchaseValid = grandTotal >= coupon.minimumPurchase;
-            // const isUserEligible = !coupon.redeemedUsers.some(user => user.userId === String(userId));
-            return isMinPurchaseValid
+            return isMinPurchaseValid;
         });
+
+        // Check if a coupon is applied
+        if (req.session.appliedCoupon) {
+            const appliedCoupon = await coupon.findOne({ couponCode: req.session.appliedCoupon });
+            if (appliedCoupon && grandTotal >= appliedCoupon.minimumPurchase) {
+                couponDiscount = appliedCoupon.discountAmount; // Calculate coupon discount
+                grandTotal -= couponDiscount; // Apply the discount
+            }
+        }
+
+        // Pass couponDiscount and updated grandTotal to the view
         res.render('users/checkout', {
             name: userData.name,
             addresses: addressData || [],
             cartData,
             cartLength,
             availableCoupons: validCoupons,
-            
-            grandTotal
+            couponDiscount, // Pass the coupon discount
+            grandTotal // Pass the updated total
         });
-
     } catch (error) {
         console.error('Error during coupon selection:', error.message);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
+
 
 
 

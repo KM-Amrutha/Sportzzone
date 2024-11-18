@@ -1252,7 +1252,8 @@ module.exports = {
 
    loadWishlist,
    addtoWishlist,
-   removeWishlist
+   removeWishlist,
+  
 }
    
    

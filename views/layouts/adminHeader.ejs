@@ -54,6 +54,8 @@
   width: 100%;
   max-width: 600px;
   margin-top: 20px;
+  border: 2px solid #f1f1f1;
+  border-radius: 10px;
 }
 
 select {
@@ -72,6 +74,99 @@ select:focus {
   outline: none;
   border-color: #555;
 }
+
+/* Custom colors for chart lines */
+.chart-line-1 {
+  border-color: #ffcc00; /* Yellow */
+  background-color: #ffcc00; /* Yellow */
+}
+
+.chart-line-2 {
+  border-color: #28a745; /* Green */
+  background-color: #28a745; /* Green */
+}
+
+/* Customize the legend */
+.chart-legend {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.chart-legend-item span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.chart-legend-item .yellow {
+  background-color: #ffcc00; /* Yellow */
+}
+
+.chart-legend-item .green {
+  background-color: #28a745; /* Green */
+}
+
+
+.custom-header {
+    background-color: rgb(234, 223, 15);
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+}
+
+.custom-column-header {
+    color: green;
+    font-size: 1.2em;
+    text-align: left;
+}
+
+.custom-cell {
+    color: green;
+    font-size: 1em;
+    text-align: left;
+}
+.btn-yellow {
+    background-color: #047502;  /* Bright yellow background */
+    color: rgb(17, 13, 13);  /* White text color */
+    border: none;  /* Remove border */
+}
+
+.btn-yellow:hover,
+.btn-yellow:focus {
+    background-color: #269208;  /* Slightly darker yellow for hover/focus */
+    color: white;
+    text-decoration: none;  /* Remove underline */
+}
+/* Custom styling for the select dropdown */
+#sorting {
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #058a0a;  /* Green border */
+    border-radius: 5px;
+    background-color: #167206;  /* Light green background */
+    color: rgb(31, 24, 24);  /* White text color */
+    cursor: pointer;
+}
+
+#sorting:hover,
+#sorting:focus {
+    outline: none;  /* Remove default focus outline */
+    border-color: #388E3C;  /* Darker green border on hover/focus */
+    background-color: #07ac0c;  /* Slightly darker green background on hover/focus */
+}
+
+
+
 
     </style>
 
@@ -195,7 +290,7 @@ select:focus {
 
     <main class="main-wrap">
         <header class="main-header navbar">
-            <div class="col-search">
+            <!-- <div class="col-search">
                 <form class="searchform">
                     <div class="input-group">
                         <input list="search_terms" type="text" class="form-control" placeholder="Search term">
@@ -205,7 +300,7 @@ select:focus {
                         <option value="Products">
                     </datalist>
                 </form>
-            </div>
+            </div> -->
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
                 <ul class="nav">

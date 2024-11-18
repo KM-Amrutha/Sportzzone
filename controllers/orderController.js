@@ -99,6 +99,8 @@ const loadOrderPage = async (req, res) => {
         }
 
         order.orderStatus = 'Cancelled';
+        console.log('Order status after cancellation:', order.orderStatus);
+
         await order.save();
 
         for (const item of order.product) {
@@ -132,6 +134,8 @@ const loadOrderPage = async (req, res) => {
         }
 
         res.status(200).send('Order cancelled successfully');
+        console.log('Order passed to EJS:', order);
+
     } catch (error) {
         console.error('Error cancelling order:', error);
         res.status(500).send('Internal Server Error');
@@ -323,6 +327,18 @@ const toggleOfferStatus = async (req, res) => {
   }
 };
 
+const invoicePdf = async (req,res)=>{
+  try{
+const orderId = req.query.id;
+const invoice= await Orders.findById(orderId).populate('userId').populate('products.productId')
+
+        res.render("invoice",{invoice})
+
+
+  } catch(error){
+error.message(error.message)
+  }
+} 
 
 
 
@@ -335,5 +351,6 @@ const toggleOfferStatus = async (req, res) => {
    offers,
    applyOffer,
    toggleOfferStatus,
+   invoicePdf
    
 }

@@ -129,23 +129,27 @@
                 
                 <div class="order-actions">
                     
-                    <% if (order.orderstatus !== 'Cancelled'  && order.orderStatus !== 'Returned') { %>
+                    <% if (order.orderStatus !== 'Cancelled' && order.orderStatus !== 'Returned') { %>
                         <% if (order.orderStatus === 'Delivered') { %>
                             <button id="returnOrderBtn" class="btn btn-return-order btn-red" data-order-id="<%= order._id %>">
                                 Return Product
                             </button>
-                            <br>
                         <% } else { %>
                             <button id="cancelOrderBtn" class="btn btn-cancel-order btn-red" data-order-id="<%= order._id %>">
                                 Cancel Order
                             </button>
                         <% } %>
-                    <% } else if (order.status === 'Return') { %>
+                    <% } else if (order.orderStatus === 'Returned') { %>
                         <p><strong>Status:</strong> This order has been returned.</p>
                     <% } else { %>
                         <p><strong>Status:</strong> This order has been cancelled.</p>
+                        <p>Order Status: <%= order.orderStatus %></p>
                     <% } %>
+                    
+                    
                     <a href="/userProfile" class="btn btn-profile">Go to User Profile</a>
+
+                    <a href="/invoicePdf?id=<%=order._id%>" class="btn btn-primary" >Invoice</a>
 
             </div>    
               
@@ -156,35 +160,46 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const cancelOrderBtn = document.getElementById('cancelOrderBtn');
-    
-        if (cancelOrderBtn) {
-            cancelOrderBtn.addEventListener('click', function() {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'You are about to cancel this order.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, cancel it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`/cancelOrder/<%= order._id %>`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
+  document.addEventListener('DOMContentLoaded', () => {
+    const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+    console.log('Cancel Order Button:', cancelOrderBtn); // Debug log
+
+    if (cancelOrderBtn) {
+        cancelOrderBtn.addEventListener('click', function () {
+            console.log('Cancel Order Button Clicked'); // Debug log
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to cancel this order.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log('User confirmed cancellation'); // Debug log
+                    fetch(`/cancelOrder/<%= order._id %>`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
                         .then(response => response.text())
                         .then(data => {
+                            console.log('Response from server:', data); // Debug log
                             if (data === 'Order cancelled successfully') {
                                 Swal.fire(
                                     'Cancelled!',
                                     'Your order has been cancelled.',
                                     'success'
                                 );
+
+                                const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+                                  if (cancelOrderBtn) {
+                                  cancelOrderBtn.innerText = 'Order Cancelled';
+                                  cancelOrderBtn.disabled = true;
+                                  cancelOrderBtn.classList.add('btn-disabled'); // Optional styling
+            }
                             } else {
                                 Swal.fire(
                                     'Error!',
@@ -193,18 +208,23 @@
                                 );
                             }
                         }).catch(error => {
+                            console.error('Error during fetch:', error); // Debug log
                             Swal.fire(
                                 'Error!',
                                 'There was a problem cancelling your order.',
                                 'error'
                             );
                         });
-                    }
-                });
+                }
             });
-        }
-    });
-    </script>
+        });
+    } else {
+        console.error('Cancel Order Button not found on the page'); // Debug log
+    }
+});
+
+</script>
+
     <script>
         document.getElementById('returnOrderBtn')?.addEventListener('click', function() {
             Swal.fire({
