@@ -35,6 +35,14 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        @media print {
+    .hide-on-print {
+        display: none !important;
+    }
+}
+    </style>
 
     <style>
         .crossed {
@@ -447,7 +455,7 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
                                     
                                         <li class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<%= user.name %>
+                                                <i class="fa-solid fa-user"></i> <%= user.name %>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
                                                 <li><a class="dropdown-item" href="/userProfile"><i class="material-icons md-settings"></i>Account</a></li>
@@ -553,7 +561,7 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
                         </div>
                     </div>
                     
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
+                    
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">

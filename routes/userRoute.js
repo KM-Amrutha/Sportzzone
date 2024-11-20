@@ -88,6 +88,8 @@ user_route.post('/placeOrder',auth.isLogin,auth.isBlocked,cartController.placeOr
 
 user_route.post('/onlinepay',auth.isLogin,cartController.onlinepay);
 user_route.post('/verifyPayment',auth.isLogin,auth.isBlocked,cartController.verifyPayment);
+user_route.post('/failedOrder',auth.isLogin,auth.isBlocked,cartController.failedOrder);
+user_route.post('/retryPayment/:id',auth.isLogin,auth.isBlocked,cartController.retryPayment);
 
 user_route.post('/addtoWallet',auth.isLogin,auth.isBlocked,cartController.addtowallet);
 

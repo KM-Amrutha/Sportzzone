@@ -411,8 +411,7 @@ const salesReportSearch = async (req, res) => {
     const endOfDay = new Date(endDate);
     endOfDay.setHours(23, 59, 59, 999);
 
-    console.log('Parsed Start Date:', startDate.toISOString());
-    console.log('Parsed End Date:', endOfDay.toISOString());
+   
 
   
     const orderList = await Orders.find({
@@ -485,7 +484,6 @@ const excelReport = async (req, res) => {
       orderStatus: "Delivered",
     };
 
-    // Add date filtering only if both start and end dates are provided
     if (start && end) {
       const startDate = new Date(start);
       const endDate = new Date(end);
@@ -499,28 +497,25 @@ const excelReport = async (req, res) => {
       query.orderDate = { $gte: startDate, $lte: endDate };
     }
 
-    // Fetch orders based on the constructed query
+    
     const orders = await Orders.find(query).populate("userId");
 
-    // Prepare data for the Excel sheet
+
     const reportData = orders.map((order) => ({
       OrderID: order.orderId,
       Name: order.userId.name,
       PaymentMethod: order.paymentMethod,
       CouponDiscount: order.couponDiscount,
       TotalAmount: order.totalAmount,
-      OrderDate: order.orderDate.toISOString().split("T")[0], // Format to YYYY-MM-DD
+      OrderDate: order.orderDate.toISOString().split("T")[0], 
     }));
 
-    // Create a new workbook and sheet
+    
     const workbook = xlsx.utils.book_new();
     const worksheet = xlsx.utils.json_to_sheet(reportData);
     xlsx.utils.book_append_sheet(workbook, worksheet, "Sales Report");
-
-    // Write the Excel file to memory
     const excelBuffer = xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
 
-    // Set headers and send the file
     res.setHeader(
       "Content-Disposition",
       `attachment; filename="sales-report-${start || "all"}-${end || "all"}.xlsx"`

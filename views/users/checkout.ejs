@@ -68,6 +68,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="couponDropdown" id="couponDropdownMenu">
                                         <% if (availableCoupons && availableCoupons.length > 0) { %>
+                                        <%= console.log(availableCoupons.length) %>
                                             <% availableCoupons.forEach(coupon => { %>
                                                 <% if (grandTotal >= coupon.minimumPurchase) { %>
                                                     <a class="dropdown-item" href="#" onclick="selectCoupon('<%= coupon.couponCode %>')">
@@ -488,6 +489,7 @@
         })
         .then(response => response.json())
         .then(data => {
+            
             if (data.razorpayOrder) {
                 const options = {
                     "key": '<%= process.env.RAZORPAY_ID_KEY %>', 
@@ -497,15 +499,18 @@
                     "description": "Order Payment",
                     "order_id": data.razorpayOrder.id, 
                     "handler": function (response) {
-                    
+                        console.log(response);
+                        
+                        // if (response.)
                         fetch('/verifyPayment', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-        // razorpayOrderId: data.razorpayOrder.id, // This is the Razorpay order ID
-        amount: totalAmount //
+        razorpayOrderId: data.razorpayOrder.id, 
+        amount: totalAmount ,
+        orderId: data.orderId
     })
 })
 .then(response => response.json())
@@ -541,8 +546,22 @@
                         "color": "#90EE90"
                     }
                 };
+
                 const rzp = new Razorpay(options);
-                rzp.open();
+
+                
+                rzp.on('payment.failed', function (response) {
+                
+                  fetch('/failedOrder', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                  });
+                window.location.href = '/userProfile';
+            });
+            rzp.open();
+            rzp.close(() => {
+                window.location.href = '/loadCheckout';
+                })
             } else {
                 Swal.fire({
                     icon: "error",

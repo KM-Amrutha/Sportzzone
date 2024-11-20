@@ -172,6 +172,8 @@
 
                                                                     <td style="padding: 10px;">
                                                                         <span class="badge <%= orders.paymentStatus === 'Received' ? 'bg-success text-dark' : (orders.paymentStatus === 'Failed' ? 'bg-danger text-light' : 'bg-warning text-dark') %>">
+                                                                        
+                                                                             %>
                                                                             <%= orders.paymentStatus %>
                                                                         </span>
                                                                         
@@ -183,8 +185,13 @@
                                                                             <%= orders.totalAmount %>
                                                                             </td>
                                                                             <td style="padding: 10px;">
+                                                                                    <% if (orders.paymentStatus === 'Pending' && orders.paymentMethod === 'Razorpay') { %>
+                                                                                        <p class="text-danger cursor-pointer" onclick="retryPayement('<%= orders.orderId %>')">Pay</p>
 
-                                                                                <a href="/orderDetailPage?id=<%= orders._id %>">View Order</a>
+                                                                                        <% } else { %>
+                                                                                            <a href="/orderDetailPage?id=<%= orders._id %>">View Order</a>
+                                                                                         
+                                                                                    <% } %>
                                                                                 
                                                                                 </td>
                                                                             <% })%>
@@ -390,17 +397,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-        
-
-    
-                                   
-
-
-
-
-
-
-                                 
                             </div>
                         </div>
                     <!-- </div> -->
@@ -411,7 +407,7 @@
                 <nav aria-label="Order Pagination">
                     <ul class="pagination">
                       <% for(let i = 1; i <= totalPages; i++) { %>
-                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <li class="page-item <%= currentPage == i ? 'active' : '' %>">
                           <a href="#" class="page-link pagination-link" data-page="<%= i %>"><%= i %></a>
                         </li>
                       <% } %>
@@ -752,36 +748,109 @@
         }
       })
         .then(response => response.json())
+        // .then(data => {
+        //   console.log('AJAX Response:', data);
+
+        //   // Ensure the table body is found and update it
+        //   const ordersTbody = document.getElementById('orders-tbody');
+        //   if (!ordersTbody) {
+        //     console.error('Orders table body not found.');
+        //     return;
+        //   }
+
+        //   let ordersHtml = '';
+        //   data.orders.forEach(order => {
+        //     ordersHtml += `
+        //       <tr>
+        //         <td style="padding: 10px;">${order.orderId}</td>
+        //         <td style="padding: 10px;">
+        //           ${new Date(order.orderDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+        //         </td>
+        //         <td style="padding: 10px;">
+        //             <!-- Order status badges here -->
+        //             <td style="padding: 10px;">${order.orderStatus}</td>
+        //         </td>
+        //         <td style="padding: 10px;">${order.paymentStatus}</td>
+        //         <td style="padding: 10px;">${order.totalAmount}</td>
+        //         <td style="padding: 10px;">
+        //           <a href="/orderDetailPage?id=${order._id}">View Order</a>
+        //         </td>
+        //       </tr>`;
+        //   });
+        //   ordersTbody.innerHTML = ordersHtml;
+        // })
         .then(data => {
-          console.log('AJAX Response:', data);
+    console.log('AJAX Response:', data);
 
-          // Ensure the table body is found and update it
-          const ordersTbody = document.getElementById('orders-tbody');
-          if (!ordersTbody) {
-            console.error('Orders table body not found.');
-            return;
-          }
+    // Ensure the table body is found and update it
+    const ordersTbody = document.getElementById('orders-tbody');
+    if (!ordersTbody) {
+        console.error('Orders table body not found.');
+        return;
+    }
 
-          let ordersHtml = '';
-          data.orders.forEach(order => {
-            ordersHtml += `
-              <tr>
+    // Construct the HTML for table rows dynamically
+    let ordersHtml = '';
+    data.orders.forEach(order => {
+        const orderStatusBadgeClass = 
+            order.orderStatus === 'Cancelled' && order.paymentStatus !== 'Failed'
+                ? 'bg-danger'
+                : order.orderStatus === 'Order Placed'
+                ? 'bg-primary'
+                : order.orderStatus === 'Confirmed'
+                ? 'bg-warning'
+                : order.orderStatus === 'Shipped'
+                ? 'bg-info'
+                : order.orderStatus === 'Delivered'
+                ? 'bg-success'
+                : 'bg-secondary';
+
+        const paymentStatusBadgeClass = 
+            order.paymentStatus === 'Received'
+                ? 'bg-success text-dark'
+                : order.paymentStatus === 'Failed'
+                ? 'bg-danger text-light'
+                : 'bg-warning text-dark';
+
+        ordersHtml += `
+            <tr>
                 <td style="padding: 10px;">${order.orderId}</td>
                 <td style="padding: 10px;">
-                  ${new Date(order.orderDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    ${new Date(order.orderDate).toLocaleString('en-IN', {
+                        timeZone: 'Asia/Kolkata',
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    })}
                 </td>
                 <td style="padding: 10px;">
-                  <!-- Order status badges here -->
+                    <span class="badge ${orderStatusBadgeClass}">
+                        ${order.orderStatus}
+                    </span>
                 </td>
-                <td style="padding: 10px;">${order.paymentStatus}</td>
+                <td style="padding: 10px;">
+                    <span class="badge ${paymentStatusBadgeClass}">
+                        ${order.paymentStatus}
+                    </span>
+                </td>
                 <td style="padding: 10px;">${order.totalAmount}</td>
                 <td style="padding: 10px;">
-                  <a href="/orderDetailPage?id=${order._id}">View Order</a>
+                    ${
+                        order.paymentStatus === 'Pending' && order.paymentMethod === 'Razorpay'
+                            ? '<a href="" class="text-danger">Pay</a>'
+                            : `<a href="/orderDetailPage?id=${order._id}">View Order</a>`
+                    }
                 </td>
-              </tr>`;
-          });
-          ordersTbody.innerHTML = ordersHtml;
-        })
+            </tr>`;
+    });
+
+    // Update the table body with the generated HTML
+    ordersTbody.innerHTML = ordersHtml;
+})
+
         .catch(error => console.error('Error:', error));
     });
   });
@@ -844,7 +913,107 @@
 
     </script>
 
+    <script>
+       function retryPayement(id) {
+    fetch(`/retryPayment/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('9999999-->', data);
+        if (data.success) {
 
+                                                    const options = {
+                                                    "key": '<%= process.env.RAZORPAY_ID_KEY %>', 
+                                                    "amount": data.razorpayOrder, 
+                                                    "currency": "INR",
+                                                    "name": "Sports Zone",
+                                                    "description": "Order Payment",
+                                                    "order_id": data.razorpayOrder.id, 
+                                                    "handler": function (response) {
+                                                        // if(response.)
+                                                        console.log('ooooi', response);
+                                                        fetch('/verifyPayment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        razorpayOrderId: data.razorpayOrder.id, 
+                                        amount: data.razorpayOrder.amount / 100,
+                                        orderId: data.orderId
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.message === 'Payment verified and order updated successfully') {
+                                        Swal.fire({
+                                            position: "center",
+                                            icon: "success",
+                                            title: "Payment successful!",
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        }).then(() => {
+                                            window.location.href = `/loadOrderPage?id=${data.order._id}`;
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Payment verification failed",
+                                            text: data.message
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: "Something went wrong during payment verification."
+                                    });
+                                });
+
+                                                    },
+                                                    "theme": {
+                                                        "color": "#90EE90"
+                                                    }
+                                                };
+                                                
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                  fetch('/failedOrder', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    // body: JSON.stringify({ selectedAddress, couponId }),
+                  });
+                // alert('')
+                window.location.href = '/userProfile';
+                });
+                rzp.open();
+        } else {
+            Swal.fire({
+                title: 'Payment Failed!',
+                text: data.message || 'There was an issue processing your payment. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error processing payment:', error);
+
+        Swal.fire({
+            title: 'Unexpected Error!',
+            text: 'An unexpected error occurred while processing your payment. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+
+    </script>
 
 
 

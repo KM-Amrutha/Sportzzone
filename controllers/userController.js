@@ -644,6 +644,7 @@ const userProfile = async (req, res) => {
     .skip(skip)
     .limit(limit);
 
+
     let wallet = await Wallet.findOne({ userId });
 
     if (!wallet) {
