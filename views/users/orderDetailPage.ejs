@@ -149,8 +149,10 @@
                     
                     <a href="/userProfile" class="btn btn-profile">Go to User Profile</a>
 
-                    <a href="/invoicePdf?id=<%=order._id%>" class="btn btn-primary" >Invoice</a>
+                    <% if(order.orderStatus == 'Delivered') { %>
 
+                    <a href="/invoicePdf?id=<%=order._id%>" class="btn btn-primary" >Invoice</a>
+                            <% } %>
             </div>    
               
         </div>

@@ -329,14 +329,23 @@ const toggleOfferStatus = async (req, res) => {
 
 const invoicePdf = async (req,res)=>{
   try{
+    const userid = req.session.user_id;
+    const userData = await User.findOne({ _id: userid });
+    const addressData = await Address.findOne({ userId: userid });
 const orderId = req.query.id;
-const invoice= await Orders.findById(orderId).populate('userId').populate('products.productId')
+const invoice= await Orders.findById(orderId).populate('userId').populate('product.productId');
 
-        res.render("invoice",{invoice})
+
+
+        res.render("users/invoice",
+          {invoice,
+            user: userData,
+            address: addressData
+          })
 
 
   } catch(error){
-error.message(error.message)
+console.error(error.message)
   }
 } 
 

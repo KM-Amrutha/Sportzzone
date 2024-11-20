@@ -1,45 +1,15 @@
-<head>
-    <meta charset="utf-8">
-    <title>Invoice</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/logo.png">
-    <!-- Template CSS -->
-    <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+<%- include('../layouts/userHeader.ejs') -%>
 
-
-    <style>
-        @media print {
-    .hide-on-print {
-        display: none !important;
-    }
-}
-    </style>
-
-
-
-</head>
-
-<body>
-    <div class="screen-overlay"></div>
-    <aside class="navbar-aside" id="offcanvas_aside">
-        <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
-                <img src="/assets/imgs/theme/logo.png" class="logo" alt="Evara Dashboard">
-            </a>
-            <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+    <main class="main-wrap">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/home" rel="nofollow">Home</a>
+                    <span></span> userprofile
+                    <span></span> invoice
+                </div>
             </div>
         </div>
-        
-    </aside>
-    <main class="main-wrap">
         <header class="main-header navbar">
            
         </header>
@@ -65,7 +35,8 @@
 
 
                                     <a href="#" class="brand-wrap">
-                                        <img src="/assets/imgs/theme/logo.png" class="logo" alt="Evara Dashboard" style="width: 100px; height: auto;">
+                                        <!-- <img src="/assets/imgs/theme/logo.png" class="logo" alt="Evara Dashboard" style="width: 100px; height: auto;"> -->
+                                   SportZone
                                     </a><br><br>
                                    
                                     <small  class="text-muted">Order ID: <%=invoice.orderId%></small>
@@ -115,10 +86,11 @@
                                                         <div class="col-sm-6">
                                                             <span>Ph :</span>
                                                             <strong>
-                                                                 <%=invoice.address.mobile%>
+                                                                 <%=address.mobile%>
                                                             </strong>
                                                             <p>
-                                                                <%=invoice.address.address%> <br><%=invoice.address.city%> <br><%=invoice.address.state%> <br><%=invoice.address.zipcode%>
+                                                                <%=address.houseName%> <br><%=address.city%> <br>
+                                                                <%=address.state%> <br><%=address.pincode%>
                                                                
                                                             </p>
                                                         </div>
@@ -138,13 +110,16 @@
                                                     </thead>
                                                     <tbody>
                                                         <% if (locals.invoice) { %>
-                                                            <% invoice.products.forEach((item) => { %>
+                                                            <% invoice.product.forEach((item) => { %>
                                                                 <% console.log(item) %>
                                                                 <tr>
-                                                                    <td><%= item.productId.title %></td>
-                                                                    <td>₹ <%= item.productId.salesprice %></td>
+                                                                    <td><%= item.productId.productName %></td>
+                                                                    <td>₹ <%= item.productId.productPrice %></td>
                                                                     <td><%= item.quantity %></td>
-                                                                    <td class="highlight-amount">₹ <%= item.quantity * item.productId.salesprice %></td>
+                                                                    <td class="highlight-amount">₹  <%= item.quantity * 
+                                                                        (item.productId.offerPrice 
+                                                                            ? item.productId.offerPrice 
+                                                                            : item.productId.productPrice) %></td>
                                                                 </tr>
                                                             <% }) %>
                                                         <% } %>
@@ -169,14 +144,6 @@
                     <script>
 
 
-                        // document
-                        //   .getElementById('print')
-                        //   .addEventListener('click', function() {
-                        //     window.print();
-                        //   });
-
-
-
                         document.getElementById('print').addEventListener('click', function() {
     const downloadButton = document.querySelector('.download-button');
     if (downloadButton) {
@@ -184,12 +151,6 @@
     }
     window.print();
 });
-
-
-
-                      
-
-
 
                         </script>
                     <script>

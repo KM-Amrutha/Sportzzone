@@ -9,7 +9,7 @@ const couponSchema = new mongoose.Schema({
     expirationDate: { type: Date, required: true },
     isActive: { type: Boolean, default: true },
     timesUsed: { type: Number, default:1 },
-    redeemedUsers:[{userId:{type:String},usedTime:{type:Date}}],
+    redeemedUsers:[{type:mongoose.Schema.Types.ObjectId}],
     Date: { type: Date, default: Date.now }
 });
 
