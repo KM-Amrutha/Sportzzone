@@ -43,15 +43,9 @@ admin_route.post('/editCategory',adminAuth.isLogin,categoryController.editCatego
 admin_route.get('/ToggleblockCategory',adminAuth.isLogin,categoryController.ToggleblockCategory);
 
 
-
-
-
-
 admin_route.get('/addproduct',adminAuth.isLogin,productController.loadaddProduct);
 admin_route.post('/insertProduct',adminAuth.isLogin, upload.array('images',4), productController.productInsert);
 admin_route.get('/productlist',adminAuth.isLogin,productController.productListview);
-
-
 
 admin_route.get('/ToggleblockProduct',adminAuth.isLogin,productController.ToggleblockProduct)
 admin_route.delete("/deleteImage",adminAuth.isLogin,productController.deleteImage);
