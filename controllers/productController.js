@@ -3,9 +3,11 @@ const category = require("../models/categoryModel");
 const Orders = require('../models/orderModel');
 const { v4: uuidv4 } = require("uuid")
 const sharp = require('sharp')
-const fs = require('fs')
+const fs = require('fs');
 const path = require('path')
 const mongoose = require('mongoose');
+const {upload} = require('../multer/multer');
+const rimraf = require('rimraf');
 
 
 
@@ -36,7 +38,7 @@ const productListview = async (req, res) => {
 };
 
   const loadaddProduct = async(req,res)=>{
-    console.log("load Add product success")
+  
     try{
        const categories = await category.find()
       res.render("admin/addProduct",{categories })
@@ -48,78 +50,80 @@ const productListview = async (req, res) => {
   }
 
 
-
-
-
-    const productInsert = async (req, res) => {
-      try {
-          
-          const {
-              productName,
-              productDescription,
-              productCategory,
-              productBrand,
-              productPrice,
-              countStock,
-              listed
-          } = req.body;
-
-          const imageUrls= [];
-          for (const file of req.files) {
-            const filename = `${uuidv4()}.jpg`;
-                const outputPath = path.join(__dirname, '../public/uploads', filename);
-                try{
-                await sharp(file.path)
-                    .resize({ width: 386, height: 595 })
-                    .toFile(outputPath);
-
-                imageUrls.push(filename);
-
-                fs.unlink(file.path, (err) => {
-                    if (err) {
-                        console.error(`Error deleting file: ${err}`);
-                    } else {
-                        console.log(`File deleted: ${file.path}`);
-                    }
-                });
-            } catch (sharpError) {
-                console.error("Sharp Error:", sharpError);
-                throw new Error("Invalid input: Sharp failed to process the image.");
-            }
-        }
-  
-        
-          if (!productName || !productDescription || !productCategory || !productBrand || !productPrice || !countStock) {
-              return res.status(400).send({message:"All fields are required."});
-          }
-          const newProduct = new Product({
-              productName: productName,
-              productDescription: productDescription,
-              productCategory: productCategory,
-              productBrand: productBrand,
-              productPrice: parseFloat(productPrice),  
-              countStock: parseInt(countStock), 
-              listed: listed || false,
-              images: imageUrls
-          });
-          const productData = await newProduct.save();
-  
-          if (productData) {
-              res.redirect('/admin/productlist');
+  function deleteFileWithRetries(filePath, retries = 3, delay = 2000) {  // Increased delay to 2 seconds
+    return new Promise((resolve, reject) => {
+      const attemptDelete = (attemptsLeft) => {
+        fs.unlink(filePath, (err) => {
+          if (err && attemptsLeft > 0) {
+            console.log(`Failed to delete ${filePath}. Retrying...`);
+            setTimeout(() => attemptDelete(attemptsLeft - 1), delay);  // Retry with longer delay
+          } else if (err) {
+            console.error(`Error deleting file: ${filePath}.`, err);
+            reject(err);
           } else {
-              console.log("Error saving product");
-              res.status(500).send("Error saving product.");
+            console.log(`Successfully deleted file: ${filePath}`);
+            resolve();
           }
-      } catch (error) {
-          console.error("Error:", error.message);
-          res.status(500).send("Internal server error");
+        });
+      };
+      attemptDelete(retries);
+    });
+  }
+  
+  const productInsert = async (req, res) => {
+    const { productName, productDescription, productPrice, countStock, listed, productBrand, productCategory } = req.body;
+    const croppedImages = req.files;  // Array of uploaded images
+    let imageUrls = [];
+  
+    try {
+      console.log("Received Product Data:", req.body);
+      console.log("Uploaded Files:", croppedImages);
+  
+      // Process each uploaded image
+      for (const file of croppedImages) {
+        const filename = `${uuidv4()}.jpg`; // Generate a new unique filename for the processed image
+        const outputPath = path.join(__dirname, '../public/uploads', filename); // Final destination path for the image
+  
+        console.log(`Processing file: ${file.path}`);
+  
+        try {
+          // Resize and save the processed image using sharp
+          await sharp(file.path)
+            .resize({ width: 386, height: 595 })  // Resize to desired dimensions
+            .toFile(outputPath);  // Save the image to the output path
+  
+          console.log(`Processed and saved image: ${outputPath}`);
+          imageUrls.push(filename);  // Add the image filename to the array for storage
+  
+          // Attempt to delete the temporary file after a small delay
+          setTimeout(() => {
+            deleteFileWithRetries(file.path);  // Call retry function to delete the temp file
+          }, 1000); // Delay before attempting to delete
+  
+        } catch (error) {
+          console.error("Error processing image with Sharp:", error);
+          return res.status(500).send("Error processing image.");  // Return error response if image processing fails
+        }
       }
+  
+      // Save the product with the processed images (imageUrls contains the processed image filenames)
+      // Example: Product.create({ productName, productDescription, productPrice, countStock, listed, productBrand, productCategory, images: imageUrls });
+  
+      // Simulate a product save response (replace this with your actual product saving logic)
+      console.log("Saving product with images:", imageUrls);
+  
+      // Assuming product saving is successful:
+      res.status(200).send("Product created successfully!");
+  
+    } catch (error) {
+      console.error("Error in product insertion:", error);
+      res.status(500).send("Internal server error.");
+    }
   };
 
 
 
-  
-  const ToggleblockProduct= async (req,res)=>{
+  const ToggleblockProduct = async (req,res)=>{
     try{
       const productid= req.query.proid
       
