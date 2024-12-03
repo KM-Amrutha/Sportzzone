@@ -311,7 +311,7 @@
             
                     if (files.length === 0 || files.length > 4) {
                         imageError.textContent = 'Please upload between 1 and 4 images.';
-                        event.target.value = ''; // Clear the input
+                        event.target.value = ''; 
                         return;
                     }
             
@@ -326,13 +326,13 @@
                         imagesToCrop.push(file);
                     }
             
-                    openCropModal(); // Open modal to crop images
+                    openCropModal(); 
                 }
             
-                // Open Modal with Multiple Croppers
+                
                 function openCropModal() {
                     console.log("openCropModal called");
-                    cropImagesContainer.innerHTML = ''; // Clear any previous images
+                    cropImagesContainer.innerHTML = ''; 
             
                     imagesToCrop.forEach((file, index) => {
                         const reader = new FileReader();
@@ -356,16 +356,16 @@
                         reader.readAsDataURL(file);
                     });
             
-                    modal.style.display = 'block'; // Show the modal
+                    modal.style.display = 'block'; 
                 }
             
-                // Save All Cropped Images
+                
                 cropAndSave.addEventListener('click', async () => {
     console.log("Crop and Save clicked");
     const croppedFiles = [];
 
     try {
-        // Process each cropper instance
+        
         await Promise.all(
             croppers.map((cropper, index) =>
                 new Promise((resolve, reject) => {
