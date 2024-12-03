@@ -131,6 +131,8 @@ user_route.get('/loadWishlist',auth.isLogin,auth.isBlocked,userController.loadWi
 user_route.post('/wishlist/add', auth.isLogin, userController.addtoWishlist);
 user_route.post('/removeWishlist', auth.isLogin, userController.removeWishlist);
 
+user_route.get('/aboutUs',auth.isLogin,auth.isBlocked, userController.aboutUs);
+
 
 
 

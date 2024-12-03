@@ -17,14 +17,14 @@ const config = require("./config/config");
 
 
 //connnect to mongoDb
-mongoose.connect(process.env.mongourl)
-.then(()=>{
-  // console.log("connected to server db");
-  })
- .catch((err)=>{
-  console.log(err.message);
-  
- }) 
+mongoose.connect("mongodb+srv://amruthakm:mongodb777@cluster0.hatus.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster")
+.then(() => {
+  // console.log("Connected to MongoDB Atlas");
+})
+.catch((err) => {
+  console.log("Connection error:", err.message);
+});
+
 
   // useNewUrlParser: true,
   // useUnifiedTopology: true

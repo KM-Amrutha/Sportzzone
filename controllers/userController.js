@@ -1206,6 +1206,26 @@ const removeWishlist = async(req, res) => {
   }
 };
 
+const aboutUs = async (req,res)=>{
+  try{
+      const userId = req.session.user_id;
+      const userData = await User.findById(userId);
+      if(userData){
+        res.render('users/aboutUs',{
+          user:userData
+        });
+      } else {
+        res.render('users/login')
+      }
+       
+
+
+
+   } catch(error){
+    console.error(error.message);
+   }
+}
+
 
 
 
@@ -1254,6 +1274,8 @@ module.exports = {
    loadWishlist,
    addtoWishlist,
    removeWishlist,
+
+   aboutUs
   
 }
    
