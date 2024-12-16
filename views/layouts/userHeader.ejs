@@ -2,10 +2,10 @@
 <html class="no-js" lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/index-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:09 GMT -->
+<!-- Mirrored from wthemes.com/html/evara/evara-frontend/index-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:09 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>Sportzzone - cricket for life</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg"> -->
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
 
@@ -44,16 +44,17 @@
 }
     </style>
 
+
     <style>
         .crossed {
   text-decoration: line-through;
   color: red; /* Change this color if needed */
 }
-    .single-slider-img img {
+    /* .single-slider-img img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-    }
+    } */
     
 .dashboard-menu {
     margin-right: 0px;
@@ -79,7 +80,7 @@
     .form-label {
         font-size: 16px;
         font-weight: 500;
-        color: #15a389;
+        color: #2b0578;
     }
 
     /* Style for the form inputs */
@@ -91,13 +92,13 @@
 
     .form-control:focus {
         border-color: #229958;
-        box-shadow: 0 0 5px rgba(8, 160, 168, 0.5);
+        box-shadow: 0 0 5px rgba(71, 4, 185, 0.5);
     }
 
     /* Style for the Save Address button */
     .btn-fill-out {
-        background-color: #18de96;
-        color: #0ac323;
+        background-color: #2b23cb;
+        color: #31046f;
         padding: 12px;
         border-radius: 8px;
         transition: all 0.3s ease;
@@ -108,13 +109,13 @@
         color: #fff;
     }
     .btn {
-    background-color: rgb(15, 164, 40);
-    color: rgb(30, 24, 24); /* Optional: Change text color to white for better visibility */
+    background-color: rgb(51, 9, 191);
+    color: rgb(232, 225, 225); /* Optional: Change text color to white for better visibility */
 }
 
 .btn-primary {
-    background-color: rgb(25, 173, 52);
-    color: rgb(19, 15, 15);
+    background-color: rgb(40, 10, 177);
+    color: rgb(209, 232, 236);
 }
 
 .btn-danger {
@@ -124,78 +125,161 @@
 .btn {
   display: inline-block; /* Ensure the button is inline-block */
   padding: 10px 15px; /* Add some padding */
-  background-color: #1acd0ed8; /* Change background color */
+  background-color: #0a018ad8; /* Change background color */
   color: #0d0b0b; /* Text color */
   text-decoration: none; /* Remove underline */
   border-radius: 5px; /* Round corners */
 }
 
 .btn:hover {
-  background-color: #159417; /* Change color on hover */
+  background-color: #0f09c2; /* Change color on hover */
+}
+
+
+/* Container for search bar */
+.search-style-2 {
+    position: relative;
+    width: 100%;
+}
+
+/* Search input field styling */
+#search-input {
+    width: calc(100% - 120px);
+    padding: 10px 15px; /* Increased padding for more spacing inside the input */
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    background-color: #f9fcff; /* Softer light blue background */
+    color: #000;
+    font-size: 16px; /* Larger text size for better readability */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds spacing between icon and text */
+}
+
+/* Placeholder text styling */
+#search-input::placeholder {
+    color: #15088c; /* Blue placeholder text */
+    font-style: italic; /* Makes placeholder text more stylish */
+}
+
+/* Search button styling */
+.search-style-2 button[type="submit"] {
+    background-color: #230792;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    padding: 10px 15px;
+    font-size: 16px; /* Larger text size */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Adds smooth hover effect and button interaction */
+}
+
+/* Search button hover effect */
+.search-style-2 button[type="submit"]:hover {
+    background-color: #3f07b0;
+    transform: scale(1.05); /* Slightly enlarges button on hover */
+}
+
+/* Dropdown suggestions styling */
+.dropdown-suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #1804ab;
+    background-color: white;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    display: none;
+}
+
+/* Dropdown suggestion items */
+.dropdown-suggestions li {
+    padding: 10px;
+    cursor: pointer;
+    color: #000;
+}
+
+/* Dropdown suggestion hover effect */
+.dropdown-suggestions li:hover {
+    background-color: #e7f1ff;
+}
+
+
+/* Style for the login button */
+.header-info a {
+    background-color: #3a14b4; /* Blue background */
+    color: #fff; /* White text */
+    padding: 5px 15px; /* Button padding */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Ensure it looks like a button */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.header-info a:hover {
+    background-color: #250970; /* Darker blue on hover */
+}
+
+.main-menu a {
+    color: blue !important; /* Sets the link text color to blue */
+}
+
+.main-menu a:hover {
+    color: rgb(100, 100, 197) !important; /* Changes color on hover */
 }
 /* Parent container for search input and dropdown */
-.search-style-2 {
-  position: relative; /* Ensures dropdown is positioned relative to search bar */
-  width: 100%; /* Take the full width available without shrinking */
+
+.pagination-area nav {
+    display: flex;
+    justify-content: center; /* Centers the navigation inside the pagination area */
 }
 
-/* Search input styling */
-#search-input {
-  width: 100%; /* Make the input field take the full width of the container */
-  padding: 10px;
-  box-sizing: border-box; /* Include padding in the width calculation */
-}
-
-/* Dropdown suggestions */
-.dropdown-suggestions {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  border: 1px solid #0fee21;
-  background-color: white;
-  width: 90%; /* Match the width of the input */
-  position: absolute;
-  top: 100%; /* Position right below the input */
-  left: 0; /* Align to the left edge of the input */
-  z-index: 100;
-}
-
-/* Style the dropdown items */
-.dropdown-suggestions li {
-  padding: 10px;
-  cursor: pointer;
-}
-
-/* Highlight effect on hover */
-.dropdown-suggestions li:hover {
-  background-color: #f0f0f0;
-}
 .pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+    justify-content: center; /* Centers the pagination links inside the list */
+    margin: 0; /* Ensures no extra margin */
+    padding: 0; /* Ensures no extra padding */
 }
 
-.pagination a {
-  padding: 10px 15px;
-  margin: 0 5px;
-  border: 1px solid #ccc;
-  text-decoration: none;
-  color: #000;
+.pagination .page-item {
+    margin: 0 5px; /* Optional: Adjust spacing between the pagination items */
 }
 
-.pagination a.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+.pagination .page-link {
+    text-align: center; /* Ensures the text inside the link is centered */
+    display: flex; /* Uses flexbox to center text inside */
+    justify-content: center; /* Centers the text horizontally */
+    align-items: center; /* Centers the text vertically */
+    padding: 10px 15px; /* Adjust padding for better clickability */
+    border: 1px solid #ddd; /* Border for the pagination buttons */
+    border-radius: 5px; /* Rounded edges for pagination buttons */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    font-size: 16px; /* Ensures proper text size */
 }
+
+.pagination .page-item.active .page-link {
+    background-color: blue; /* Highlight the active page */
+    color: white; /* Active page number color */
+    border-color: blue;
+}
+
+.pagination .page-link:hover {
+    background-color: blue !important; /* Blue background on hover */
+    color: white; /* White color for the number on hover */
+    text-decoration: none; /* Removes underline on hover */
+}
+
+
+
 .btn-custom, .custom-input {
         height: 42px; /* Adjust this height as needed */
     }
     .btn-custom {
     padding: 15px 40px; /* Adjust for desired length */
-    background-color: #0fac24; /* Your preferred button color */
-    color: rgb(13, 12, 12); /* White text */
+    background-color: #12096d; /* Your preferred button color */
+    color: rgb(237, 233, 233); /* White text */
     border: none; /* Remove border */
     font-size: 16px; /* Adjust font size if needed */
     text-transform: uppercase; /* Optional: Makes text uppercase */
@@ -203,7 +287,7 @@
 }
 
 .btn-custom:hover {
-    background-color: #066c23; /* Adjust hover color if needed */
+    background-color: #3906af; /* Adjust hover color if needed */
     color: white; /* Keep white text on hover */
     transition: background-color 0.3s ease; /* Smooth transition effect */
 }
@@ -211,7 +295,7 @@
 
     /* Input field style */
     .custom-input {
-        border: 2px solid #28a745; /* Green border for input */
+        border: 2px solid #0404b5; /* Green border for input */
         border-radius: 0.25rem;
         padding: 0.5rem;
         width: 100%;
@@ -219,20 +303,20 @@
 
     /* Apply coupon button style */
     .apply-btn {
-        background-color: #28a745; /* Green background */
-        color: rgb(5, 85, 2);
-        border: 2px solid #28a745; /* Green border */
+        background-color: #2c0cac; /* Green background */
+        color: rgb(11, 25, 180);
+        border: 2px solid #2828a7; /* Green border */
         border-radius: 0.25rem;
         padding: 0.5rem 1rem;
     }
     .btn-custom:hover, .apply-btn:hover {
-        background-color: #218838; /* Lighter green on hover */
+        background-color: #240796; /* Lighter green on hover */
         color: white; /* White text on hover */
     }
 
     /* Input placeholder text color */
     ::placeholder {
-        color: #28a745; /* Green placeholder text */
+        color: #030549; /* Green placeholder text */
         opacity: 1; /* Override browser default opacity */
     }
 
@@ -249,7 +333,7 @@
 }
 
 
-/* Style for dropdown button to ensure it keeps the arrow */
+
 .dropdown-toggle::after {
     margin-left: 10px;  /* Add some space between text and arrow */
     vertical-align: 0.255em;
@@ -259,9 +343,11 @@
     content: "";
 }
 a.btn-custom, .dropdown-item.btn-custom {
-    background-color: #28a745 !important;  /* Override existing styles with !important */
+    background-color: #240baf !important;  /* Override existing styles with !important */
     color: rgb(238, 246, 240) !important;               /* Text color with high priority */
-    border: none !important;               /* Remove any default border */
+    border: none !important;  
+    text-align: center; /* Centers text horizontally */
+    vertical-align: middle;
     padding: 15px 30px !important;         /* Button padding for a bigger size */
     margin: 10px !important;               /* Space between buttons */
     text-align: center !important;         /* Center text */
@@ -274,7 +360,7 @@ a.btn-custom, .dropdown-item.btn-custom {
 }
 
 a.btn-custom:hover, .dropdown-item.btn-custom:hover {
-    background-color: #3ce573 !important; 
+    background-color: #30077d !important; 
      /* Light green color on hover */
 }
 
@@ -283,11 +369,252 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
         align-items: center;
     }
 
-    .header-top, .header-middle, .header-bottom {
-    border: 2px solid black;
+ 
+
+.header-middle {
+     /* Reduce top padding */
+    padding-bottom: 0px !important; /* Reduce bottom padding */
 }
-    
+
+.header-wrap {
+    display: flex; /* Align elements in a row */
+     /* Vertically center items */
+    justify-content: space-between; /* Space between items */
+     /* Reduce internal padding */
+}
+
+.logo img {
+    max-height: 200px; 
+}
+
+/* Reset margins and padding for the body and html */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.single-slider-img {
+      height: 100%;
+       max-width: 100%;
+    /* justify-content: center;
+    align-items: center; */
+}
+
+.single-slider-img img {
+    width: 100%; /* Ensures full width */
+    height: 100%; /* Ensures full height */
+    object-fit:fill; /* Keeps the aspect ratio while covering the entire container */
+    /* Removes any bottom space or unwanted margins */
+}
+
+img .current{
+width:fit-content;
+height:fit-content;
+}
+
+img .hover-low{
+    width: fit-content;
+    height:fit-content
+
+}
+
+/* Optional: Add animation to images */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+ul.categories .category-item {
+    color: blue !important;
+    font-weight: bold;
+}
+
+ul.categories .category-item a {
+    color: blue !important;
+    text-decoration: none;
+}
+
+ul.categories .category-item a:hover {
+    color: darkblue !important;
+}
+
+/* Ensure the banner image fills the section */
+.banner-2 {
+    position: relative;
+    width: 100%;
+    height: 50vh; /* Make the section full viewport height */
+    overflow: hidden;
+}
+
+.banner-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.banner-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire section without distortion */
+}
+
+/* Style for the banner text */
+.banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+}
+
+.banner-text h1 {
+    color: white;
+    font-size: 2rem; /* Adjust font size as needed */
+    transition: color 0.3s ease-in-out;
+}
+
+.banner-text h1:hover {
+    color: rgb(5, 5, 75); /* Blue hover effect for text */
+}
+
+/* home ile side ile picture varan vendi */
+
+.image-container {
+    display: flex; /* Ensures the container uses flexbox for alignment */
+    align-items: center; /* Centers items vertically */
+    justify-content: center; /* Centers items horizontally */
+    overflow: hidden; /* Ensures the image doesn't overflow the container */
+}
+
+.image-container img {
+    width: auto; /* Ensures the width adjusts based on the aspect ratio */
+    height: 100%; /* Fills the height of the container */
+    object-fit: cover; /* Ensures the image fills the container neatly */
+}
+
+
+
+.container-fluid {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 20px;
+    padding: 0 20px; 
+    width: 100%; 
+}
+
+
+.popular-category-item {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.popular-category-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popular-category-item {
+    border: 1px solid blue;
+    background-color: #ddd;
+}
+
+
+@media (max-width: 768px) {
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (max-width: 480px) {
+    .categories-grid {
+        grid-template-columns: 1fr; 
+    }
+} 
+
+.card-1 h5 a {
+  color: blue; 
+  text-decoration: none; 
+}
+
+.card-1 h5 a:hover {
+  color: rgb(5, 5, 25);
+}
+
+.product-price{
+    color:#030315 !important;
+    text-decoration: none;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #2211a3; /* Default link color */
+    margin-right: 5px;
+}
+
+.breadcrumb a:hover {
+    color: #0056b3; /* Hover effect */
+}
+
+.breadcrumb a + a:before {
+    content: '>';
+    margin-left: 5px;
+    color: #6c757d; /* Separator color */
+}
+.product-name a {
+    color: #18110f; /* Replace this with your desired color code */
+    text-decoration: none; /* Removes the underline */
+     /* Optional: Makes the text bold */
+}
+
+.product-name a:hover {
+    color: #0c0b12; /* Replace with a hover color, if needed */
+}
+.btn-custom-centered {
+    display: inline-block; /* Ensures the button is an inline-block */
+    text-align: center; /* Centers text horizontally */
+    vertical-align: middle; /* Centers text vertically */
+    padding: 10px 20px; /* Adjust padding for spacing */
+    font-size: 16px; /* Font size for readability */
+    background-color: #28a745; /* Button background color */
+    color: #fff; /* Text color */
+    text-decoration: none; /* Removes underline */
+    border-radius: 5px; /* Adds rounded corners */
+    border: 1px solid #28a745; /* Border matching background color */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+.btn-custom-centered:hover {
+    background-color: #218838; /* Darker color on hover */
+    border-color: #1e7e34; /* Border color on hover */
+}
+
+
+
 </style>
+
 </head>
 
 <body>
@@ -424,29 +751,62 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
     </div>
 
 
-    <header class="header-area header-style-4 header-height-2" style="background-color: rgb(235, 235, 8);">
-        <div class="header-top header-top-ptb-1 d-none d-lg-block" style=" background-color: rgb(233, 245, 7);">
+    <header   style="background-color:#ffc107;">
+        
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info">
-                        </div>
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href=""><img src="assets/imgs/theme/icons/sportzzone1.png" alt="logo"></a>
                     </div>
-                    <div class="col-xl-6 col-lg-4">
-                        <div class="text-center">
-                            <div id="news-flash" class="d-inline-block">
-                              
-                            </div>
+                    <div class="header-right">
+
+                        <div class="search-style-2">
+                            <form action="/" method="get" id="search-form">
+                                <div style="display: flex; align-items: center; width: 100%;">
+                                    <input 
+                                        type="text" 
+                                        name="search" 
+                                        id="search-input" 
+                                        placeholder="Search for items..." 
+                                        autocomplete="off"
+                                    >
+                                    <button type="submit">
+                                        <i class="fa fa-search"></i> Search
+                                    </button>
+                                </div>
+                            </form>
+                            <!-- Dropdown for "Show All Products" -->
+                            <ul id="search-suggestions" class="dropdown-suggestions">
+                                <li id="show-all">Show All Products</li>
+                            </ul>
                         </div>
-                    </div>
-                    
-                            <div class="col-xl-3 col-lg-4">
+                        
+                        
+                        
+                        
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/loadWishlist">
+                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                        <!-- <span class="pro-count blue">4</span> -->
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/getCart">
+                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                        <!-- <span class="pro-count blue">2</span> -->
+                                    </a>
+                                </div>
                                 <div class="header-info header-info-right">
                                     <ul>
                                         <% if(locals.user) { %>
                                     
                                         <li class="nav-item dropdown">
-                                            <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" 
+                                            aria-expanded="false">
                                                 <i class="fa-solid fa-user"></i> <%= user.name %>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
@@ -456,83 +816,34 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
                                             </ul>
                                         </li>
                                         <% } else { %>
-                                        <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/loadLogin">Login</a></li>
+                                         <a style="color: #effdfd;" href="/loadLogin">Login</a>
+                                      </li>
                                         <% } %>
                                     </ul>
                                 </div>
-                            </div>
-                            </div>
-                </div>
-            </div>
 
-
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-                    <div class="logo logo-width-1">
-                        <a href="index.html"><img src="assets/imgs/theme/icons/sportzzone1.png" alt="logo"></a>
-                    </div>
-                    <div class="header-right">
-
-                        <div class="search-style-2">
-                            <form action="/" method="get" id="search-form">
-                              <input type="text" name="search" id="search-input" placeholder="Search for items..." autocomplete="off">
-                              <button type="submit">Search</button>
-                            </form>
-                          
-                            <!-- Dropdown for "Show All Products" -->
-                            <ul id="search-suggestions" class="dropdown-suggestions" style="display: none;">
-                              <li id="show-all" style="cursor: pointer;">Show All Products</li>
-                            </ul>
-                          </div>
-
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-                                <div class="header-action-icon-2">
-                                    <a href="/loadWishlist">
-                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
-                                    </a>
-                                </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/getCart">
-                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
-                                    </a>
-                                    <!-- <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="assets/imgs/shop/thumbnail-3.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="#">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                           
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>$4000.00</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="/getCart" class="outline">View cart</a>
-                                                <a href="#">Checkout</a>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
+</div>
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2">
+                <nav>
+                    <ul class="d-flex justify-content-center"> 
+                        <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a></li>
+                        <li><a href="/productShopPage">Shop</a></li>
+                        <li><a href="/loadWishlist">Wishlist</a></li>
+                        <li><a href="/getCart">Cart</a></li>
+                        <li><a href="/aboutUs">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+        
+
+
+        <!-- <div class="header-bottom header-bottom-bg-color sticky-bar">
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
@@ -620,8 +931,11 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </header>
+
+
+
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">

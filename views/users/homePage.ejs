@@ -1,113 +1,68 @@
 
 <%- include('../layouts/userHeader.ejs') -%>
 
-    <main class="main">
-        <section class="home-slider position-relative mb-30">
-            <div class="container">
-                <div class="home-slide-cover bg-grey-10 mt-30">
-                    <div class="hero-slider-1 style-4 dot-style-1 dot-style-1-position-1">
-                        <!-- <div class="single-hero-slider single-animation-wrap">
-                            <div class="container">
-                                <div class="row align-items-center slider-animated-1">
-                                    <div class="col-lg-5 col-md-6">
-                                        <div class="hero-slider-content-2">
-                                            <h4 class="animated">Trade-In Offer</h4>
-                                            <h3 class="animated fw-900">Supper Value Deals</h3>
-                                            <h2 class="animated fw-900 text-brand">On All Products</h2>
-                                            <p class="animated">Save more with coupons & up to 70% off</p>
-                                            <a class="animated btn btn-brush btn-brush-3" href="shop-product-right.html" tabindex="0"> Shop Now </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-7 col-md-6">
-                                        <div class="single-slider-img single-slider-img-1">
-                                            <img class="animated" src="uploads/wallpapper5.jpg" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="single-hero-slider single-animation-wrap">
-                            <div class="container">
-                                <div class="row align-items-center slider-animated-1">
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="single-slider-img single-slider-img-1">
-                                            <img class="animated" src="uploads/wallpapper7.jpg" alt="Hero Slider Image">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    
+        <section class="home-slider">
+            <div class="  rounded-lg ">
+                <div class="hero-slider-1 style-4 dot-style-1 dot-style-1-position-1">
+                    <!-- First Image -->
+                    <div class="single-hero-slider single-animation-wrap">
+                        <div class="single-slider-img">
+                            <img class="animated" src="uploads/wallpapper7.jpg" alt="Hero Slider Image 1">
                         </div>
-                        
-
-                        <div class="single-hero-slider single-animation-wrap">
-                            <div class="container">
-                                <div class="row align-items-center slider-animated-1">
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="single-slider-img single-slider-img-1">
-                                            <img class="animated" src="uploads/wallpapper8.jpg" alt="Hero Slider Image">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                    <!-- Second Image -->
+                    <div class="single-hero-slider single-animation-wrap">
+                        <div class="single-slider-img">
+                            <img class="animated" src="uploads/wallpapper8.jpg" alt="Hero Slider Image 2">
                         </div>
-                    </div> 
-                    <!-- <div class="slider-arrow hero-slider-1-arrow"></div> -->
+                    </div>
                 </div>
             </div>
         </section>
         
-        <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="widget-category mb-30">
+        
+        
+
+        <section class="product-tabs pt-25 pb-20   wow fadeIn animated">
+                <div class=" ml-10 row">
+
+                    <div class="col-lg-3 d-flex flex-column"> <!-- col-lg-3 starts here -->
+                        <!-- Widget Category -->
+                        <div class="widget-category ml-15 mt-20 mb-30">
                             <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
-                        
-                            <% if (category&& category.length > 0) { %>
+                    
+                            <% if (category && category.length > 0) { %>
                             <ul class="categories">
-                                
                                 <% for (let i = 0; i < category.length; i++) { %>
-                                    <li style="color: black; font-weight: bold;">
-                                        <a href="/filterbyCategory?categoryId=<%= category[i]._id %>"><%= category[i].catName %></a>
-                                        
-                                    </li>
-                                    
+                                <li class="category-item">
+                                    <a href="/filterbyCategory?categoryId=<%= category[i]._id %>"><%= category[i].catName %></a>
+                                </li>
                                 <% } %>
-                                <li style="color: black; font-weight: bold;">
+                                <li class="category-item">
                                     <a href="/allCategory">Show All</a>
-                                  </li>
+                                </li>
                             </ul>
                             <% } else { %>
-                                <p>No categories available</p>
+                            <p>No categories available</p>
                             <% } %>
                         </div>
-                        <!-- <div class="widget-category mb-30">
-                            <h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by</h5>
-                            <ul class="categories">
-                                <li><a href='#'>Price: Low to High</a></li>
-                                <li><a href="shop-grid-right.html">Price: High to Low</a></li>
-                                <li><a href="shop-grid-right.html">Aa to Zz</a></li>
-                                <li><a href="shop-grid-right.html">Zz to Aa</a></li>
-                            </ul>
-                        </div> -->
-                        <!-- <div class="widget-category mb-30">
-                            <h5 class="section-title style-1 mb-30 wow fadeIn animated">Price Range</h5>
-                            <ul class="categories">
-                                <li><a href="shop-grid-right.html">$0-$200</a></li>
-                                <li><a href="shop-grid-right.html">$200-$400</a></li>
-                                <li><a href="shop-grid-right.html">$400-$600</a></li>
-                                <li><a href="shop-grid-right.html">$600-$800</a></li>
-                                <li><a href="shop-grid-right.html">800$+</a></li>
-                            </ul>
-                        </div> -->
-                    </div>
+                    
+                        <!-- Image Div -->
+                        <div class="image-container flex-grow-1 d-flex align-items-center justify-content-center">
+                            <img src="../uploads/wallpapper1.jpg" alt="Image Description" class="img-fluid" style="max-width: 100%; max-height: 100%;">
+                        </div>
+                    </div> <!-- col-lg-3 ends here -->
+                    
 
 
                     <div class="col-lg-9">
                         <div class="tab-header">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">Featured</button>
+                                    <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" 
+                                    data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" 
+                                    aria-selected="true">Featured</button>
                                 </li>
                                 
                                 <!-- <li class="nav-item" role="presentation">
@@ -127,11 +82,11 @@
                                       <div class="product-cart-wrap mb-30">
                                         <div class="product-img-action-wrap">
                                           <div class="product-img product-img-zoom">
-                                            <a href="shop-product-right.html">
+                                            <a href="/productDetail?id=<%= product[i]._id %>">
                                               <% if (product[i].images) { %>
-                                                <img class="default-img" src="../uploads/<%= product[i].images[0] %>" alt="">
+                                                <img class="current" src="../uploads/<%= product[i].images[0] %>" alt="">
                                                 <% if (product[i].images.length > 1) { %>
-                                                  <img class="hover-img" src="../uploads/<%= product[i].images[1] %>" alt="">
+                                                  <img class="hover-low" src="../uploads/<%= product[i].images[1] %>" alt="">
                                                 <% } %>
                                               <% } else { %>
                                                 <img class="default-img" src="../uploads/default-image.jpg" alt="No image available">
@@ -192,7 +147,7 @@
 
                         </div>
                     </div>
-                </div>
+                
         </section>
 
 
@@ -209,76 +164,51 @@
     </nav>
 </div>
 
-        <section class="banner-2 section-padding pb-0">
-            <div class="container">
-                <div class="banner-img banner-big wow fadeIn animated f-none">
-                    <img src="../uploads/wallpapper4.jpg" alt="">
-                    <div class="banner-text d-md-block d-none">
-                        <h4 class="mb-15 mt-40 text-brand">Repair Services</h4>
-                        <h1 class="fw-600 mb-20">We're an Apple <br>Authorised Service Provider</h1>
-                        <a href="shop-grid-right.html" class="btn">Learn More <i class="fi-rs-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <section class="popular-categories section-padding mt-15">
-            <div class="container wow fadeIn animated">
-                <h3 class="section-title mb-20"><span> Our </span> Categories</h3>
-                <div class="carausel-6-columns-cover position-relative">
-                    <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-arrows"></div>
-                    <div class="carausel-6-columns" id="carausel-6-columns">
 
-                        <% if (category&& category.length > 0) { %>
-
-                        <div class="card-1">
-                            <figure class=" img-hover-scale overflow-hidden">
-                                <a href="#"> <img src="assets/imgs/shop/catbat.jpg" alt=""></a>
-                            </figure>
-                            <h5><a href="/filterbyCategory?categoryId=<%= category[0]._id %>"><%= category[0].catName %></a></h5>
-                        </div>
-
-                        <div class="card-1">
-                            <figure class=" img-hover-scale overflow-hidden">
-                                <a href="category[1]"> <img src="assets/imgs/shop/catball.jpg" alt=""></a>
-                            </figure>
-                            <h5><a href="/filterbyCategory?categoryId=<%= category[1]._id %>"><%= category[1].catName %></a></h5>
-                        </div>
-                        <div class="card-1">
-                            <figure class=" img-hover-scale overflow-hidden">
-                                <a href="category[2]"><img src="assets/imgs/shop/cathelmet.jpg" alt=""></a>
-                            </figure>
-                            <h5><a href="/filterbyCategory?categoryId=<%= category[2]._id %>"><%= category[2].catName %></a></h5>
-                        </div>
-                        <div class="card-1">
-                            <figure class=" img-hover-scale overflow-hidden">
-                                <a href="category[3]"><img src="assets/imgs/shop/catpad.jpg" alt=""></a>
-                            </figure>
-                            <h5><a href="/filterbyCategory?categoryId=<%= category[3]._id %>"><%= category[3].catName %></a></h5>
-                        </div>
-                        <div class="card-1">
-                            <figure class=" img-hover-scale overflow-hidden">
-                                <a href="category[4]"><img src="assets/imgs/shop/catstump.jpg" alt=""></a>
-                            </figure>
-                            <h5><a href="/filterbyCategory?categoryId=<%= category[4]._id %>"><%= category[4].catName %></a></h5>
-                        </div>
-                       
-                       
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-       
-       
-       
-        
-    </main>
-
+<section class="banner-2 section-padding pb-0">
     
+        <div class="banner-img banner-big wow fadeIn animated f-none">
+            <img src="../uploads/wallpapper1.jpg" alt="">
+            <div class="banner-text d-md-block d-none">
+                <h1 class="fw-600 mb-20">Sportzzzone.. <br>Cricket for life..!!</h1>
+            </div>
+        </div>
+        </section>
 
-
+        
+        <section class="new-arrivals section-padding mt-15">
+          <div class="container-fluid wow fadeIn animated">
+            <h3 class="section-title mb-20 text-center"><span>Our</span> New Arrivals</h3>
+            <div class="categories-grid">
+              <% if (newArrivals && newArrivals.length > 0) { %>
+                <% for (let i = 0; i < newArrivals.length; i++) { %>
+                  <div class="card-1">
+                    <figure class="img-hover-scale overflow-hidden">
+                      <a href="/productDetail?id=<%= newArrivals[i]._id %>">
+                        <% if (newArrivals[i].images && newArrivals[i].images.length > 0) { %>
+                          <img src="../uploads/<%= newArrivals[i].images[0] %>" >
+                        <% } else { %>
+                          <img class="default-img" src="../uploads/noimage.webp" alt="No image available">
+                        <% } %>
+                      </a>
+                    </figure>
+                    <h5>
+                      <a href="/productDetail?id=<%= newArrivals[i]._id %>"><%= newArrivals[i].productName %></a>
+                    </h5>
+                  </div>
+                <% } %>
+              <% } else { %>
+                <p class="text-center">No new arrivals available.</p>
+              <% } %>
+            </div>
+          </div>
+        </section>
+        
+      
+        
+        
+        
 
 
     <%- include('../layouts/userFooter.ejs') -%>
@@ -379,31 +309,32 @@
         </script>
 
 <script>
-const searchInput = document.getElementById('search-input');
-const searchSuggestions = document.getElementById('search-suggestions');
-const showAllOption = document.getElementById('show-all');
-const searchForm = document.getElementById('search-form');
-
-searchInput.addEventListener('focus', function() {
-  searchSuggestions.style.display = 'block';
-});
-
-document.addEventListener('click', function(event) {
-  if (!searchForm.contains(event.target)) {
-    searchSuggestions.style.display = 'none';
-  }
-});
-
-searchInput.addEventListener('input', function() {
-  searchSuggestions.style.display = 'block';
-});
-
-showAllOption.addEventListener('click', function() {
-  searchInput.value = ''; 
-  searchForm.submit();
-});
-
-</script>
+    const searchInput = document.getElementById('search-input');
+    const searchSuggestions = document.getElementById('search-suggestions');
+    const showAllOption = document.getElementById('show-all');
+    const searchForm = document.getElementById('search-form');
+    
+    searchInput.addEventListener('focus', function() {
+      searchSuggestions.style.display = 'block';
+    });
+    
+    document.addEventListener('click', function(event) {
+      if (!searchForm.contains(event.target)) {
+        searchSuggestions.style.display = 'none';
+      }
+    });
+    
+    searchInput.addEventListener('input', function() {
+      searchSuggestions.style.display = 'block';
+    });
+    
+    showAllOption.addEventListener('click', function() {
+      searchInput.value = ''; 
+      searchForm.submit();
+    });
+    </script>
+    
+    
     
     
 

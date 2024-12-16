@@ -11,7 +11,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: "public/assets/imgs/page/back1.jpg" ; /* Light black background */
+            background-image: url("/assets/imgs/page/back1.jpg");
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,20 +20,17 @@
         }
 
         .login-container {
-            background: radial-gradient(rgba(241, 233, 6, 0.8),rgb(249, 241, 11));
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(229, 234, 236, 0.1);
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            color: #333;
-            font-weight: 600;
-        }
+    background-color:transparent;
+    padding: 30px;
+    border-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(4, 4, 0, 0.125);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    position: relative;
+    top: 30px;
+}
 
         .message {
             color: #ff4d4d;
@@ -51,8 +48,8 @@
         }
 
         button {
-            background-color: #089d26;
-            color: #fff;
+            background-color:#110185;
+            color: #b7b3b3;
             padding: 12px;
             border: none;
             border-radius: 8px;
@@ -64,21 +61,21 @@
         }
 
         button:hover {
-            background-color: #0aa729;
+            background-color: #110185;
         }
 
         a {
             display: block;
             text-align: center;
             text-decoration: none;
-            color: #0ca016;
+            color: #110185;
             margin-top: 10px;
             font-size: 14px;
             transition: color 0.3s ease;
         }
 
         a:hover {
-            color: #39df0b;
+            color: #2409a1;
         }
 
         .password-field {
@@ -92,27 +89,70 @@
             transform: translateY(-50%);
             cursor: pointer;
         }
+
+        .logo-title {
+    display: flex;
+    align-items: center; /* Align logo and title vertically */
+    justify-content: center; /* Center both horizontally */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+/* Logo inside the container */
+.login-logo {
+    width: 80px; /* Adjust the size of the logo */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 20px; /* Space between logo and title */
+}
+
+/* Title styling */
+h1 {
+    margin: 0; /* Remove default margin */
+    color: #110185;
+    font-weight: 600;
+}
+
+
     </style>
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-    <div class="login-container">
-        <h1>Login</h1>
-        
+    <div class="login-container ">
+    
+        <div class="logo-title">
+            <img src="/assets/imgs/theme/icons/sportzzone1.png" alt="Logo" class="login-logo">
+            <h1>Login</h1>
+        </div>
+    
+        <!-- Form Section -->
         <form action="/login" method="POST">
-            <input type="email" id="email" placeholder="Enter your email" name="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required title="Please Check your Email Address">
+            <input type="email" id="email" placeholder="Enter your email" name="email" 
+            pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required title="Please Check your Email Address">
             <div class="password-field">
-                <input type="password" id="password" placeholder="Enter your password" name="password" pattern=".{8,}" required title="Please Check your Password">
+                <input type="password" id="password" placeholder="Enter your password" name="password" 
+                pattern=".{8,}" required title="Please Check your Password">
                 <i class="fa fa-eye" id="togglePassword"></i>
             </div>
-
             <a class="forget" href="/forgot-Password">Forgot password?</a>
             <a href="/register">New user? Register here</a>
-
             <button type="submit">Login</button>
         </form>
+    
+        <div class="divider">
+            <span>OR</span>
+        </div>
+        <div class="social-login">
+            <a href="/login/google" class="google-login">
+                <img src="images/logo/google.png" alt="Google Icon" class="google-icon"> 
+                Login with Google
+            </a>
+        </div>
     </div>
+    
+    
 
     <% if (message && message.length > 0) { %>
         <script>

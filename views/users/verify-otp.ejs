@@ -5,73 +5,109 @@
   <title>OTP Verification</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #0b0808;
-      color: #333333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      font-family: 'Poppins', sans-serif;
+            background-image: url("/assets/imgs/page/back1.jpg");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
     }
+
     form {
-      background-color: #f3eb0b;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      width: 300px;
-      text-align: center;
+      background-color: transparent; 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            position: relative;
+            top: -60px;
+            backdrop-filter: blur(5px); 
     }
-    label {
-      display: block;
-      margin-bottom: 8px;
+
+    h2 {
+      margin-bottom: 20px;
+      color: #110146;
+      font-size: 24px;
       font-weight: bold;
     }
-    input[type="text"] {
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: #031669;
+      font-weight: 600;
+    }
+
+    input[type="number"] {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 20px;
-      border: 1px solid #cccccc;
-      border-radius: 4px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
       box-sizing: border-box;
+      transition: border-color 0.3s;
+      
+            
     }
+
+    input[type="number"]:focus {
+      border-color: #250373;
+      outline: none;
+    }
+
     button {
-      background-color: #10d22a;
+      background-color: #0c0255;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
+
+    button:hover {
+      background-color: #3013b2;
+    }
+
     button:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
     }
+
+    #timer {
+      margin: 15px 0;
+      color: #ee1414;
+      font-size: 14px;
+    }
+
     .message {
-      margin-top: 20px;
+      margin-top: 15px;
       color: red;
+      font-size: 14px;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 <body>
   <form action="/verify-otp" method="POST">
     <% if (typeof message !== 'undefined' && message) { %>
       <div class="message"><%= message %></div>
-      <% } %>
+    <% } %>
     <h2>Verify OTP</h2>
     <label for="otp">Enter OTP</label>
-   
     <input type="number" id="otp" name="otp" maxlength="6" minlength="6" required>
-
     <input type="hidden" name="email" value="<%= email %>">
     <button type="submit">Verify</button>
-    
     <div id="timer">Resend OTP in: <span id="countdown">60</span> seconds</div>
     <button type="button" id="resendBtn" disabled>Resend OTP</button>
-    
   </form>
+</body>
+
+
 
   <script>
     let countdown = 60;
@@ -218,5 +254,5 @@
       color: #007BFF;
     }
   </style>
-</body>
+
 </html>

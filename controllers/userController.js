@@ -83,6 +83,11 @@ try {
       }
     : { is_Active: true }; 
 
+    const newArrival = await products
+    .find({ is_Active: true })
+    .sort({ date: -1 })
+    .limit(5);
+
   
   const productData = await products.find(productFilter)
     .populate('productCategory')
@@ -100,6 +105,7 @@ try {
 
     res.render('users/homePage', {
       product: productData,
+      newArrivals:newArrival,
       category: categories,
       noProductsFound,
       currentPage: page,
@@ -133,11 +139,17 @@ const loadHome = async (req, res) => {
         }
       : { is_Active: true }; 
 
+
     const productData = await products.find(productFilter)
       .populate('productCategory')
       .sort({ date: -1 })
       .skip(skip)
       .limit(limit); 
+
+      const newArrival = await products
+      .find({ is_Active: true })
+      .sort({ date: -1 })
+      .limit(5);
 
     const totalProducts = await products.countDocuments(productFilter); // Ensure this line correctly counts documents based on the filter
     const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
@@ -152,6 +164,7 @@ const loadHome = async (req, res) => {
         user: userData,
         category: categories,
         product: productData,
+        newArrivals:newArrival,
         noProductsFound,
         currentPage: page,
         totalPages, 
@@ -282,15 +295,22 @@ const verifyLogin = async (req, res) => {
 
         const noProductsFound = productData.length === 0;
 
-        // Render the homepage with pagination and search
+        const newArrival = await products
+    .find({ is_Active: true })
+    .sort({ date: -1 })
+    .limit(5);
+        
+
+        
         res.render('users/homePage', {
           user: userData,
           product: productData,
           category: categories,
+          newArrivals:newArrival,
           noProductsFound,
           currentPage: page,
-          totalPages,  // Pass totalPages to EJS for pagination
-          searchQuery  // Pass search query to EJS for search functionality
+          totalPages, 
+          searchQuery  
         });
 
       } else {
@@ -487,84 +507,7 @@ const verifyPassword = async(req,res)=>{
     console.error(error)
   }
 };
-//guest user things-----------------------------//
 
-// const guestShopPage = async(req,res)=>{
-//   try{
-//     const productData = await products.find({is_Active:true})
-//     const categories= await category.find({is_Active:true})
-//     // console.log(productData);
-//     res.render('users/productShop', {product:productData, category:categories})
-//   }catch(error){
-//     console.error(error.message);
-//   }
-// };
-
-
-const guestShopPage = async (req, res) => {
-  
-  try {
-  
-    let page = parseInt(req.query.page) || 1; 
-    const limit = 8;
-
-    
-    const count = await products.countDocuments({ is_Active: true });
-    const totalPages = Math.ceil(count / limit);
-
-    
-    page = Math.min(totalPages, Math.max(1, page));
-
-    
-    const productData = await products.find({ is_Active: true })
-      .populate('productCategory') 
-      .skip((page - 1) * limit)
-      .limit(limit);
-    const categories = await category.find({ is_Active: true });
-
-    res.render('users/productShop', {
-      product: productData,
-      category: categories,
-      totalPages: totalPages,
-      currentPage: page,
-      limit: limit
-    });
-  } catch (error) {
-    console.error('Error loading guest shop page:', error.message);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-
-const guestProductDetailPage = async(req, res) => {
-  try {
-    console.log("guestproductdeetailspage");
-    const id = req.query.id;  // This retrieves the product ID from the query string
-    
-    const userId = req.session.userId;
-    const loginData = await User.findById(userId);
-    const categories = await category.find({ is_Active: true });
-
-    // Find the specific product by ID
-    const productData = await products.findOne({ _id: id, is_Active: true })
-      .populate('productCategory');  // Assuming the productCategory field is properly set in your schema
-
-    console.log(productData);
-    
-    if (productData) {
-      res.render('users/productDetail', {
-        product: productData,  // Passing the single product data
-        user: loginData,
-        category: categories
-      });
-    } else {
-      res.status(404).send('Product not found');  // Handle the case when no product is found
-    }
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Internal Server Error');
-  }
-};
 
 
 const loadshopPage = async (req, res) => {
@@ -580,10 +523,10 @@ const loadshopPage = async (req, res) => {
     const categories = await category.find({is_Active: true});
     const count = await products.countDocuments({is_Active: true});
     const totalPages = Math.ceil(count / limit);
+
 const userId=req.session.user_id
-
-
 const userData=await User.findById(userId)
+console.log('userdata from shop page:', userData)
     res.render('users/productShop', {
       user: userData,
       product: productData,
@@ -599,15 +542,16 @@ const userData=await User.findById(userId)
 
 const productdetailPage = async(req,res)=>{
   try{
-    console.log("productdetailpage")
+    
+    const id = req.query.id; 
       const userId= req.session.user_id
       const userData= await User.findById(userId);
+      console.log('userdata in productdetailpage:', userData)
       const categories = await category.find({is_Active: true});
 
-      const productData = await products.find({is_Active: true})
-    .populate('productCategory')
+      const productData = await products.findOne({ _id: id, is_Active: true })
+      .populate('productCategory'); 
 
-console.log(productData.productCategory);
 
    if(productData){
     res.render('users/productDetail',
@@ -620,6 +564,7 @@ console.log(productData.productCategory);
     console.error(error)
   }
 }
+
 
 const userProfile = async (req, res) => {
 
@@ -1090,14 +1035,8 @@ const ZtoA = async(req,res)=>{
   
     const totalPages = Math.ceil(count / limit);
     page = Math.max(1, Math.min(totalPages || 1, page));
-
-    
     const productData = allProducts.slice((page - 1) * limit, page * limit);
 
-    console.log("Count:", count);
-    console.log("Products fetched:", productData);
-
-  
     res.render('users/productShop', {
       product: productData,
       loginData,
@@ -1179,8 +1118,6 @@ const addtoWishlist = async (req, res) => {
   }
 };
 
-
-
 const removeWishlist = async(req, res) => {
   try {
       const productId = req.body.id; 
@@ -1217,13 +1154,27 @@ const aboutUs = async (req,res)=>{
       } else {
         res.render('users/login')
       }
-       
-
-
-
    } catch(error){
     console.error(error.message);
    }
+}
+
+
+const googleAuth = async(req,res)=>{
+  try{
+    const googleUser = req.user;
+    const email = googleUser.emails[0].value;
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.redirect('/register');
+    }
+    req.session.user = user;
+    res.redirect('/home');
+
+  } catch(error){
+    console.error('Error during Google authentication:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
 }
 
 
@@ -1264,8 +1215,6 @@ module.exports = {
    updateUserProfile,
 
    homewithoutLogin,
-   guestShopPage,
-   guestProductDetailPage,
    lowtoHigh,
    hightoLow,
    AtoZ,
@@ -1275,7 +1224,8 @@ module.exports = {
    addtoWishlist,
    removeWishlist,
 
-   aboutUs
+   aboutUs,
+   googleAuth
   
 }
    

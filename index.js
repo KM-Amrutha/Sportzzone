@@ -7,31 +7,26 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const flash = require('connect-flash')
+const passport = require('passport');
+require('./passport');
 
 
 //load environmental variables..
 dotenv.config();
 
 //import config file here
+
 const config = require("./config/config");
 
 
 //connnect to mongoDb
-mongoose.connect("mongodb+srv://amruthakm:mongodb777@cluster0.hatus.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster")
+mongoose.connect(process.env.mongodb)
 .then(() => {
   // console.log("Connected to MongoDB Atlas");
 })
 .catch((err) => {
   console.log("Connection error:", err.message);
 });
-
-
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true
-
-
-
-
 
 //view engine setup
 app.set('view engine','ejs')
@@ -82,7 +77,8 @@ app.use((err,req,res,next)=>{
 })
 
 
-   const port=2005
+   
+   const port = process.env.PORT || 2005;
    
   app.listen(port,function(){
     console.log(`http://localhost:${port}`);

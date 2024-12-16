@@ -6,9 +6,11 @@
  const auth = require("../middleware/auth")
  const bodyParser = require ('body-parser');
  const userController = require('../controllers/userController');
- const categoryController= require('../controllers/categoryController');
+ const categoryController= require('../controllers/categoryController'); 
  const cartController = require('../controllers/cartController');
  const orderController= require('../controllers/orderController');
+ const passport = require("passport")
+ require('../passport')
  
 
  const config = require("../config/config");
@@ -18,21 +20,17 @@ const { markAsUntransferable } = require("worker_threads");
 user_route.use(bodyParser.json()); 
 user_route.use(bodyParser.urlencoded({extended:true})); 
  
- 
-
-//   user_route.set('view engine','ejs');
-//  user_route.set('views','./views/users');
-
-// user_route.set('views', path.join(__dirname, '../views/admin'));
-
  // static files middleware
 user_route.use(express.static('public'));
+
+user_route.use(passport.initialize())
+user_route.use(passport.session())
 
 
 user_route.get('/',userController.homewithoutLogin);
 
-user_route.get('/productShop',auth.isBlockedoornot,userController.guestShopPage);
-user_route.get('/productDetail',auth.isBlockedoornot,userController.guestProductDetailPage);
+user_route.get('/login/google',passport.authenticate('google',{scope:['email','profile']}))
+user_route.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.googleAuth);
 
 
 user_route.get('/register',auth.isLogout,userController.loadRegister); 
@@ -67,7 +65,7 @@ user_route.post('/newPassword',auth.isLogout,userController.verifyPassword)
 
 user_route.get("/productShopPage",userController.loadshopPage);
 
-user_route.get('/productDetail',userController.productdetailPage);
+user_route.get('/productDetailPage',userController.productdetailPage);
 
 user_route.get('/filterbyCategory',userController.filterbyCategory);
 user_route.get('/allCategory',userController.allCategory);
@@ -132,9 +130,7 @@ user_route.post('/wishlist/add', auth.isLogin, userController.addtoWishlist);
 user_route.post('/removeWishlist', auth.isLogin, userController.removeWishlist);
 
 user_route.get('/aboutUs',auth.isLogin,auth.isBlocked, userController.aboutUs);
-
-
-
+// user_route.get('/newArrivals',auth.isBlocked,userController.newArrivals);
 
 module.exports = user_route;
 

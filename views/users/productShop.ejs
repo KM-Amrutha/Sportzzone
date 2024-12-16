@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-fullwidth.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>Sportzzone  - cricket for life </title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,11 +19,14 @@
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/maind134.css?v=3.4">
 
     <style>
-       .row {
+
+   .row {
   display: flex;
   flex-wrap: wrap;
 }
@@ -53,6 +56,86 @@
   color: red; 
 }
 
+.header-info a {
+    background-color: #3a14b4; /* Blue background */
+    color: #fff; /* White text */
+    padding: 5px 15px; /* Button padding */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Ensure it looks like a button */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.header-info a:hover {
+    background-color: #250970; /* Darker blue on hover */
+}
+
+.main-menu a {
+    color: blue !important; /* Sets the link text color to blue */
+}
+
+.main-menu a:hover {
+    color: rgb(100, 100, 197) !important; /* Changes color on hover */
+}
+
+.logo img {
+    max-height: 100px; 
+}
+
+.pagination-area nav {
+    display: flex;
+    justify-content: center; /* Centers the navigation inside the pagination area */
+}
+
+.pagination {
+    justify-content: center; /* Centers the pagination links inside the list */
+    margin: 0; /* Ensures no extra margin */
+    padding: 0; /* Ensures no extra padding */
+}
+
+.pagination .page-item {
+    margin: 0 5px; /* Optional: Adjust spacing between the pagination items */
+}
+
+.pagination .page-link {
+    text-align: center; /* Ensures the text inside the link is centered */
+    display: flex; /* Uses flexbox to center text inside */
+    justify-content: center; /* Centers the text horizontally */
+    align-items: center; /* Centers the text vertically */
+    padding: 10px 15px; /* Adjust padding for better clickability */
+    border: 1px solid #ddd; /* Border for the pagination buttons */
+    border-radius: 5px; /* Rounded edges for pagination buttons */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    font-size: 16px; /* Ensures proper text size */
+}
+
+.pagination .page-item.active .page-link {
+    background-color: blue; /* Highlight the active page */
+    color: white; /* Active page number color */
+    border-color: blue;
+}
+
+.pagination .page-link:hover {
+    background-color: blue !important; /* Blue background on hover */
+    color: white; /* White color for the number on hover */
+    text-decoration: none; /* Removes underline on hover */
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #310fa1; /* Default link color */
+    margin-right: 5px;
+}
+
+.breadcrumb a:hover {
+    color: #0056b3; /* Hover effect */
+}
+
+.breadcrumb a + a:before {
+    content: '>';
+    margin-left: 5px;
+    color: #6c757d; /* Separator color */
+}
 
       </style>
 
@@ -193,69 +276,16 @@
     </div>
 
 
-    <header class="header-area header-style-1 header-height-2">
-        <div class="header-top header-top-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info">
-                            <!-- <ul>
-                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
-                                <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
-                            </ul> -->
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-4">
-                        <div class="text-center">
-                            <div id="news-flash" class="d-inline-block">
-                                <!-- <ul>
-                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
-                                    <li>Supper Value Deals - Save more with coupons</li>
-                                    <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
-                                </ul> -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info header-info-right">
-                            <ul>
-                                <% if(locals.user) { %>
-                                    <%= console.log(user,"user in  product details");
-                                     %>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<%= user.name %>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                        <li><a class="dropdown-item" href="/userProfile"><i class="material-icons md-settings"></i>Account</a></li>
-                                        <li><div class="dropdown-divider"></div></li>
-                                        <li><a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a></li>
-                                    </ul>
-                                </li>
-                                <% } else { %>
-                                    
-                                <li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;<a style="color: #000000;" href="/loadLogin">Login</a></li>
-                                <% } %>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+    <header class="header-area"  style="background-color:#ffc107;" header-height-2">
+       
+        <!-- <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
-                        <!-- <div class="search-style-2">
-                                
-                                <input type="text" placeholder="Search for items...">
-                            
-                        </div> -->
+                      
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
@@ -309,12 +339,16 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
+        </div> -->
+
+
+
+
+        <div class="header-bottom   header-bottom-bg-color sticky-bar">
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
+                    <div class="logo logo-width-1">
+                        <a href=""><img src="assets/imgs/theme/icons/sportzzone1.png" alt="logo"></a>
                     </div>
 
                     <div class="header-nav d-flex justify-content-center w-100">
@@ -322,13 +356,38 @@
                             <nav>
                                 <ul class="d-flex justify-content-center">
                                     <li><a class="active" href="/">Home <i class="fi-rs-angle-down"></i></a></li>
-                                    <li><a href="/productShop">Shop</a></li>
+                                    <li><a href="/productShopPage">Shop</a></li>
                                     <li><a href="/loadWishlist">Wishlist</a></li>
                                     <li><a href="/getCart">Cart</a></li>
-                                    <li><a href="page-about.html">About</a></li>
+                                    <li><a href="aboutUs">About</a></li>
                                 </ul>
                             </nav>
                         </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <ul>
+                                <% if(locals.user) { %>
+                            
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                        <i class="fa-solid fa-user"></i> <%= user.name %>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                        <li><a class="dropdown-item" href="/userProfile"><i class="material-icons md-settings"></i>Account</a></li>
+                                        <li><div class="dropdown-divider"></div></li>
+                                        <li><a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a></li>
+                                    </ul>
+                                </li>
+                                <% } else { %>
+                                 <a style="color: #f0f6fa;" href="/loadLogin">Login</a>
+                              </li>
+                                <% } %>
+                            </ul>
+                        </div>
+
                     </div>
                     
                     <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
@@ -567,7 +626,7 @@
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="/home" rel="nofollow">Home</a>
+                <a href="/" rel="nofollow">Home</a>
                 <span></span> Shop
             </div>
         </div>
@@ -581,11 +640,12 @@
                         <div class="totall-product">
                             <p>We found <strong class="text-brand"><%=product.length%></strong> items for you!</p>
                         </div>
+
                         <div class="sort-by-product-area">
                             <div class="sort-by-cover">
                                 <div class="sort-by-product-wrap">
                                     <div class="sort-by">
-                                        <span><i class="fi-rs-apps-sort"></i>Sort :</span>
+                                        <span><i class="fi-rs-apps-sort"></i>Sort </span>
                                     </div>
                                     <div class="sort-by-dropdown-wrap">
                                         <span> by<i class="fi-rs-angle-small-down"></i></span>
@@ -612,7 +672,7 @@
                                     <div class="product-cart-wrap mb-30">
                                         <div class="product-img-action-wrap">
                                             <div class="product-img product-img-zoom">
-                                                <a href="/productDetail?id=<%= product[i]._id %>">
+                                                <a href="/productDetailPage?id=<%= product[i]._id %>">
                                                     <% if (product[i].images && product[i].images.length > 0) { %>
                                                         <img class="default-img" src="../uploads/<%= product[i].images[0] %>" alt="">
                                                         <% if (product[i].images.length > 1) { %>
@@ -641,13 +701,13 @@
                                         <div class="product-content-wrap">
                                             <div class="product-category">
                                                 <% if (product[i].productCategory) { %>
-                                                    <a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productCategory.catName %></a>
+                                                    <a href="/productDetailPage?id=<%= product[i]._id %>"><%= product[i].productCategory.catName %></a>
                                                 <% } else { %>
                                                     <span>No category available</span>
                                                 <% } %>
                                             </div>
                         
-                                            <h2><a href="/productDetail?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
+                                            <h2><a href="/productDetailPage?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
                         
                                             <% if (product[i].countStock == 0) { %>
                                                 <div class="product-price">
@@ -721,6 +781,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Toastr JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
         const searchInput = document.getElementById('search-input');
@@ -781,7 +844,8 @@
     })
     .then(data => {
         if (data.success) {
-            toastr.success(data.message); // Show success message
+            toastr.success(data.message); 
+            // toastr.success("Toastr is working!");// Show success message
         } else {
             toastr.error(data.message);  // Handle any other error messages
         }
@@ -828,15 +892,9 @@
         }
     </script>
 
-<!-- Include jQuery first -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 
-<!-- Toastr CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-<!-- Toastr JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!-- <script>
     window.onload = function() {
         toastr.success('Products sorted successfully');
