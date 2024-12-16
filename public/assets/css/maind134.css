@@ -5836,6 +5836,7 @@ h6.post-title {
   transition: all .3s ease 0s;
   -moz-appearance: none;
   -webkit-appearance: none;
+  appearance: none; /* Standard property */
   position: relative;
 }
 
