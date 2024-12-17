@@ -11,7 +11,6 @@ const coupon = require('../models/couponModel');
 const xlsx = require('xlsx');
 
 
-
 // Configure multer for file uploads
 // const storage = multer.diskStorage({
 //   destination: function(req, file, cb) {
