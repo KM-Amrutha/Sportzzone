@@ -845,13 +845,13 @@
     .then(data => {
         if (data.success) {
             toastr.success(data.message); 
-            // toastr.success("Toastr is working!");// Show success message
+            
         } else {
-            toastr.error(data.message);  // Handle any other error messages
+            toastr.error(data.message);  
         }
     })
     .catch(error => {
-        toastr.error(error.message); // Show any caught errors
+        toastr.error(error.message); 
     });
 }
    </script>

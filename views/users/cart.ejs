@@ -5,11 +5,12 @@
             <div class="container">
                 <div class="breadcrumb">
                     <a href="/home" rel="nofollow">Home</a>
-                    <span></span> Shop
-                    <span></span> Your Cart
+            <span><a href="/productShopPage" rel="nofollow">Shop</a></span>
+            <span><a href="/getCart" rel="nofollow">Your Cart</a></span>
                 </div>
             </div>
         </div>
+
         <section class="mt-50 mb-50">
             <div class="container">
                 <div class="row">
@@ -118,8 +119,8 @@
                         <% if (locals.cartData && cartData.product && cartData.product.length > 0) { %>
                             <div class="row">
                                 <div class="col-12 text-center"> <!-- Center the buttons -->
-                                    <a href="/home" class="btn-custom btn-lg">Continue Shopping</a>
-                                    <a href="/loadCheckout" class="btn-custom btn-lg">Proceed to Checkout</a>
+                                    <a href="/home" class="btn-custom btn-custom-centered btn-lg">Continue Shopping</a>
+                                    <a href="/loadCheckout" class="btn-custom btn-custom-centered btn-lg">Proceed to Checkout</a>
                                 </div>
                             </div>
                         <% } %>
@@ -233,14 +234,13 @@ function decreaseQuantity(id, productId, price, offerPrice, OfferisActive) {
 
     console.log('Decrease Quantity Clicked');
     console.log('Current Quantity:', currentQuantityValue);
-    console.log('Using Price:', OfferisActive ? offerPrice : price); // Log the current price being used
+    console.log('Using Price:', OfferisActive ? offerPrice : price);
 
     if (currentQuantityValue > 1) {
         currentQuantityValue--;
         currentQuantityElement.innerText = currentQuantityValue;
 
-        // Determine which price to use
-        const currentPrice = OfferisActive ? offerPrice : price; // Use offerPrice if active
+        const currentPrice = OfferisActive ? offerPrice : price; 
         currSubtotal.innerText = `₹${(currentQuantityValue * currentPrice).toFixed(2)}`;
 
         updateGrandTotal();

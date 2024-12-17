@@ -1262,13 +1262,14 @@ label {
 .custome-checkbox .form-check-label {
   position: relative;
   cursor: pointer;
+  padding-left: 20px;
 }
 
 .custome-checkbox .form-check-label {
   position: relative;
   cursor: pointer;
   color: #687188;
-  padding: 0;
+  padding-left: 20px;
   vertical-align: middle;
 }
 
@@ -1299,7 +1300,7 @@ label {
   left: 3px;
   opacity: 0;
   height: 6px;
-  border-left: 2px solid #fff;
+  border-left: 20px solid #fff;
   border-bottom: 2px solid #fff;
   -webkit-transform: translateY(-65%) rotate(-45deg);
   transform: translateY(-65%) rotate(-45deg);
@@ -8744,6 +8745,7 @@ span.fi-rs-apps {
 
 .mb-25 {
   margin-bottom: 25px !important;
+  padding-left: 30px;
 }
 
 .mb-30 {

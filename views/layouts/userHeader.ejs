@@ -91,7 +91,7 @@
     }
 
     .form-control:focus {
-        border-color: #229958;
+        border-color: #630fa9;
         box-shadow: 0 0 5px rgba(71, 4, 185, 0.5);
     }
 
@@ -277,7 +277,7 @@
         height: 42px; /* Adjust this height as needed */
     }
     .btn-custom {
-    padding: 15px 40px; /* Adjust for desired length */
+    padding: 15px 0px; /* Adjust for desired length */
     background-color: #12096d; /* Your preferred button color */
     color: rgb(237, 233, 233); /* White text */
     border: none; /* Remove border */
@@ -303,15 +303,15 @@
 
     /* Apply coupon button style */
     .apply-btn {
-        background-color: #2c0cac; /* Green background */
-        color: rgb(11, 25, 180);
-        border: 2px solid #2828a7; /* Green border */
+        background-color: #2c0cac; 
+        color: rgb(239, 247, 247);
+        border: 2px solid #2828a7; 
         border-radius: 0.25rem;
         padding: 0.5rem 1rem;
     }
     .btn-custom:hover, .apply-btn:hover {
-        background-color: #240796; /* Lighter green on hover */
-        color: white; /* White text on hover */
+        background-color: #ffc107;
+        color: white; /
     }
 
     /* Input placeholder text color */
@@ -387,7 +387,7 @@ a.btn-custom:hover, .dropdown-item.btn-custom:hover {
     max-height: 200px; 
 }
 
-/* Reset margins and padding for the body and html */
+
 html, body {
     margin: 0;
     padding: 0;
@@ -583,6 +583,8 @@ ul.categories .category-item a:hover {
     margin-left: 5px;
     color: #6c757d; /* Separator color */
 }
+/* the checkout page problems fixing */
+
 .product-name a {
     color: #18110f; /* Replace this with your desired color code */
     text-decoration: none; /* Removes the underline */
@@ -594,21 +596,82 @@ ul.categories .category-item a:hover {
 }
 .btn-custom-centered {
     display: inline-block; /* Ensures the button is an inline-block */
-    text-align: center; /* Centers text horizontally */
-    vertical-align: middle; /* Centers text vertically */
-    padding: 10px 20px; /* Adjust padding for spacing */
+    text-align: center !important; /* Centers text horizontally */
+    vertical-align: middle !important; /* Centers text vertically */
+    padding: 10px 20px !important; /* Adjust padding for spacing */
     font-size: 16px; /* Font size for readability */
-    background-color: #28a745; /* Button background color */
+    background-color: #2516b0; /* Button background color */
     color: #fff; /* Text color */
     text-decoration: none; /* Removes underline */
     border-radius: 5px; /* Adds rounded corners */
-    border: 1px solid #28a745; /* Border matching background color */
+    border: 1px solid #4c1cd1; /* Border matching background color */
     cursor: pointer; /* Changes cursor to pointer on hover */
 }
 
 .btn-custom-centered:hover {
-    background-color: #218838; /* Darker color on hover */
-    border-color: #1e7e34; /* Border color on hover */
+    background-color: #1d27b6; /* Darker color on hover */
+    border-color: #9a14b1; /* Border color on hover */
+
+}
+
+.form-check-input {
+    margin-left: 20px;
+}
+.address-container {
+    padding-left: 30px;
+}
+
+.table .product-thumbnail + td a {
+    color: black;
+    text-decoration: none; /* Optional: removes underline */
+}
+
+.product-qty {
+    font-weight: bold;
+}
+.table td:last-child {
+    font-weight: bold;
+}
+
+.payment_option .custome-radio {
+    margin-bottom: 10px;
+    position: relative; /* Ensures a proper positioning context */
+}
+
+.payment_option .custome-radio .form-check-label {
+    color: #292b2c;
+    font-weight: 600;
+    display: flex;
+    align-items: center; /* Aligns label vertically with the radio button */
+    position: relative;
+}
+
+.custome-radio .form-check-label::before {
+    content: "";
+    border: 1px solid #908f8f;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 8px;
+    position: relative;
+}
+
+.custome-radio input[type="radio"] + .form-check-label::after {
+    content: "";
+    height: 8px; /* Inner dot size */
+    width: 8px;
+    border-radius: 50%;
+    background-color: #19035b;
+    position: absolute;
+    top: 50%; /* Align vertically center */
+    left: 25px; /* Position inside the circle */
+    transform: translateY(-50%); /* Vertical centering */
+    opacity: 0; /* Hidden by default */
+}
+
+.custome-radio input[type="radio"]:checked + .form-check-label::after {
+    opacity: 1; /* Show the dot when checked */
 }
 
 

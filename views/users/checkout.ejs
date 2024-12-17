@@ -3,7 +3,7 @@
 
 <style>
     #removeCouponBtn:hover {
-        background-color: rgb(12, 154, 12);
+        background-color: rgb(240, 220, 9);
         transition: background-color 0.3s;
     }
 </style>
@@ -13,9 +13,9 @@
         <div class="paordder-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
-                    <span></span> Shop
-                    <span></span> Checkout
+                    <a href="/home" rel="nofollow">Home >></a>
+                    <a href="/productShopPage" rel="nofollow">Shop >></a>
+                    <a href="/loadCheckout" rel="nofollow">Checkout</a>
                 </div>
             </div>
         </div>
@@ -132,14 +132,14 @@
                                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                             <!-- Edit Address link -->
                                             <a href="/loadEditAddress?id=<%= address._id %>" 
-                                                style="background-color: rgb(3, 147, 48); border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 16px; border-radius: 5px; text-decoration: none; display: inline-block;">
-                                                 <i class="fa-solid fa-pen"></i> Edit Address
+                                                style="background-color: rgb(19, 10, 189); border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 16px; border-radius: 5px; text-decoration: none; display: inline-block;">
+                                                  Edit Address
                                              </a>
                             
                                             <!-- Remove Address button -->
                                             <button onclick="removeAddress('<%= address._id %>')" 
                                                     style="background-color: rgb(202, 4, 4); border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 16px; border-radius: 5px;">
-                                                <i class="fa-solid fa-trash"></i> Remove Address
+                                                 Remove Address
                                             </button>
                                         </div>
                                     </div>
@@ -298,6 +298,7 @@
                                 <div class="mb-25">
                                     <h5>Payment</h5>
                                 </div>
+                                
                                 <div class="payment_option">
                                      <div class="custome-radio">
                                         <input class="form-check-input" required="" type="radio"
@@ -809,7 +810,7 @@ async function applyCoupon() {
         const couponDiscountDisplay = document.getElementById('couponDiscountDisplay');
         if (couponDiscountDisplay) {
             couponDiscountDisplay.innerHTML = `
-                <span class="font-xl text-brand fw-900" style="color: green;">Rs. ${discountAmount.toFixed(2)}</span>
+                <span class="font-xl text-brand fw-900" style="color: blue;">Rs. ${discountAmount.toFixed(2)}</span>
             `;
         }
 

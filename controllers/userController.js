@@ -550,7 +550,7 @@ const productdetailPage = async(req,res)=>{
       const categories = await category.find({is_Active: true});
 
       const productData = await products.findOne({ _id: id, is_Active: true })
-      .populate('productCategory'); 
+      .populate('productCategory');     
 
 
    if(productData){
@@ -761,11 +761,17 @@ const addAddress = async (req, res) => {
 
 const loadEditAddress = async (req, res) => {
   try {
+
+    const userId=req.session.user_id;
+    const userData=await User.findById(userId)
+
       const addressId = req.query.id; 
       const address = await Address.findById(addressId); 
       
       if (address) {
-          res.render('users/editAddress', { addresses: address });
+          res.render('users/editAddress', {
+            user:userData,
+             addresses: address });
       } else {
           res.status(404).send('Address not found');
       }
