@@ -70,56 +70,119 @@ const productListview = async (req, res) => {
     });
   }
   
+  // const productInsert = async (req, res) => {
+  //   const { productName, productDescription, productPrice, countStock, listed, productBrand, productCategory } = req.body;
+  //   const croppedImages = req.files;  
+  //   let imageUrls = [];
+  
+  //   try {
+  //     console.log("Received Product Data:", req.body);
+  //     console.log("Uploaded Files:", croppedImages);
+  
+  //     for (const file of croppedImages) {
+  //       const filename = `${uuidv4()}.jpg`; 
+  //       const outputPath = path.join(__dirname, '../public/uploads', filename); 
+      
+  //       try {
+        
+  //         await sharp(file.path)
+  //           .resize({ width: 386, height: 595 }) 
+  //           .toFile(outputPath); 
+  //         console.log(`Processed and saved image: ${outputPath}`);
+      
+  //         imageUrls.push(filename); 
+      
+        
+  //         setTimeout(() => {
+  //           try {
+  //             fs.unlinkSync(file.path);
+  //             console.log(`Deleted temporary file: ${file.path}`);
+  //           } catch (error) {
+  //             console.warn(`Failed to delete temporary file: ${file.path}`, error);
+  //           }
+  //         }, 2000); 
+  //       } catch (error) {
+  //         console.error("Error processing image:", error);
+  //         return res.status(500).send("Error processing image.");
+  //       }
+  //     }
+      
+  //     console.log("Saving product with images:", imageUrls);
+  
+    
+  //     res.status(200).send("Product created successfully!");
+  
+  //   } catch (error) {
+  //     console.error("Error in product insertion:", error);
+  //     res.status(500).send("Internal server error.");
+  //   }
+  // };
+
   const productInsert = async (req, res) => {
-    const { productName, productDescription, productPrice, countStock, listed, productBrand, productCategory } = req.body;
-    const croppedImages = req.files;  // Array of uploaded images
-    let imageUrls = [];
-  
     try {
-      console.log("Received Product Data:", req.body);
-      console.log("Uploaded Files:", croppedImages);
-  
-      // Process each uploaded image
-      for (const file of croppedImages) {
-        const filename = `${uuidv4()}.jpg`; // Generate a new unique filename for the processed image
-        const outputPath = path.join(__dirname, '../public/uploads', filename); // Final destination path for the image
-  
-        console.log(`Processing file: ${file.path}`);
-  
-        try {
-          // Resize and save the processed image using sharp
-          await sharp(file.path)
-            .resize({ width: 386, height: 595 })  // Resize to desired dimensions
-            .toFile(outputPath);  // Save the image to the output path
-  
-          console.log(`Processed and saved image: ${outputPath}`);
-          imageUrls.push(filename);  // Add the image filename to the array for storage
-  
-          // Attempt to delete the temporary file after a small delay
-          setTimeout(() => {
-            deleteFileWithRetries(file.path);  // Call retry function to delete the temp file
-          }, 1000); // Delay before attempting to delete
-  
-        } catch (error) {
-          console.error("Error processing image with Sharp:", error);
-          return res.status(500).send("Error processing image.");  // Return error response if image processing fails
-        }
+        
+        const {
+            productName,
+            productDescription,
+            productCategory,
+            productBrand,
+            productPrice,
+            countStock,
+            listed
+        } = req.body;
+
+        const imageUrls= [];
+        for (const file of req.files) {
+          const filename = `${uuidv4()}.jpg`;
+              const outputPath = path.join(__dirname, '../public/uploads', filename);
+              try{
+              await sharp(file.path)
+                  .resize({ width: 386, height: 595 })
+                  .toFile(outputPath);
+
+              imageUrls.push(filename);
+
+              fs.unlink(file.path, (err) => {
+                  if (err) {
+                      console.error(`Error deleting file: ${err}`);
+                  } else {
+                      console.log(`File deleted: ${file.path}`);
+                  }
+              });
+          } catch (sharpError) {
+              console.error("Sharp Error:", sharpError);
+              throw new Error("Invalid input: Sharp failed to process the image.");
+          }
       }
-  
-      // Save the product with the processed images (imageUrls contains the processed image filenames)
-      // Example: Product.create({ productName, productDescription, productPrice, countStock, listed, productBrand, productCategory, images: imageUrls });
-  
-      // Simulate a product save response (replace this with your actual product saving logic)
-      console.log("Saving product with images:", imageUrls);
-  
-      // Assuming product saving is successful:
-      res.status(200).send("Product created successfully!");
-  
+
+      
+        if (!productName || !productDescription || !productCategory || !productBrand || !productPrice || !countStock) {
+            return res.status(400).send({message:"All fields are required."});
+        }
+        const newProduct = new Product({
+            productName: productName,
+            productDescription: productDescription,
+            productCategory: productCategory,
+            productBrand: productBrand,
+            productPrice: parseFloat(productPrice),  
+            countStock: parseInt(countStock), 
+            listed: listed || false,
+            images: imageUrls
+        });
+        const productData = await newProduct.save();
+
+        if (productData) {
+            res.redirect('/admin/productlist');
+        } else {
+            console.log("Error saving product");
+            res.status(500).send("Error saving product.");
+        }
     } catch (error) {
-      console.error("Error in product insertion:", error);
-      res.status(500).send("Internal server error.");
+        console.error("Error:", error.message);
+        res.status(500).send("Internal server error");
     }
-  };
+};
+  
 
 
 
@@ -225,14 +288,14 @@ const productListview = async (req, res) => {
 
                       console.log("Added image:", filename);
                       console.log("Updated image list:", imageUrls);
-  
-                      fs.unlink(file.path, (err) => {
-                          if (err) {
-                              console.error(`Error deleting file: ${err}`);
-                          } else {
-                              console.log(`File deleted: ${file.path}`);
-                          }
-                      });
+                      try {
+                        fs.unlinkSync(file.path);
+                        console.log(`Deleted temporary file: ${file.path}`);
+                      } catch (error) {
+                        console.warn(`Failed to delete temporary file: ${file.path}`, error);
+                      
+                      }
+                      
                   } catch (sharpError) {
                       console.error("Sharp Error:", sharpError);
                       errors.push("Error processing image.");

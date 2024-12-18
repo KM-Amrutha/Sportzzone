@@ -12,14 +12,15 @@
 
         <section class="pt-150 pb-150">
             <div class="container">
-                <div class="row">
+                
                     <!-- <div class="col-lg-10 m-auto"> -->
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="dashboard-menu">
                                     <ul class="nav flex-column" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false">
+                                            <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" 
+                                            aria-controls="dashboard" aria-selected="false">
                                                 <i class="fi-rs-settings-sliders mr-10"></i>Dashboard
                                             </a>
                                         </li>
@@ -228,11 +229,11 @@
                                                                     </address>
                                                                    
                                                                     <a onclick="removeAddress('<%= address._id %>')" class="btn-custom btn-sm btn-danger">
-                                                                        <i class="fa-solid fa-trash fa-xl"></i> Delete
+                                                                         Delete
                                                                     </a>
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                     <a href="/loadEditAddress?id=<%= address._id %>" class="btn-custom btn-sm btn-primary">
-                                                                        <i class="fa-solid fa-pen"></i> Edit
+                                                                        Edit
                                                                     </a>
                                                                     <hr>
                                                                 </div>
@@ -293,13 +294,15 @@
                                         </div>
                                     </div>
 
-                                    <% if(wallet){ %>
-                                        <div class="tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="account-detail-tab" style="padding: 20px;
-                                        width: 100%; display: grid; grid-template-columns: 1fr 2fr;">
 
-                                            <div class="card coupon-container" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 200px;">
+
+                                    <% if(wallet){ %>
+                                        <div class="tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="wallet-tab" style="padding: 20px;
+                                        width: 130%; display: grid; grid-template-columns: 1fr 2fr;">
+
+                                            <div class="card coupon-container" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(32, 27, 186, 0.1); width: 200px;">
                                                 <div class="card-header bg-gradient-primary text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                                                    <h5 style="margin-bottom: 0; font-size: 24px;">Wallet</h5>
+                                                    <h5 style="margin-bottom: 0; color: #2012ba; font-size: 24px;">Wallet</h5>
                                                 </div>
                                                 <div class="card-body" style="max-width: 300px;"> <!-- Adjust the max-width -->
                                                     <div class="wallet-info" style="padding-bottom: 15px;">
@@ -313,7 +316,7 @@
                                                                 <label for="amount" style="margin-bottom: 5px; font-size: 18px;">Amount:</label>
                                                                 <input type="number" class="form-control" id="amountInput" name="amount" style="border-radius: 20px; font-size: 16px; padding: 10px; border: 1px solid #ced4da;" placeholder="Enter amount">
                                                             </div>
-                                                            <button style="background-color: #056216;" type="button" onclick="submitForm()" class="btn btn-primary" style="border-radius: 20px; padding: 10px 30px; font-size: 18px;">Add me</button>
+                                                            <button style="background-color: #2012ba;" type="button" onclick="submitForm()" class="btn btn-primary" style="border-radius: 20px; padding: 10px 30px; font-size: 18px;">Add me</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -321,7 +324,7 @@
                                             <%}%>
                                             <% if (wallet) { %>
                                                 <div class="transaction-history" style="max-height: 400px; overflow-y: auto;">
-                                                    <h2 style="position: sticky; top: 0; background-color: #ffffff; z-index: 1; color: #18c939; 
+                                                    <h2 style="position: sticky; top: 0; background-color: #ffffff; z-index: 1; color: #3517db; 
                                                     font-size: 24px; font-weight: bold; text-align: center; text-transform: uppercase; margin-bottom: 20px;">
                                                     Transaction History</h2>
                                                     
@@ -361,7 +364,7 @@
                                             <% } %>
                                         </div>
 
-                                            <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                            <div class="tab-pane fade" id="changePassword" role="tabpanel" aria-labelledby="account-detail-tab">
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5>Account Details</h5>
@@ -640,7 +643,7 @@
 
 <style>
     .error-message {
-      color: red;
+      color: rgb(215, 19, 19);
       font-size: 0.9em; 
       margin-top: 5px; 
     }
@@ -748,37 +751,7 @@
         }
       })
         .then(response => response.json())
-        // .then(data => {
-        //   console.log('AJAX Response:', data);
-
-        //   // Ensure the table body is found and update it
-        //   const ordersTbody = document.getElementById('orders-tbody');
-        //   if (!ordersTbody) {
-        //     console.error('Orders table body not found.');
-        //     return;
-        //   }
-
-        //   let ordersHtml = '';
-        //   data.orders.forEach(order => {
-        //     ordersHtml += `
-        //       <tr>
-        //         <td style="padding: 10px;">${order.orderId}</td>
-        //         <td style="padding: 10px;">
-        //           ${new Date(order.orderDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-        //         </td>
-        //         <td style="padding: 10px;">
-        //             <!-- Order status badges here -->
-        //             <td style="padding: 10px;">${order.orderStatus}</td>
-        //         </td>
-        //         <td style="padding: 10px;">${order.paymentStatus}</td>
-        //         <td style="padding: 10px;">${order.totalAmount}</td>
-        //         <td style="padding: 10px;">
-        //           <a href="/orderDetailPage?id=${order._id}">View Order</a>
-        //         </td>
-        //       </tr>`;
-        //   });
-        //   ordersTbody.innerHTML = ordersHtml;
-        // })
+  
         .then(data => {
     console.log('AJAX Response:', data);
 

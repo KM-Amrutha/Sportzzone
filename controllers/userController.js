@@ -683,16 +683,21 @@ const filterbyCategory = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .exec();
-
     if (!product || product.length === 0) {
       return res.status(404).json({ error: 'No products found for the category' });
     }
+
+    const newArrival = await products
+    .find({ is_Active: true })
+    .sort({ date: -1 })
+    .limit(5);
 
     const totalPages = Math.ceil(totalProducts / limit);
 
     res.render("users/homePage", {
       loginData,
       product,
+      newArrivals:newArrival,
       category: categories,
       currentPage: page,
       totalPages,

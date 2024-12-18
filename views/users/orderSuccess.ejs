@@ -26,137 +26,163 @@
 
     <style>
 
-
-
-
-.main {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #007bff, #ffc107); /* Background specific to main */
-    color: #333;
-    padding: 20px 0;
+   .row {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-/* Container Styling */
-.main .container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f3ee58; /* Yellow background */
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.col-lg-3, .col-md-4, .col-sm-6 {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Success Message Styling */
-.main .success-message {
-    text-align: center;
+.product-cart-wrap {
+  flex: 1; /* Allow product cards to expand equally */
+  display: flex;
+  flex-direction: column;
 }
 
-.main .success-message h1 {
-    color: #28a745; /* Green */
+.product-img-action-wrap, .product-content-wrap {
+  flex-grow: 1; /* Allow image and content to expand properly */
+}
+
+/* Fix any padding or margin issues */
+.product-cart-wrap {
+  padding: 0 !important;
+  margin-bottom: 30px;
+}
+.crossed {
+  text-decoration: line-through;
+  color: red; 
+}
+
+.header-info a {
+    background-color: #3a14b4; /* Blue background */
+    color: #fff; /* White text */
+    padding: 5px 15px; /* Button padding */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Ensure it looks like a button */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.header-info a:hover {
+    background-color: #250970; /* Darker blue on hover */
+}
+
+.main-menu a {
+    color: blue !important; /* Sets the link text color to blue */
+}
+
+.main-menu a:hover {
+    color: rgb(100, 100, 197) !important; /* Changes color on hover */
+}
+
+.logo img {
+    max-height: 100px; 
+}
+/* Main container styling */
+.order-success-page {
+    background: linear-gradient(to bottom right, #FFD700, #3A14B4); /* Yellow to Blue gradient */
+    min-height: 100vh; /* Ensure it takes the full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px; /* Add padding for responsiveness */
+    box-sizing: border-box;
+}
+
+.order-success-page .content-wrapper {
+    background-color: #fff; /* White background for the card */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    padding: 30px; /* Inner padding */
+    max-width: 800px; /* Increased width */
+    width: 90%; /* Ensure it adapts on smaller screens */
+    text-align: center; /* Center align content */
+}
+
+/* Success message styling */
+.order-success-page .success-message h1 {
+    color: #28a745; /* Green for success message */
+    margin-bottom: 20px; /* Space below heading */
     font-size: 2rem;
-    margin-bottom: 10px;
 }
 
-.main .success-message p {
-    margin: 5px 0;
-    font-size: 1.1rem;
+.order-success-page .success-message p {
+    font-size: 1rem;
+    color: #333; /* Darker text for contrast */
+    margin: 10px 0;
 }
 
-/* Order Details Styling */
-.main .order-details {
-    margin-top: 30px;
+/* Order details styling */
+.order-success-page .order-details {
+    margin-top: 20px;
+    text-align: left; /* Left align details */
 }
 
-.main .order-details h2 {
+.order-success-page .order-details h2 {
+    color: #3A14B4; /* Match the theme color */
     font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #333;
+    margin-bottom: 15px;
 }
 
-.main .order-details ul {
-    list-style-type: none;
+.order-success-page .order-details ul {
+    list-style: none;
     padding: 0;
 }
 
-.main .order-details ul li {
+.order-success-page .order-details li {
+    background-color: #f9f9f9; /* Light gray background for each item */
     padding: 10px;
-    border-bottom: 1px solid #ccc;
-    background: #fdfdfd;
     margin-bottom: 10px;
     border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow */
 }
 
-/* Action Buttons */
-.main .actions {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.main .actions .btn {
-    text-decoration: none;
-    color: #fff;
-    background-color: #076a02; /* Green */
+/* Continue shopping button */
+.order-success-page .actions .btn-primary {
+    display: inline-block;
+    background-color: #3A14B4; /* Primary blue color */
+    color: #fff; /* White text */
     padding: 10px 20px;
+    text-decoration: none;
     border-radius: 5px;
-    margin: 0 10px;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.main .actions .btn:hover {
-    background-color: #065a02;
-    transform: scale(1.05);
-}
-
-/* Primary Button */
-.main .btn-primary {
-    background-color: #28a745; /* Green */
-    border-color: #28a745;
-}
-
-.main .btn-primary:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-    color: #fff;
-}
-
-/* Pagination (if required inside main) */
-.main .pagination {
-    display: flex;
-    justify-content: center;
     margin-top: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-.main .pagination .page-item {
-    margin: 0 5px;
+.order-success-page .actions .btn-primary:hover {
+    background-color: #250970; /* Darker blue on hover */
 }
 
-.main .pagination .page-link {
-    display: block;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    color: #007bff;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-success-page .content-wrapper {
+        padding: 20px;
+    }
 
-.main .pagination .page-link:hover {
-    background-color: #007bff;
-    color: #fff;
-}
+    .order-success-page .success-message h1 {
+        font-size: 1.5rem;
+    }
 
-.main .pagination .page-item.active .page-link {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
+    .order-success-page .order-details h2 {
+        font-size: 1.2rem;
+    }
 }
 
 
-    </style>
+      </style>
+      
+
+
+   
 
 </head>
 
-
 <body>
+
     <!-- Quick view -->
     <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -292,6 +318,72 @@
 
     <header class="header-area"  style="background-color:#ffc107;" header-height-2">
        
+        <!-- <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                      
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/loadWishlist">
+                                        
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="getCart">
+                                    </a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                        <ul>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara" src="/assets/imgs/shop/thumbnail-3.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
+                                                    <h4><span>1 × </span>$800.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara" src="/assets/imgs/shop/thumbnail-2.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
+                                                    <h4><span>1 × </span>$3200.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="shopping-cart-footer">
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>$4000.00</span></h4>
+                                            </div>
+                                            <div class="shopping-cart-button">
+                                                <a href="shop-cart.html" class="outline">View cart</a>
+                                                <a href="shop-checkout.html">Checkout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+
+
         <div class="header-bottom   header-bottom-bg-color sticky-bar">
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
@@ -569,42 +661,34 @@
         </div>
     </div>
 
-
-
-
-<main class="main">
-<div class="container">
+    <main class="order-success-page">
+        <div class="content-wrapper">
+            <div class="success-message">
+                <h1>Thank you for your order!</h1>
+                <p>Your order ID is <strong><%= order.orderId %></strong>.</p>
+                <p>Total Amount: <strong>₹<%= order.totalAmount %></strong></p>
+                <p>Payment Status: <strong><%= order.paymentStatus %></strong></p>
+                <p>Order Status: <strong><%= order.orderStatus %></strong></p>
+                <p>Date Placed: <strong><%= order.orderDate.toDateString() %></strong></p>
+            </div>
+            <div class="order-details">
+                <h2>Order Details</h2>
+                <ul>
+                    <% order.product.forEach(item => { %>
+                        <li>
+                            <p>Product: <%= item.productId.productName %></p>
+                            <p>Quantity: <%= item.quantity %></p>
+                            <p>Price: ₹<%=(item.displayPrice || 0).toFixed(2) %></p>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+            <div class="actions">
+                <a href="./home" class="btn btn-primary">Continue Shopping</a>
+            </div>
+        </div>
+    </main>
     
-    <div class="success-message">
-        <h1>Thank you for your order!</h1>
-        <p>Your order ID is <strong><%= order.orderId%></strong>.</p>
-        <p>Total Amount: <strong>₹<%= order.totalAmount %></strong></p>
-        <p>Payment Status: <strong><%= order.paymentStatus %></strong></p>
-        <p>Order Status: <strong><%= order.orderStatus %></strong></p>
-        <p>Date Placed: <strong><%= order.orderDate.toDateString() %></strong></p>
-    </div>
-    <div class="order-details">
-        <h2>Order Details</h2>
-        <ul>
-            <% order.product.forEach(item => { %>
-                <li>    
-                    <p>Product: <%= item.productId.productName %></p>
-                    <p>Quantity: <%= item.quantity %></p>
-                    <p>Price: ₹<%=(item.displayPrice || 0).toFixed(2) %></p>
-                    
-                    
-                </li>
-            <% }) %>
-        </ul>
-    </div>
-    <div class="actions">
-        <a href="./home" class="btn btn-primary">Continue Shopping</a>
-    </div>
-    <div>
-        
-    </div>
-</div>
-</main>
 
 <%- include('../layouts/userFooter.ejs') -%>
 

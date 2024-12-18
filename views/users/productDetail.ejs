@@ -20,6 +20,10 @@
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/maind134.css?v=3.4">
 
@@ -119,8 +123,28 @@
     color: white; /* White color for the number on hover */
     text-decoration: none; /* Removes underline on hover */
 }
+</style>
 
+       <style>
+        #toast-container > .toast-success {
+  background-color: #090795 !important;
+  color: #ffffff !important;
+}
 
+#toast-container > .toast-error {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+#toast-container > .toast-info {
+  background-color: #17a2b8 !important;
+  color: #ffffff !important;
+}
+
+#toast-container > .toast-warning {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+}
 
       </style>
 
@@ -711,6 +735,7 @@
                                                
                                                 <button type="submit" class="button button-add-to-cart" onclick= "addToCart('<%=product._id%>')" >Add to cart</button>
                                                 
+                                                
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtoWishlist('<%= product._id%>')"><i class="fi-rs-heart"></i></a>
                                                 
                                             
@@ -757,6 +782,12 @@
         </div>
     </div>
 
+     <!-- Toastr JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
        function addToCart(productId) {
     event.preventDefault(); 
@@ -794,7 +825,7 @@
 
     </script>  
 
-    <script>
+<script>
     function addtoWishlist(productId) {
         $.ajax({
             url: '/wishlist/add',
@@ -804,15 +835,15 @@
                 if (response.success) {
                     Swal.fire({
                         title: 'Success',
-                        text: 'Product added to wishlist',
+                        text: response.message, // "Product added to wishlist"
                         icon: 'success',
                         confirmButtonText: 'OK'
                     });
                 } else {
                     Swal.fire({
-                        title: 'Error',
-                        text: response.error,
-                        icon: 'error',
+                        title: 'Info',
+                        text: response.message, // "Product is already in wishlist"
+                        icon: 'info',
                         confirmButtonText: 'OK'
                     });
                 }
@@ -829,6 +860,8 @@
         });
     }
 </script>
+
+  
 
 
     <!-- Vendor JS-->

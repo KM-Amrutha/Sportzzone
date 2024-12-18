@@ -2182,12 +2182,12 @@ label {
 }
 
 .nav-tabs .nav-link.active {
-  color: #088178;
+  color: #251bdb;
   background-color: #fde1bd;
 }
 
 .nav-tabs .nav-link:hover {
-  color: #088178;
+  color: #442fe4;
   background-color: #fde1bd;
   -webkit-transform: translateY(-3px);
           transform: translateY(-3px);
@@ -4476,8 +4476,8 @@ table .product-thumbnail img {
 }
 
 .tab-style3 .nav-tabs .nav-item a.active {
-  border-bottom-color: #088178;
-  color: #088178;
+  border-bottom-color: #0e4eb4;
+  color: #191cc3;
 }
 
 .tab-style3 .nav-tabs li.nav-item a {

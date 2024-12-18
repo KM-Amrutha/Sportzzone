@@ -8,13 +8,13 @@
                     <!-- First Image -->
                     <div class="single-hero-slider single-animation-wrap">
                         <div class="single-slider-img">
-                            <img class="animated" src="uploads/wallpapper7.jpg" alt="Hero Slider Image 1">
+                            <img class="animated" src="uploads/wall77.jpg" alt="Hero Slider Image 1">
                         </div>
                     </div>
                     <!-- Second Image -->
                     <div class="single-hero-slider single-animation-wrap">
                         <div class="single-slider-img">
-                            <img class="animated" src="uploads/wallpapper8.jpg" alt="Hero Slider Image 2">
+                            <img class="animated" src="uploads/virat.jpg" alt="Hero Slider Image 2">
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                                       <div class="product-cart-wrap mb-30">
                                         <div class="product-img-action-wrap">
                                           <div class="product-img product-img-zoom">
-                                            <a href="/productDetail?id=<%= product[i]._id %>">
+                                            <a href="/productDetailPage?id=<%= product[i]._id %>">
                                               <% if (product[i].images) { %>
                                                 <img class="current" src="../uploads/<%= product[i].images[0] %>" alt="">
                                                 <% if (product[i].images.length > 1) { %>
@@ -108,7 +108,7 @@
                                           <div class="product-category">
                                             <a href="#"><%= product[i].productCategory.catName %></a>
                                           </div>
-                                          <h2><a href="/productShop?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
+                                          <h2><a href="/productDetailPage?id=<%= product[i]._id %>"><%= product[i].productName %></a></h2>
                           
                                           <% if (product[i].countStock == 0) { %>
                                             <div class="product-price">

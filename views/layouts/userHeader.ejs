@@ -212,13 +212,19 @@
 .header-info a {
     background-color: #3a14b4; /* Blue background */
     color: #fff; /* White text */
-    padding: 5px 15px; /* Button padding */
+    padding: 8px 30px; /* Adjust padding to match the height of other buttons */
     border-radius: 5px; /* Rounded corners */
     text-decoration: none; /* Remove underline */
-    display: inline-block; /* Ensure it looks like a button */
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    display: inline-flex; /* Ensure it behaves like a button */
+    align-items: center; /* Vertically align text in the button */
+    justify-content: center; /* Center content horizontally */
+    height: 40px; /* Set fixed height for consistent alignment */
+    line-height: 1; /* Prevent misalignment from line height */
+    font-size: 16px; /* Font size consistency */
+    transition: background-color 0.3s ease;
 }
 
+/* Hover effect for login button */
 .header-info a:hover {
     background-color: #250970; /* Darker blue on hover */
 }
@@ -674,7 +680,39 @@ ul.categories .category-item a:hover {
     opacity: 1; /* Show the dot when checked */
 }
 
+/* account of user css starting here first is address */
 
+#address .btn-custom {
+    display: inline-flex; /* Use flexbox for alignment */
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Center text horizontally */
+    text-align: center; /* Ensure text is centered */
+    width: auto; /* Keep button responsive */
+    padding: 5px 10px; /* Adjust padding if needed */
+}
+
+</style>
+
+<style>
+    #toast-container > .toast-success {
+  background-color: #19046d !important;
+  color: #ffffff !important;
+}
+
+#toast-container > .toast-error {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+#toast-container > .toast-info {
+  background-color: #17a2b8 !important;
+  color: #ffffff !important;
+}
+
+#toast-container > .toast-warning {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+}
 
 </style>
 
