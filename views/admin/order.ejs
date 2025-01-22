@@ -5,9 +5,6 @@
         <div>
             <h2 class="content-title card-title">Order List </h2>
         </div>
-        <div>
-            <input type="text" placeholder="Search order ID" class="form-control bg-white">
-        </div>
     </div>
     <div class="card mb-4">
         <!-- <header class="card-header">
@@ -84,13 +81,13 @@
                           </div>
                         </td>
                         <td class="text-end">
-                          <a href="/admin/loadOrderDetails?id=<%= order._id %>" class="btn btn-sm btn-outline-dark">Order Detail</a>
+                          <a href="/admin/loadOrderDetails?id=<%= order._id %>" class="btn btn-sm custom-blue-btn">Order Detail</a>
                         </td>
                       </tr>
                     <% }) %>
                   </tbody>
                 <% } else { %>
-                  <h3 style="font-size: 28px; font-weight: bold; color: #000000; text-transform: uppercase; border-bottom: 2px solid #0bb71f; padding-bottom: 5px;">No orders found</h3>
+                  <h3 style="font-size: 28px; font-weight: bold; color: #000000; text-transform: uppercase; border-bottom: 2px solid #080a79; padding-bottom: 5px;">No orders found</h3>
                 <% } %>
               </table>
             </div> <!-- table-responsive //end -->

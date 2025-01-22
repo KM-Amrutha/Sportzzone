@@ -19,6 +19,7 @@ const { truncate } = require('fs/promises');
 require('dotenv').config();
 
 
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -36,8 +37,8 @@ const generateOTP = () => {
   return numericOTP.toString().padStart(6, '0'); 
 };
 
-const sendOTP = (email, otp) => {
 
+const sendOTP = (email, otp) => {
   const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -45,8 +46,6 @@ const sendOTP = (email, otp) => {
       text: `Your OTP code is ${otp}`
       
   };
-  
-
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
           return console.log('error sending Otp',error);
@@ -96,11 +95,9 @@ try {
     .limit(limit); 
 
     const totalProducts = await products.countDocuments(productData);
-    
     const totalPages = Math.ceil(totalProducts / limit); 
 
     const categories = await category.find({ is_Active: true });
-
     const noProductsFound = productData.length === 0;
 
     res.render('users/homePage', {
@@ -151,8 +148,8 @@ const loadHome = async (req, res) => {
       .sort({ date: -1 })
       .limit(5);
 
-    const totalProducts = await products.countDocuments(productFilter); // Ensure this line correctly counts documents based on the filter
-    const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
+    const totalProducts = await products.countDocuments(productFilter);
+    const totalPages = Math.ceil(totalProducts / limit); 
 
     const userData = await User.findById(userid);
     const categories = await category.find({ is_Active: true });
@@ -227,7 +224,9 @@ const insertUser = async(req,res)=>{
             await newOTP.save();
             sendOTP(req.body.email, otp);
 
-              res.render('./users/verify-otp',{email : req.body.email, message:'OTP Send to your email'});
+              res.render('./users/verify-otp',{
+                email : req.body.email, 
+                message:'OTP Send to your email'});
           }
           else{
             res.render('./users/registration',{message:"your registration has been failed"});
@@ -324,6 +323,8 @@ const verifyLogin = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 const userLogout = async(req,res)=>{
 try {
@@ -475,7 +476,8 @@ const verifyNewOtp = async (req, res) => {
   try {
     let userOtp = req.body.newOtp;
     if (userOtp === req.session.passwordOtp) {
-      return res.render('users/newPassword', { email: req.session.email });
+      return res.render('users/newPassword',
+         { email: req.session.email });
     } else {
       res.render('users/resetOtp', { message: "Invalid OTP" });
     }
@@ -1171,25 +1173,60 @@ const aboutUs = async (req,res)=>{
 }
 
 
-const googleAuth = async(req,res)=>{
-  try{
-    const googleUser = req.user;
-    const email = googleUser.emails[0].value;
-    const user = await User.findOne({ email });
-    if (!user) {
-        return res.redirect('/register');
-    }
-    req.session.user = user;
-    res.redirect('/home');
+// const googleAuth = async(req,res)=>{
+//   try{ 
+//     const googleUser = req.user;
+//     console.log("Google User Profile:", googleUser);
 
-  } catch(error){
-    console.error('Error during Google authentication:', error.message);
-    res.status(500).send('Internal Server Error');
+//     const email = googleUser.emails[0].value;
+//     const user = await User.findOne({ email });
+
+//     console.log("Email:", email);
+// console.log("User Found in DB:", user);
+
+//     if (!user) {
+//         return res.redirect('/register');
+//     }
+//     req.session.user = user;
+//     res.redirect('/home');
+
+//   } catch(error){
+//     console.error('Error during Google authentication:', error.message);
+//     res.status(500).send('Internal Server Error');
+//   }
+// }
+
+const googleAuth = async (req, res) => {
+  try {
+      const googleUser = req.user;
+      console.log("Google User Profile:", googleUser);
+
+      const email = googleUser.emails[0].value;
+      let user = await User.findOne({ email });
+
+      console.log("Email:", email);
+      console.log("User Found in DB:", user);
+
+      if (!user) {
+          // Optionally create the user if they don't exist
+          console.log("User not found, creating a new user.");
+          user = new User({
+              name: googleUser.displayName,
+              email: email,
+              googleId: googleUser.id,
+              is_Active: true,
+          });
+          await user.save();
+      }
+
+      req.session.user_id = user._id;
+      console.log("Session User Set:", req.session.user);
+      return res.status(200).redirect('/home');
+  } catch (error) {
+      console.error('Error during Google authentication:', error.message);
+      res.status(500).send('Internal Server Error');
   }
-}
-
-
-
+};
 
 module.exports = {
       loadHome,

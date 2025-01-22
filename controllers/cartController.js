@@ -451,7 +451,9 @@ const placeOrder = async (req, res) => {
     const { couponCode, paymentMethod } = req.body;
 
     const userCart = await cart.findOne({ userId });
-    const address = await Address.find({ userId });
+    let addresses = await Address.findById(req.body.address);
+
+    console.log('address of this user is : ', addresses)
 
     if (!userCart || userCart.product.length === 0) {
       return res.status(400).json({ message: "Cart is empty or not found." });
@@ -543,7 +545,7 @@ const placeOrder = async (req, res) => {
         paymentStatus,
         totalAmount: req.body.amount,
         product: productDataToSave,
-        address,
+        address: addresses,
         couponDiscount,
       });
 

@@ -19,7 +19,8 @@ offer:{
         },
 
  OfferisActive:{
-     type:Boolean,default:true
+     type:Boolean,
+     default:true
         },
 is_Active:{
     type:Boolean,

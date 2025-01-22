@@ -21,7 +21,8 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   offerPrice:{
-    type:Number,default: function () {
+    type:Number,
+    default: function () {
       return this.productPrice;
   }},
 

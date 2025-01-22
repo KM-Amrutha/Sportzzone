@@ -4,9 +4,13 @@ const walletSchema= new mongoose.Schema({
 
     userId : {type:mongoose.Schema.Types.ObjectId,required:true,ref:'User'},
 
-    balance: { type: Number, required: true, default: 0 },
+    balance: { type: Number, 
+        required: true, 
+        default: 0 },
    
-    currency: { type: String, required: true },
+    currency: { type: String,
+     required: true },
+
     transactionHistory: [
         {
             date: { type: Date, default: Date.now },
@@ -14,7 +18,8 @@ const walletSchema= new mongoose.Schema({
             amount: { type: Number, required: true }
         }
     ],
-    date: { type: Date, default: Date.now}
+    date: { type: Date,
+         default: Date.now}
 
 });
 

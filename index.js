@@ -22,7 +22,7 @@ const config = require("./config/config");
 //connnect to mongoDb
 mongoose.connect(process.env.mongodb)
 .then(() => {
-  // console.log("Connected to MongoDB Atlas");
+  //  console.log(`Connected to MongoDB ${process.env.mongodb}` );
 })
 .catch((err) => {
   console.log("Connection error:", err.message);
@@ -50,7 +50,7 @@ app.use(session({
   
 }));
 
-app.use(flash());
+// app.use(flash());
 
 
 //for user routes------------------
@@ -73,6 +73,7 @@ app.use("*", (req, res, next) => {
 
 app.use((err,req,res,next)=>{
   console.log(err.stack)
+  
   res.status(500).send("internal server error")
 })
 

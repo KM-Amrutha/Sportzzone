@@ -1,5 +1,5 @@
  const express = require("express");
- const user_route = express()
+ const user_route = express.Router()
  const session = require ("express-session");
 //  const multer = require('multer')
  const path = require("path");
@@ -19,8 +19,14 @@ const { markAsUntransferable } = require("worker_threads");
 
 user_route.use(bodyParser.json()); 
 user_route.use(bodyParser.urlencoded({extended:true})); 
+
+user_route.use(session({
+    secret:config.sessionSecret,
+    saveUninitialized:true,
+    resave:false
+}));
  
- // static files middleware
+ // static files middleware..
 user_route.use(express.static('public'));
 
 user_route.use(passport.initialize())

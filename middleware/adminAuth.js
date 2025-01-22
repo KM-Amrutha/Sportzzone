@@ -7,7 +7,7 @@ const isLogin = async (req, res, next) => {
             console.log('Session Admin ID:', req.session.admin_id);
             next();
         } else {
-            console.log('No Admin ID in session, redirecting to login');
+            console.log('No Admin ID in session, redirecting to login'); 
             res.redirect('/admin');
         }
     } catch (error) {
@@ -15,6 +15,8 @@ const isLogin = async (req, res, next) => {
         res.redirect('/admin');
     }
 };
+
+
 
 const isLogout = async (req, res, next) => {
     try {
@@ -30,7 +32,18 @@ const isLogout = async (req, res, next) => {
     }
 };
 
+const para = async(req,res,next)=>{
+    try{
+        console.log(req.params,"para")
+next()
+    } catch(err){
+        console.log(err)
+        next()
+    }
+}
+
 module.exports = {
     isLogin,
-    isLogout
+    isLogout,
+    para
 };

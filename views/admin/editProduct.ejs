@@ -4,7 +4,7 @@
  <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>Sportzzone Edit page</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -218,7 +218,8 @@
         </header>
         
         <body>
-            <form action="/admin/editProduct?id=<%= product._id %>" id="editForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <form action="/admin/editProduct?id=<%= product._id %>" id="editForm" method="post" enctype="multipart/form-data" 
+                onsubmit="return validateForm()">
                 <input type="hidden" name="productId" value="<%= product._id %>">
                 <section class="content-main">
                     <div class="row">
@@ -226,7 +227,7 @@
                             <div class="content-header">
                                 <h2 class="content-title">Edit Product</h2>
                                 <div>
-                                    <button class="btn btn-md rounded font-sm hover-up" style="background-color: #088178; margin-left: 10cm;" type="submit">UPDATE PRODUCT</button>
+                                    <button class="btn btn-md rounded font-sm hover-up" style="background-color: #2b1fd6; margin-left: 10cm;" type="submit">UPDATE PRODUCT</button>
                                 </div>
                             </div>
                         </div>
@@ -270,6 +271,8 @@
                             </div>
                         </div>
                         <div class="col-lg-3">
+
+
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h4>Media</h4>
@@ -288,11 +291,16 @@
                                                 <p>No images uploaded.</p>
                                             <% } %>
                                         </div>
-                                        <input class="form-control" type="file" multiple accept="image/jpeg,image/jpg,image/png,image/webp,image/gif" name="images" id="imageInput" onchange="validateAndPreviewImages(event)" >
+                                        <input class="form-control" type="file" multiple accept="image/jpeg,image/jpg,image/png,image/webp,image/gif" 
+                                        name="images" id="imageInput" onchange="validateAndPreviewImages(event)" >
                                         <div id="image-error" class="text-danger"></div>
+                                        <input type="hidden" name="deletedImages" value="...">
                                     </div>
                                 </div>
                             </div>
+
+
+
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h4>Organization</h4>
@@ -348,11 +356,49 @@
             <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
             <script src="/admin-assets/js/main.js" type="text/javascript"></script>
 
+
+
                <script>
-    function deleteImage(event) {
-        const imageContainer = event.target.parentNode;
-        imageContainer.remove(); // Remove the image container from the DOM
+   let deletedImages = []; // Store deleted images
+
+// Function to handle image deletion
+function deleteImage(event, imageName) {
+    const imageContainer = event.target.parentNode;
+
+    // Add the image name to the deleted images array
+    if (!deletedImages.includes(imageName)) {
+        deletedImages.push(imageName);
     }
+
+    // Remove the image container from the UI
+    imageContainer.remove();
+
+    // Update the hidden input field with the current list of deleted images
+    const deletedImagesInput = document.querySelector('input[name="deletedImages"]');
+    if (deletedImagesInput) {
+        deletedImagesInput.value = JSON.stringify(deletedImages); // Update the value with the JSON string
+    }
+}
+
+// Ensure the hidden input for deleted images exists during form submission
+document.querySelector('form').addEventListener('submit', function () {
+    let deletedImagesInput = document.querySelector('input[name="deletedImages"]');
+    
+    if (!deletedImagesInput) {
+        // Create and append a hidden input field if not already present
+        deletedImagesInput = document.createElement('input');
+        deletedImagesInput.type = 'hidden';
+        deletedImagesInput.name = 'deletedImages';
+        this.appendChild(deletedImagesInput);
+    }
+
+    // Update the hidden input value with the current deletedImages array
+    deletedImagesInput.value = JSON.stringify(deletedImages);
+    console.log('the deleted images are: ',deletedImages);
+});
+
+
+
 
     function validateAndPreviewImages(event) {
         const previewContainer = document.getElementById('image-preview-container');
@@ -416,6 +462,8 @@
         }
     }
 
+
+
     function validateForm() {
         let pname = document.getElementById("productName").value;
         let pdescription = document.getElementById("productDescription").value;
@@ -456,6 +504,9 @@
 
         return true;
     }
+
+
+
 
             </script>
         

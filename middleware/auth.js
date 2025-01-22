@@ -1,6 +1,5 @@
+const session = require('express-session');
 const User= require('../models/userModel')
-
-
 
 const isLogin = async(req,res,next)=>{
   try {

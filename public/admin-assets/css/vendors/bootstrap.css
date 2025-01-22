@@ -3170,7 +3170,7 @@ fieldset:disabled .btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #3167EB;
+  background-color: #3a18d3;
   border-color: #3167EB;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -3178,7 +3178,7 @@ fieldset:disabled .btn {
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #2a58c8;
+  background-color: #0b35a0;
   border-color: #2752bc;
 }
 
@@ -5360,6 +5360,7 @@ fieldset:disabled .btn {
   color: #6c757d;
 }
 
+
 .pagination {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5465,6 +5466,9 @@ fieldset:disabled .btn {
   border-top-right-radius: 0.2rem;
   border-bottom-right-radius: 0.2rem;
 }
+
+
+
 
 .badge {
   display: inline-block;
@@ -8258,7 +8262,7 @@ fieldset:disabled .btn {
 }
 
 .ms-auto {
-  margin-left: auto !important;
+  margin-left: 1300px !important;
 }
 
 .p-0 {

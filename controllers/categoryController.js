@@ -16,40 +16,40 @@ const loadCategory = async (req,res) =>{
   };
 
   
-  const addCategory = async(req, res) => {
-    console.log("hii for load");
+  const addCategory = async (req, res) => {
     try {
-      
-      const { catName,description} = req.body;
-      const catData= await category.find({})
-      console.log(req.body,"req body is getting");
-
-      
-      if(catData== ''){
-        res.render("addCategory", {message:"categroy name is required", category:catData})
+      const { catName, description } = req.body;
+  
+      if (!catName || !description) {
+        return res.render("admin/addCategory", {
+          message: "Name and Descriptions are required.",
+          category: await category.find({}),
+        });
       }
-    
-         const exists = await category.findOne( { catName: { $regex: new RegExp('^' + catName + '$', 'i') } });
-         console.log(exists," PERU exist cheyyundo nokkan");
-            if (exists) {
-               const categoryData = await category.find({})
-              res.render('addCategory',{message:"Category already exists",category:categoryData})
-                 }
-      const categories = new category({
-        catName,
-        description
-    
+  
+      const exists = await category.findOne({
+        catName: { $regex: new RegExp("^" + catName + "$", "i") },
       });
+  
+      if (exists) {
+        return res.render("addCategory", {
+          message: "Category already exists.",
+          category: await category.find({}),
+        });
+      }
+  
+      const categories = new category({ catName, description });
       await categories.save();
-      console.log("savedddddd");
-      res.redirect("/admin/addCategory")
-    }
-   
-    catch(error){
+  
+      res.redirect("/admin/addCategory");
+    } catch (error) {
       console.error(error.message);
-      res.status(500).send("Error in adding Categroy")
+      res.status(500).send("Error in adding category.");
     }
-  }
+  };
+
+  
+
 
   const loadeditCategory = async(req,res)=>{
     try {

@@ -31,12 +31,14 @@
 
   <!-- image cropping CDN -->
 
-    <link href=https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+
 
     
 
     
 <style>
+   
   .chart-container {
   width: 80%;
   margin: 20px auto;
@@ -53,7 +55,7 @@
   font-family: 'Arial', sans-serif;
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 10px; 
   color: #333;
 }
 
@@ -125,32 +127,32 @@ select:focus {
 
 
 .custom-header {
-    background-color: rgb(234, 223, 15);
+    background-color: #ffc107;
     text-align: center;
     font-weight: bold;
     padding: 10px 0;
 }
 
 .custom-column-header {
-    color: green;
+    color: rgb(14, 37, 205);
     font-size: 1.2em;
     text-align: left;
 }
 
 .custom-cell {
-    color: green;
+    color: rgb(32, 59, 211);
     font-size: 1em;
     text-align: left;
 }
 .btn-yellow {
-    background-color: #047502;  /* Bright yellow background */
+    background-color: #4146db;  /* Bright yellow background */
     color: rgb(17, 13, 13);  /* White text color */
     border: none;  /* Remove border */
 }
 
 .btn-yellow:hover,
 .btn-yellow:focus {
-    background-color: #269208;  /* Slightly darker yellow for hover/focus */
+    background-color: #3f30e3;  /* Slightly darker yellow for hover/focus */
     color: white;
     text-decoration: none;  /* Remove underline */
 }
@@ -158,18 +160,18 @@ select:focus {
 #sorting {
     padding: 10px;
     font-size: 18px;
-    border: 1px solid #058a0a;  /* Green border */
+    border: 1px solid #1776dd;  /* Green border */
     border-radius: 5px;
-    background-color: #167206;  /* Light green background */
+    background-color: #3d43de;  /* Light green background */
     color: rgb(31, 24, 24);  /* White text color */
     cursor: pointer;
 }
 
 #sorting:hover,
 #sorting:focus {
-    outline: none;  /* Remove default focus outline */
-    border-color: #388E3C;  /* Darker green border on hover/focus */
-    background-color: #07ac0c;  /* Slightly darker green background on hover/focus */
+    outline: none; 
+    border-color: #1c0689;  
+    background-color: #0d0d95;
 }
     </style>
 
@@ -199,6 +201,57 @@ select:focus {
     text-align: center;
 }
 
+/* new styles after 2nd review */
+.report{
+    background-color: blue;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center !important; 
+  list-style: none;
+}
+
+.page-link {
+  position: relative;
+  display: block;
+  color: #fff !important;
+  text-decoration: none;
+  background-color: #2816ca !important;
+  border: 1px solid #3167EB;
+}
+
+.page-link:hover {
+  z-index: 2;
+  color: #fff;
+  background-color: #2752bc;
+  border-color: #2752bc;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #3167EB;
+  border-color: #3167EB;
+}
+
+/* add category styling */
+        .table thead{
+    background-color: #ffc107;
+}
+ .btn-primary{
+    background-color: blue !important;
+}
+.btn.primary:hover{
+    background-color: rgb(42, 42, 154) ;
+}
+
+.custom-blue-btn:hover {
+  background-color: #300dbc;
+  border-color: #2752bc;
+  color: white;
+}
+
 </style>
 
 
@@ -208,6 +261,7 @@ select:focus {
 <body>
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
+
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
                 <img src="/admin-assets/imgs/theme/sportzzone1.png" class="logo" alt="Evara Dashboard">

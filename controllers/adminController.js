@@ -295,7 +295,14 @@ const loadOrder = async (req, res) => {
 const loadOrderDetails = async(req,res)=>{
   try{
           const productId = req.query.id
-          const orders = await Orders.findOne({ _id:productId}).populate('product.productId')
+          const orders = await Orders.findOne({ _id:productId})
+          .populate('product.productId')
+          .populate('userId')
+
+          if (!orders) {
+            return res.status(404).send("Order not found");
+          }
+          
           const orderData = await Orders.findOne({ _id:productId})
          
     res.render('admin/orderDetail', { orders, orderData });
@@ -305,11 +312,15 @@ const loadOrderDetails = async(req,res)=>{
   }
 }
 
+
+
 const orderPending= async(req,res)=>{
   try {
       const orderId= req.query.id
       const orderPending= await Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:"Order Placed"}})
-      res.redirect('/admin/loadOrders')
+      res.redirect('/admin/loadOrders',
+        orderPending
+      )
   } catch (error) {
       console.log(error.message)
   }
@@ -321,7 +332,9 @@ const orderShipped= async(req,res)=>{
   try {
       const orderId= req.query.id
       const orderShipped =await Orders.findByIdAndUpdate(orderId,{$set:{ orderStatus:'Shipped'}})
-       res.redirect('/admin/loadOrder')
+       res.redirect('/admin/loadOrder',
+        orderShipped
+       )
   } catch (error) {
       console.log(error.message)
   }
@@ -333,7 +346,8 @@ const orderDelivered=async(req,res)=>{
   try {
       const orderId= req.query.id
       const orderDelivered= await  Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:'Delivered'}})
-       res.redirect('/admin/loadOrder')
+       res.redirect('/admin/loadOrder',
+        orderDelivered)
   } catch (error) {
       console.log(error.message)
   }

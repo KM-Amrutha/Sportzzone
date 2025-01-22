@@ -88,10 +88,16 @@ const loadOrderPage = async (req, res) => {
         const orderId = req.params.id;
         const userId = req.session.user_id;
 
+        if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
+          console.error(`Invalid or missing orderId: ${orderId}`);
+          return res.status(404).render("users/404");
+        }
+
         const order = await Orders.findById(orderId);
 
         if (!order) {
-            return res.status(404).send('Order not found');
+          console.error(`Order not found with ID: ${orderId}`);
+          return res.status(404).render("users/404");
         }
 
         if (order.orderStatus === 'Cancelled') {
@@ -149,15 +155,26 @@ const returnOrder = async (req, res) => {
     const userId = req.sessoin.user_id;
 
       const orderId = req.params.orderId;
-      const wallet = await Wallet.findOne({ userId: userId });
+
+      if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
+        
+        return res.status(404).render("users/404");
+      }
 
       const orderReturned = await Orders.findByIdAndUpdate(orderId, { $set: { orderStatus: 'Returned' } });
+
       const returnedOrder = await Orders.findById( orderId );
+      const wallet = await Wallet.findOne({ userId: userId });
       
      
       if (!returnedOrder) {
-          return res.status(404).send("Order not found");
+        return res.status(404).render("users/404");
       }
+      if (!wallet) {
+        return res.status(404).send("User wallet not found");
+      }
+
+
       const orderItems = returnedOrder.product;
 
       for (const item of orderItems) {

@@ -1,5 +1,5 @@
 const express = require("express"); 
-const admin_route  = express.Router()
+const admin_route  = express.Router();
 const adminAuth = require("../middleware/adminAuth");
 const adminController = require("../controllers/adminController");
 const productController = require("../controllers/productController") ;
@@ -7,13 +7,13 @@ const categoryController = require("../controllers/categoryController");
 const cartController = require('../controllers/cartController');
 const oderController = require('../controllers/orderController');
 
+// const multer = require("multer");
+const {upload} = require('../multer/multer');
+
 const bodyParser = require("body-parser");
+
 const session =  require("express-session");
 const config = require("../config/config");
-
-// const multer = require("multer");
-const {upload} = require('../multer/multer')
-
 
 admin_route.use(session({
     secret:config.sessionSecret,
@@ -48,9 +48,12 @@ admin_route.post('/insertProduct',adminAuth.isLogin, upload.array('images',4), p
 admin_route.get('/productlist',adminAuth.isLogin,productController.productListview);
 
 admin_route.get('/ToggleblockProduct',adminAuth.isLogin,productController.ToggleblockProduct)
-admin_route.delete("/deleteImage",adminAuth.isLogin,productController.deleteImage);
+// admin_route.delete("/deleteImage",adminAuth.isLogin,productController.deleteImage);
 admin_route.get('/loadeditProduct',adminAuth.isLogin,productController.loadeditProduct);
 admin_route.post('/editProduct', adminAuth.isLogin, upload.array('images', 4), productController.editProduct);
+
+admin_route.post('/deleteImage', adminAuth.isLogin, productController.deleteImageFromProduct);
+
 
 
 //-----------------------order---------------//
