@@ -199,35 +199,39 @@ const productInsert = async (req, res) => {
         countStock,
         listed,
       } = req.body;
+    
+      
 
-      if (!productName || typeof productName !== 'string' || productName.trim().length < 3) {
-        return res.status(400).json({ message: 'Product name must be a string with at least 3 characters.' });
-      }
-      
-      if (!productDescription || typeof productDescription !== 'string' || productDescription.trim().length < 10) {
-        return res.status(400).json({ message: 'Product description must be a string with at least 10 characters.' });
-      }
-      
-      if (!productCategory || typeof productCategory !== 'string' || productCategory.trim().length < 3) {
-        return res.status(400).json({ message: 'Product category must be a string with at least 3 characters.' });
-      }
-      
-      if (!productBrand || typeof productBrand !== 'string' || productBrand.trim().length < 2) {
-        return res.status(400).json({ message: 'Product brand must be a string with at least 2 characters.' });
-      }
-      
-      if (!productPrice || isNaN(productPrice) || Number(productPrice) <= 0) {
-        return res.status(400).json({ message: 'Product price must be a positive number.' });
-      }
-      
-      if (!countStock || isNaN(countStock) || Number(countStock) < 0) {
-        return res.status(400).json({ message: 'Stock count must be a non-negative number.' });
-      }
+      // if (!productName || typeof productName !== 'string' || productName.trim().length < 3) {
+      //   console.log('Product Name Validation Failed:', productName);
 
-      if (!req.files || req.files.length === 0) {
-          return res.status(400).json({ message: 'No files uploaded.' });
-      }
+      //   return res.status(400).json({ message: 'Product name must be a string with at least 3 characters.' });
+      // }
+      
+      // if (!productDescription || typeof productDescription !== 'string' || productDescription.trim().length < 10) {
+      //   return res.status(400).json({ message: 'Product description must be a string with at least 10 characters.' });
+      // }
+      
+      // if (!productCategory || typeof productCategory !== 'string' || productCategory.trim().length < 3) {
+      //   return res.status(400).json({ message: 'Product category must be a string with at least 3 characters.' });
+      // }
+      
+      // if (!productBrand || typeof productBrand !== 'string' || productBrand.trim().length < 2) {
+      //   return res.status(400).json({ message: 'Product brand must be a string with at least 2 characters.' });
+      // }
+      
+      // if (!productPrice || isNaN(productPrice) || Number(productPrice) <= 0) {
+      //   return res.status(400).json({ message: 'Product price must be a positive number.' });
+      // }
+      
+      // if (!countStock || isNaN(countStock) || Number(countStock) < 0) {
+      //   return res.status(400).json({ message: 'Stock count must be a non-negative number.' });
+      // }
 
+      // if (!req.files || req.files.length === 0) {
+      //     return res.status(400).json({ message: 'No files uploaded.' });
+      // }
+     
       const croppedImagePaths = await Promise.all(
           req.files.map(async (file) => {
               const croppedPath = `${file.destination}/cropped-${file.filename}`;
@@ -260,12 +264,17 @@ const productInsert = async (req, res) => {
       });
 
       await newProduct.save();
+
+      console.log('new product is :', newProduct);
+
       res.redirect('/admin/productlist');
   } catch (error) {
       console.error('Error inserting product:', error);
       res.status(500).json({ message: 'Error inserting product.', error: error.message });
   }
 };
+
+
 
 const deleteImageFromProduct = async (req, res) => {
   try {

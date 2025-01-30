@@ -88,17 +88,25 @@ try {
     .limit(5);
 
   
-  const productData = await products.find(productFilter)
+    const productData = await products.find(productFilter)
     .populate('productCategory')
-    .sort({ date: -1 })
-    .skip(skip)
+    .sort({ _id: 1 })
+    .skip((page-1) * limit)
     .limit(limit); 
+  console.log('the rpoducts are : ')
+    for(let i=0;i<productData.length;i++){
+      console.log(productData[i].productName)
+    }
 
-    const totalProducts = await products.countDocuments(productData);
+    const totalProducts = await products.countDocuments({is_Active:true});
     const totalPages = Math.ceil(totalProducts / limit); 
 
     const categories = await category.find({ is_Active: true });
     const noProductsFound = productData.length === 0;
+
+    console.log('Current Page:', page);
+console.log('Total Pages:', totalPages);
+console.log('Products on this page:', productData.length);
 
     res.render('users/homePage', {
       product: productData,
@@ -522,6 +530,10 @@ const loadshopPage = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
+      for(let i=0;i<productData.length;i++){
+        console.log(productData[i].productName)
+      }
+
     const categories = await category.find({is_Active: true});
     const count = await products.countDocuments({is_Active: true});
     const totalPages = Math.ceil(count / limit);
@@ -541,6 +553,8 @@ console.log('userdata from shop page:', userData)
     res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 const productdetailPage = async(req,res)=>{
   try{

@@ -342,16 +342,30 @@ const orderShipped= async(req,res)=>{
 
 
 
-const orderDelivered=async(req,res)=>{
+const orderDelivered = async (req, res) => {
   try {
-      const orderId= req.query.id
-      const orderDelivered= await  Orders.findByIdAndUpdate(orderId,{$set:{orderStatus:'Delivered'}})
-       res.redirect('/admin/loadOrder',
-        orderDelivered)
+    const orderId = req.query.id;
+
+    // Validate orderId
+    if (!orderId) {
+      return res.status(400).send("Order ID is required");
+    }
+
+    const updatedOrder = await Orders.findByIdAndUpdate(orderId, { 
+      $set: { orderStatus: 'Delivered' } 
+    });
+
+    if (!updatedOrder) {
+      return res.status(404).send("Order not found");
+    }
+
+    // Redirect to the admin loadOrder page
+    res.redirect('/admin/loadOrder');
   } catch (error) {
-      console.log(error.message)
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
-}
+};
 
 
 

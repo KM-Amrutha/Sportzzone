@@ -45,6 +45,7 @@ admin_route.get('/ToggleblockCategory',adminAuth.isLogin,categoryController.Togg
 
 admin_route.get('/addproduct',adminAuth.isLogin,productController.loadaddProduct);
 admin_route.post('/insertProduct',adminAuth.isLogin, upload.array('images',4), productController.productInsert);
+
 admin_route.get('/productlist',adminAuth.isLogin,productController.productListview);
 
 admin_route.get('/ToggleblockProduct',adminAuth.isLogin,productController.ToggleblockProduct)
@@ -53,7 +54,6 @@ admin_route.get('/loadeditProduct',adminAuth.isLogin,productController.loadeditP
 admin_route.post('/editProduct', adminAuth.isLogin, upload.array('images', 4), productController.editProduct);
 
 admin_route.post('/deleteImage', adminAuth.isLogin, productController.deleteImageFromProduct);
-
 
 
 //-----------------------order---------------//
