@@ -36,7 +36,10 @@
                             <ul class="categories">
                                 <% for (let i = 0; i < category.length; i++) { %>
                                 <li class="category-item">
-                                    <a href="/filterbyCategory?categoryId=<%= category[i]._id %>"><%= category[i].catName %></a>
+                                  
+                                    <a href="#" onclick="filterByCategory('<%= category[i]._id %>')">
+                                      <%= category[i].catName %>
+                                  </a>
                                 </li>
                                 <% } %>
                                 <li class="category-item">
@@ -47,6 +50,30 @@
                             <p>No categories available</p>
                             <% } %>
                         </div>
+
+                        <div class="shop-product-fillter">
+                          <div class="sort-by-product-area">
+                              <div class="sort-by-cover">
+                                  <div class="sort-by-product-wrap">
+                                      <div class="sort-by">
+                                          <span><i class="fi-rs-apps-sort"></i>Sort </span>
+                                      </div>
+                                      <div class="sort-by-dropdown-wrap">
+                                          <span> by<i class="fi-rs-angle-small-down"></i></span>
+                                      </div>
+                                  </div>
+                                  <div class="sort-by-dropdown">
+                                      <ul>
+                                          <li><a href="#" onclick="applySort('AtoZ')">Aa to Zz</a></li>
+                                          <li><a href="#" onclick="applySort('ZtoA')">Zz to Aa</a></li>
+                                          <li><a href="#" onclick="applySort('lowtoHigh')">Low to High</a></li>
+                                          <li><a href="#" onclick="applySort('hightoLow')">High to Low</a></li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      
                     
                         <!-- Image Div -->
                         <div class="image-container flex-grow-1 d-flex align-items-center justify-content-center">
@@ -63,6 +90,8 @@
                                     <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" 
                                     data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" 
                                     aria-selected="true">Featured</button>
+
+                                    
                                 </li>
                                 
                                 <!-- <li class="nav-item" role="presentation">
@@ -76,6 +105,7 @@
                         <div class="tab-content wow fadeIn animated" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
                               <% if (locals.product && locals.category) { %>
+                                <% if (product.length > 0) { %>
                                 <div class="row product-grid-4">
                                   <% for (let i = 0; i < product.length; i++) { %>
                                     <div class="col-lg-4 col-md-4 col-12 col-sm-6">
@@ -140,7 +170,14 @@
                                     </div>
                                   <% } %>
                                 </div>
-                              <% } %>
+                              <% }  else  { %>
+                                <div class="no-products-found" style="text-align: center; padding: 20px;">
+                                  <p style="font-size: 18px; color: red;">No products found for this category.</p>
+                              </div>
+                          <% } %>
+                          <% } %>
+                      
+                              
                             </div>
                           </div>
                     
@@ -333,7 +370,33 @@
       searchForm.submit();
     });
     </script>
-    
+
+ 
+
+<script>
+function filterByCategory(categoryId) {
+  let searchQuery = new URLSearchParams(window.location.search).get("search") || "";
+  
+  if (searchQuery) {
+    window.location.href = `/filterbyCategory?categoryId=${categoryId}&search=${searchQuery}`;
+  } else {
+    window.location.href = `/filterbyCategory?categoryId=${categoryId}`;
+  }
+}
+</script>
+
+<script>
+
+function applySort(sortType) {
+    console.log("Sort option selected:", sortType);  // Add this log
+     event.preventDefault();
+    const params = new URLSearchParams(window.location.search);
+    params.set('sort', sortType);  // Set the sort parameter
+    window.location.href = `/sort?${params.toString()}`;
+}
+
+      
+  </script>
     
     
     

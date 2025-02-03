@@ -71,6 +71,7 @@ try {
   let page = parseInt(req.query.page) || 1; 
     let limit = 8; 
     let skip = (page - 1) * limit;
+    let userData = req.session.user_id ||null;
 
   const productFilter = searchQuery
     ? {
@@ -93,22 +94,23 @@ try {
     .sort({ _id: 1 })
     .skip((page-1) * limit)
     .limit(limit); 
-  console.log('the rpoducts are : ')
-    for(let i=0;i<productData.length;i++){
-      console.log(productData[i].productName)
-    }
+  // console.log('the rpoducts are : ')
+  //   for(let i=0;i<productData.length;i++){
+  //     console.log(productData[i].productName)
+  //   }
 
-    const totalProducts = await products.countDocuments({is_Active:true});
+    const totalProducts = await products.countDocuments(productFilter);
     const totalPages = Math.ceil(totalProducts / limit); 
 
     const categories = await category.find({ is_Active: true });
     const noProductsFound = productData.length === 0;
 
-    console.log('Current Page:', page);
-console.log('Total Pages:', totalPages);
-console.log('Products on this page:', productData.length);
+//     console.log('Current Page:', page);
+// console.log('Total Pages:', totalPages);
+// console.log('Products on this page:', productData.length);
 
     res.render('users/homePage', {
+      user:userData ||null,
       product: productData,
       newArrivals:newArrival,
       category: categories,
@@ -147,7 +149,7 @@ const loadHome = async (req, res) => {
 
     const productData = await products.find(productFilter)
       .populate('productCategory')
-      .sort({ date: -1 })
+      .sort({ _id: 1 })
       .skip(skip)
       .limit(limit); 
 
@@ -160,13 +162,14 @@ const loadHome = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / limit); 
 
     const userData = await User.findById(userid);
+    console.log(userData);
     const categories = await category.find({ is_Active: true });
 
     const noProductsFound = productData.length === 0;
 
     if (userData || !userid) {
       res.render('users/homePage', {
-        user: userData,
+        user: userData ||null,
         category: categories,
         product: productData,
         newArrivals:newArrival,
@@ -530,9 +533,9 @@ const loadshopPage = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
-      for(let i=0;i<productData.length;i++){
-        console.log(productData[i].productName)
-      }
+      // for(let i=0;i<productData.length;i++){
+      //   console.log(productData[i].productName)
+      // }
 
     const categories = await category.find({is_Active: true});
     const count = await products.countDocuments({is_Active: true});
@@ -673,9 +676,11 @@ const allCategory = async (req, res) => {
   }
 };
 
+
 const filterbyCategory = async (req, res) => {
   try {
     const categoryId = req.query.categoryId;
+    const searchQuery = req.query.search || ""; // Get search query
     const userId = req.session.user_id;
     const categories = await category.find();
     let loginData = null;
@@ -685,49 +690,61 @@ const filterbyCategory = async (req, res) => {
     }
 
     if (!categoryId) {
-      return res.status(400).json({ error: 'Category ID is required' });
+      return res.status(400).json({ error: "Category ID is required" });
     }
 
     let page = parseInt(req.query.page) || 1;
     let limit = 8;
     let skip = (page - 1) * limit;
 
-    const totalProducts = await products.countDocuments({ productCategory: categoryId });
+    // Initialize the filter object
+    let filter = { 
+      is_Active: true,  
+      productCategory: categoryId 
+    };
 
-    const product = await products.find({ productCategory: categoryId })
+    if (searchQuery) {
+      filter.$or = [
+        { productName: { $regex: searchQuery, $options: "i" } },
+        { productDescription: { $regex: searchQuery, $options: "i" } }
+      ];
+    }
+
+    const totalProducts = await products.countDocuments(filter);
+    const product = await products.find(filter)
       .populate("productCategory")
       .skip(skip)
       .limit(limit)
       .exec();
-    if (!product || product.length === 0) {
-      return res.status(404).json({ error: 'No products found for the category' });
-    }
 
     const newArrival = await products
-    .find({ is_Active: true })
-    .sort({ date: -1 })
-    .limit(5);
+      .find({ is_Active: true })
+      .sort({ date: -1 })
+      .limit(5);
 
     const totalPages = Math.ceil(totalProducts / limit);
 
+    // Explicitly pass a "noProducts" flag if no products are found
     res.render("users/homePage", {
-      loginData,
+        user: loginData,
       product,
-      newArrivals:newArrival,
+      newArrivals: newArrival,
       category: categories,
       currentPage: page,
       totalPages,
+      noProducts: product.length === 0,  
+      selectedCategory: categoryId,     
+      searchQuery                         
     });
+
   } catch (error) {
     console.log(error.message);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   }
 };
 
 
 const addAddress = async (req, res) => {
-  
-  
   try {
     const userId = req.session.user_id;
 
@@ -1076,6 +1093,94 @@ const ZtoA = async(req,res)=>{
   }
 };
 
+
+const sortProducts = async (req, res) => {
+  try {
+  
+    const searchQuery = req.query.search || '';
+    const categoryId = req.query.categoryId || ''; 
+    const sortType = req.query.sort || 'lowtoHigh'; 
+    const categories = await category.find();
+
+    const userId = req.session.user_id;
+    let loginData = null;
+    if (userId) {
+      loginData = await User.findById(userId);
+    }
+console.log('login data is: ', loginData);
+    let page = parseInt(req.query.page) || 1;
+    const limit = 8;
+
+  
+    let filter = { is_Active: true };
+
+    if (searchQuery) {
+      filter.$or = [
+        { productName: { $regex: searchQuery, $options: "i" } },
+        { productDescription: { $regex: searchQuery, $options: "i" } }
+      ];
+    }
+
+    if (categoryId) {
+      filter.productCategory = categoryId;  
+    }
+    let productData = await products.find(filter).populate('productCategory');
+
+    productData.forEach(product => {
+      if (product.productCategory && product.productCategory.OfferisActive) {
+        product.effectivePrice = product.offerPrice;
+      } else {
+        product.effectivePrice = product.productPrice;
+      }
+    });
+
+    switch (sortType) {
+      case 'lowtoHigh':
+        productData.sort((a, b) => a.effectivePrice - b.effectivePrice);
+        break;
+      case 'hightoLow':
+        productData.sort((a, b) => b.effectivePrice - a.effectivePrice);
+        break;
+      case 'AtoZ':
+        productData.sort((a, b) => a.productName.localeCompare(b.productName));
+        break;
+      case 'ZtoA':
+        productData.sort((a, b) => b.productName.localeCompare(a.productName));
+        break;
+      default:
+        break;
+    }
+
+    // Pagination logic
+    const totalPages = Math.ceil(productData.length / limit);
+    const paginatedProducts = productData.slice((page - 1) * limit, page * limit);
+
+    const newArrival = await products
+      .find({ is_Active: true })
+      .sort({ date: -1 })
+      .limit(5);
+
+    // Render the view with sorted and filtered products
+    res.render('users/homePage', {
+      product: paginatedProducts,
+      user:loginData || null,
+      newArrivals: newArrival,
+      category: categories,
+      totalPages,
+      currentPage: page,
+      searchQuery,
+      selectedCategory: categoryId,  // Pass the selected category ID
+      sortType
+    });
+
+  } catch (error) {
+    console.error('Error in sorting:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+
 const loadWishlist = async (req, res) => {
   try {
       const userId = req.session.user_id;
@@ -1281,6 +1386,7 @@ module.exports = {
    hightoLow,
    AtoZ,
    ZtoA,
+   sortProducts,
 
    loadWishlist,
    addtoWishlist,

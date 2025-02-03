@@ -4,10 +4,7 @@ const product = require('../models/productModel')
 
 const loadCategory = async (req,res) =>{
     try{
-      console.log("category page rendered")
         const Category = await category.find();
-      
-        console.log(Category,"this is from the cater");
         res.render("admin/addCategory",{categories:Category})
     }catch(error){
       console.log("Error in laoding page",error.message);
@@ -18,42 +15,63 @@ const loadCategory = async (req,res) =>{
   
   const addCategory = async (req, res) => {
     try {
-      const { catName, description } = req.body;
-  
-      if (!catName || !description) {
-        return res.render("admin/addCategory", {
-          message: "Name and Descriptions are required.",
-          category: await category.find({}),
-        });
-      }
-  
-      const exists = await category.findOne({
-        catName: { $regex: new RegExp("^" + catName + "$", "i") },
-      });
-  
-      if (exists) {
-        return res.render("addCategory", {
-          message: "Category already exists.",
-          category: await category.find({}),
-        });
-      }
-  
-      const categories = new category({ catName, description });
-      await categories.save();
-  
-      res.redirect("/admin/addCategory");
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).send("Error in adding category.");
-    }
-  };
+        const { catName, description } = req.body;
 
-  
+       
+        const trimmedCatName = catName.trim();
+        const trimmedDescription = description.trim();
+        const nameRegex = /^[A-Za-z\s]+$/;
+
+       console.log('the body get :', req.body);
+       
+        if (!trimmedCatName || !trimmedDescription) {
+            return res.render("admin/addCategory", {
+                message: "Name and Description are required.",
+                categories: await category.find({}),
+            });
+        }
+
+        if (!nameRegex.test(trimmedCatName)) {
+            return res.render("admin/addCategory", {
+                message: "Category name should contain only letters and spaces.",
+                categories: await category.find({}),
+            });
+        }
+
+        // Check if category already exists
+        const exists = await category.findOne({
+            catName: { $regex: new RegExp("^" + trimmedCatName + "$", "i") },
+        });
+
+        if (exists) {
+            return res.render("admin/addCategory", {
+                message: "Category already exists.",
+                categories: await category.find({}),
+            });
+        }
+
+        // Add the category
+        const newCategory = new category({
+            catName: trimmedCatName,
+            description: trimmedDescription,
+        });
+
+        await newCategory.save();
+
+        // Redirect after successful category creation
+        res.redirect('/admin/addCategory'); // Redirect to the category list page
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error, Please try again later.");
+    }
+};
+
 
 
   const loadeditCategory = async(req,res)=>{
     try {
-      console.log("kittyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+      console.log("edit category ilottu vannu")
         const categories = await category.findById(req.query.id);
         req.session.cateid=req.query.id
         res.render('admin/editCategory',{categories})

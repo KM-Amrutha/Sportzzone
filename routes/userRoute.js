@@ -121,6 +121,8 @@ user_route.get('/lowtoHigh',userController.lowtoHigh);
 user_route.get('/hightoLow',userController.hightoLow);
 user_route.get('/AtoZ', userController.AtoZ);
 user_route.get('/ZtoA',userController.ZtoA);
+user_route.get('/sort', userController.sortProducts);
+
 
 
 //coupon------------//

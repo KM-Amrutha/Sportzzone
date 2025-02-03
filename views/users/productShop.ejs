@@ -56,6 +56,91 @@
   color: red; 
 }
 
+/* Container for search bar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#search-form {
+    display: flex;
+    width: 100%;
+    gap: -30; /* Remove the gap */
+}
+
+
+.search-style-2 {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Search Input */
+#search-input {
+    flex: 1; /* Take all available space */
+    padding: 10px; 
+    border: 1px solid #ccc;
+    border-right: none; 
+    border-radius: 5px 0 0 5px;
+    background-color: #f9fcff;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Placeholder */
+#search-input::placeholder {
+    color: #15088c;
+    font-style: italic;
+}
+
+/* Search Button */
+.search-style-2 button[type="submit"] {
+    background-color: #230792;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover */
+.search-style-2 button[type="submit"]:hover {
+    background-color: #3f07b0;
+    transform: scale(1.05);
+}
+
+/* Dropdown suggestions styling */
+.dropdown-suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #1804ab;
+    background-color: white;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    display: none;
+}
+
+/* Dropdown suggestion items */
+.dropdown-suggestions li {
+    padding: 10px;
+    cursor: pointer;
+    color: #000;
+}
+
+/* Dropdown suggestion hover effect */
+.dropdown-suggestions li:hover {
+    background-color: #e7f1ff;
+}
+
+
 .header-info a {
     background-color: #3a14b4; /* Blue background */
     color: #fff; /* White text */
@@ -299,139 +384,131 @@
     </div>
 
 
-    <header class="header-area"  style="background-color:#ffc107;" header-height-2">
-       
-        <!-- <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+   
+    <header   style="background-color:#ffc107;">
+        
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
+                        <a href=""><img src="assets/imgs/theme/icons/sportzzone1.png" alt="logo"></a> 
                     </div>
                     <div class="header-right">
-                      
+
+                        <div class="search-style-2">
+                            <form action="<%= (typeof user !== 'undefined' && user) ? '/home' : '/' %>" method="get" id="search-form" >
+                                <input type="text" name="search" id="search-input" placeholder="Search for items..." autocomplete="off">
+                                <button type="submit"><i class="fa fa-search"></i> Search</button>
+                            </form>
+                            <ul id="search-suggestions" class="dropdown-suggestions">
+                                <li id="show-all">Show All Products</li>
+                            </ul>
+                        </div>
+                        
+                        
+                        
+                        
+                        
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
                                     <a href="/loadWishlist">
-                                        
+                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                        <!-- <span class="pro-count blue">4</span> -->
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="getCart">
+                                    <a class="mini-cart-icon" href="/getCart">
+                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                        <!-- <span class="pro-count blue">2</span> -->
                                     </a>
-                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="/assets/imgs/shop/thumbnail-3.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="/assets/imgs/shop/thumbnail-2.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
-                                                    <h4><span>1 × </span>$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>$4000.00</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="shop-cart.html" class="outline">View cart</a>
-                                                <a href="shop-checkout.html">Checkout</a>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
+                                <div class="header-info header-info-right">
+                                    <ul>
+                                        <% if(locals.user) { %>
+                                    
+                                        <li class="nav-item dropdown">
+                                            <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" 
+                                            aria-expanded="false">
+                                                <i class="fa-solid fa-user"></i> <%= user.name %>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                                <li><a class="dropdown-item" href="/userProfile"><i class="material-icons md-settings"></i>Account</a></li>
+                                                <li><div class="dropdown-divider"></div></li>
+                                                <li><a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a></li>
+                                            </ul>
+                                        </li>
+                                        <% } else { %>
+                                         <a style="color: #effdfd;" href="/loadLogin">Login</a>
+                                      </li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> -->
+</div>
 
 
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2">
+                <nav>
+                    <ul class="d-flex justify-content-center"> 
+                        <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a></li>
+                        <li><a href="/productShopPage">Shop</a></li>
+                        <li><a href="/loadWishlist">Wishlist</a></li>
+                        <li><a href="/getCart">Cart</a></li>
+                        <li><a href="/aboutUs">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+        
 
 
-        <div class="header-bottom   header-bottom-bg-color sticky-bar">
+        <!-- <div class="header-bottom header-bottom-bg-color sticky-bar">
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1">
-                        <a href=""><img src="assets/imgs/theme/icons/sportzzone1.png" alt="logo"></a>
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
 
                     <div class="header-nav d-flex justify-content-center w-100">
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2">
                             <nav>
-                                <ul class="d-flex justify-content-center">
-                                    <li><a class="active" href="/">Home <i class="fi-rs-angle-down"></i></a></li>
+                                <ul class="d-flex justify-content-center"> 
+                                    <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a></li>
                                     <li><a href="/productShopPage">Shop</a></li>
                                     <li><a href="/loadWishlist">Wishlist</a></li>
                                     <li><a href="/getCart">Cart</a></li>
-                                    <li><a href="aboutUs">About</a></li>
+                                    <li><a href="/aboutUs">About Us</a></li>
                                 </ul>
                             </nav>
                         </div>
                     </div>
-
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info header-info-right">
-                            <ul>
-                                <% if(locals.user) { %>
-                            
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" 
-                                    aria-expanded="false">
-                                        <i class="fa-solid fa-user"></i> <%= user.name %>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                        <li><a class="dropdown-item" href="/userProfile"><i class="material-icons md-settings"></i>Account</a></li>
-                                        <li><div class="dropdown-divider"></div></li>
-                                        <li><a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a></li>
-                                    </ul>
-                                </li>
-                                <% } else { %>
-                                 <a style="color: #f0f6fa;" href="/loadLogin">Login</a>
-                              </li>
-                                <% } %>
-                            </ul>
-                        </div>
-
-                    </div>
                     
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
+                    
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
-                                    <img alt="Evara" src="/assets/imgs/theme/icons/icon-heart.svg">
+                                <a href="/loadWishlist">
+                                    <img alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
                                     <span class="pro-count white">4</span>
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="">
-                                    <img alt="Evara" src="/assets/imgs/theme/icons/icon-cart.svg">
+                                <a class="mini-cart-icon" href="shop-cart.html">
+                                    <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
                                     <span class="pro-count white">2</span>
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>
                                         <li>
                                             <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="/assets/imgs/shop/thumbnail-3.jpg"></a>
+                                                <a href="shop-product-right.html"><img alt="Evara" src="assets/imgs/shop/thumbnail-3.jpg"></a>
                                             </div>
                                             <div class="shopping-cart-title">
                                                 <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
@@ -443,7 +520,7 @@
                                         </li>
                                         <li>
                                             <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="/assets/imgs/shop/thumbnail-4.jpg"></a>
+                                                <a href="shop-product-right.html"><img alt="Evara" src="assets/imgs/shop/thumbnail-4.jpg"></a>
                                             </div>
                                             <div class="shopping-cart-title">
                                                 <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
@@ -459,7 +536,11 @@
                                             <h4>Total <span>$383.00</span></h4>
                                         </div>
                                         <div class="shopping-cart-button">
-                                            <a href="shop-cart.html">View cart</a>
+
+                                            <%if(locals.loginData){%>
+                                                <a href="/getCart">View cart</a>
+                                                <%}%>
+                                            
                                             <a href="shop-checkout.html">Checkout</a>
                                         </div>
                                     </div>
@@ -476,7 +557,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </header>
 
 
