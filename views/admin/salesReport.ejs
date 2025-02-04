@@ -109,7 +109,7 @@ form {
                                             <th>Order ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Payment</th>
-                                            <th scope="col">coupon Discount</th>
+                                            <!-- <th scope="col">coupon Discount</th> -->
                                             <th scope="col">Total</th>
                                             <th scope="col">Date</th>
                                             <!-- <th scope="col">Payment Status</th>
@@ -118,15 +118,14 @@ form {
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <%let totalDiscount=0%>
-                                        <% if(orderList && orderList.length > 0) { %>
+                                        <% let totalDiscount = 0 %>
+                                        <% if (orderList && orderList.length > 0) { %>
                                             <% orderList.forEach((order) => { %>
                                                 <tr>
-                                                    <td><%= order.orderId %></td>
-                                                    <td><b><%= order.userId.name %></b></td>
+                                                    <td><%= order.orderId %></td> 
+                                                    <td><b><%= order.userId ? order.userId.name : 'Guest User' %></b></td>
                                                     <td><b><%= order.paymentMethod %></b></td>
-                                                    <td>₹<b> <%= order.couponDiscount %></b></td>
+                                                 
                                                     <td>₹ <b><%= order.totalAmount %></b></td>
                                                     <td class="col-date">
                                                         <span class="fs-0"><%= order.orderDate.toLocaleDateString() %></span>
@@ -137,6 +136,7 @@ form {
                                             <tr><td colspan="6">No orders found for the selected date range.</td></tr>
                                         <% } %> 
                                     </tbody>
+                                    
                                 </table>
                             </div> <!-- table-responsive.// -->
                         </div>

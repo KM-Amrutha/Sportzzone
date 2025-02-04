@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>OTP Verification</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -91,9 +94,28 @@
       font-size: 14px;
     }
   </style>
+    <style>
+    
+      .custom-swal-popup {
+        border-radius: 15px;
+        padding: 20px;
+      }
+      .custom-swal-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007BFF;
+      }
+      .custom-swal-content {
+        font-size: 18px;
+        color: #333;
+      }
+      .custom-swal-icon {
+        color: #007BFF;
+      }
+    </style>
 </head>
 <body>
-  <form action="/verify-otp" method="POST">
+  <form action="/verify-otp" method="POST" id="otp-form">
     <% if (typeof message !== 'undefined' && message) { %>
       <div class="message"><%= message %></div>
     <% } %>
@@ -105,7 +127,7 @@
     <div id="timer">Resend OTP in: <span id="countdown">60</span> seconds</div>
     <button type="button" id="resendBtn" disabled>Resend OTP</button>
   </form>
-</body>
+
 
 
 
@@ -154,6 +176,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+
       const form = document.getElementById('otp-form');
 
       form.addEventListener('submit', async (event) => {
@@ -193,7 +216,7 @@
               timer: 5000,
               showConfirmButton: false
             }).then(() => {
-              window.location.href = 'users/login'; // Redirect URL after success
+              window.location.href = '/loadLogin'; 
             });
           } else {
             Swal.fire({
@@ -235,24 +258,6 @@
       });
     });
   </script>
-  <style>
-    
-    .custom-swal-popup {
-      border-radius: 15px;
-      padding: 20px;
-    }
-    .custom-swal-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #007BFF;
-    }
-    .custom-swal-content {
-      font-size: 18px;
-      color: #333;
-    }
-    .custom-swal-icon {
-      color: #007BFF;
-    }
-  </style>
 
+</body>
 </html>

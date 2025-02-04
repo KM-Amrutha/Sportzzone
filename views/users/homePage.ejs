@@ -222,7 +222,7 @@
                 <% for (let i = 0; i < newArrivals.length; i++) { %>
                   <div class="card-1">
                     <figure class="img-hover-scale overflow-hidden">
-                      <a href="/productDetail?id=<%= newArrivals[i]._id %>">
+                      <a href="/productDetailPage?id=<%= newArrivals[i]._id %>">
                         <% if (newArrivals[i].images && newArrivals[i].images.length > 0) { %>
                           <img src="../uploads/<%= newArrivals[i].images[0] %>" >
                         <% } else { %>
@@ -231,7 +231,7 @@
                       </a>
                     </figure>
                     <h5>
-                      <a href="/productDetail?id=<%= newArrivals[i]._id %>"><%= newArrivals[i].productName %></a>
+                      <a href="/productDetailPage?id=<%= newArrivals[i]._id %>"><%= newArrivals[i].productName %></a>
                     </h5>
                   </div>
                 <% } %>

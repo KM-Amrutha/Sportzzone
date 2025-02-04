@@ -135,14 +135,13 @@
   background-color: #0f09c2; /* Change color on hover */
 }
 
-/* Main search container */
-* {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .search-container {
+#search-form {
+    width: 100%; /* Ensures the form matches the container width */
+    position: relative;
+    box-sizing: border-box;
+}
+/* Container for search bar */
+.search-container {
     position: relative;
     width: 500px; /* Adjust this value for the desired length */
     margin: 0 auto; 
@@ -161,19 +160,26 @@
 
 #search-button {
     position: absolute;
-    right: 0px; /* Adjust this for closer button alignment */
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     background: #230792;
     color: #fff;
     border: none;
-    padding: 8px 12px;
-    border-radius: 50%;
+    padding: 12px; /* Equal padding for a circular button */
+    border-radius: 50%; /* Round button */
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;  /* Ensure the button is round */
+    height: 40px; /* Ensure the button is round */
+    font-size: 18px; /* Adjust the size of the search icon */
+}
+
+#search-button i {
+    font-size: 18px; /* Make sure the icon size is appropriate */
 }
 
 #search-button:hover {
@@ -192,7 +198,7 @@
     margin: 0;
     border: 1px solid #1804ab;
     background-color: white;
-    width: 100%;
+    width: 100%; /* Matches the input width */
     position: absolute;
     top: 100%;
     left: 0;
@@ -200,17 +206,21 @@
     display: none;
     border-radius: 5px;
     overflow: hidden;
+    box-sizing: border-box; /* Ensures padding/border don’t expand the width */
 }
 
 .dropdown-suggestions li {
     padding: 10px;
     cursor: pointer;
     color: #000;
+    text-align: center; /* Optional: centers the text if you prefer */
 }
 
 .dropdown-suggestions li:hover {
     background-color: #e7f1ff;
 }
+
+
 
 /* Style for the login button */
 .header-info a {
@@ -353,7 +363,7 @@
     content: "";
 }
 a.btn-custom, .dropdown-item.btn-custom {
-    background-color: #240baf !important;  /* Override existing styles with !important */
+    background-color: #452cd1 !important;  /* Override existing styles with !important */
     color: rgb(238, 246, 240) !important;               /* Text color with high priority */
     border: none !important;  
     text-align: center; /* Centers text horizontally */
@@ -880,11 +890,12 @@ ul.categories .category-item a:hover {
                                     <button type="submit" id="search-button">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                </div>
-                            </form>
+                                
                             <ul id="search-suggestions" class="dropdown-suggestions">
                                 <li id="show-all">Show All Products</li>
                             </ul>
+                        </div>
+                        </form>
                         </div>
                         
                         

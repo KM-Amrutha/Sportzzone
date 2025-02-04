@@ -199,15 +199,36 @@ try{
 const insertUser = async(req,res)=>{
     try{ 
       const { email, name, mobile, password } = req.body;
-
+      
       const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.render('./users/registration', { message: 'Email already exists.' });
+
+
+      if (existingUser) {
+        if (existingUser.is_Verified) {
+          return res.render('./users/registration', { message: 'Email already exists.' });
+        } else {
+          
+          const otp = generateOTP();
+          const otpExpires = Date.now() + 5 * 60 * 1000;
+  
+          await OTP.findOneAndUpdate(
+            { userId: existingUser._id },
+            { otp, otpExpires },
+            { upsert: true }
+          );
+  
+          sendOTP(email, otp);
+  
+          return res.render('./users/verify-otp', {
+            email,
+            message: 'OTP re-sent. Please verify your email.'
+          });
         }
+      }
 
           const passwordHash = await securePassword(password);
 
-          const user = new User({
+          const newUser = new User({
              name,
              email,
              mobile,
@@ -217,7 +238,7 @@ const insertUser = async(req,res)=>{
               
           }); 
 
-          const userData = await user.save();
+          const userData = await newUser.save();
          
           if(userData){
 
@@ -268,8 +289,10 @@ const verifyLogin = async (req, res) => {
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       
-      if (userData.is_Active == false) {
+      if (userData.is_Active === false) {
         res.render('users/login', { message: "Your account is blocked." });
+      } else if (!userData.is_Verified) {
+        res.render('users/login', { message: "Please verify your email before logging in." });
       } else if (passwordMatch) {
         req.session.user_id = userData._id;
         req.session.userData = userData;
@@ -376,11 +399,12 @@ const verifyOTP = async (req, res) => {
     let otpData = await OTP.findOne({ userId: user._id, otp, otpExpires: { $gt: Date.now() } });
 
     if (otpData) {
-      
-      res.render('users/login', { message: 'OTP verified successfully. You can now log in.' });
-    } else {
+      user.is_Verified = true;
+      await user.save();
 
-      return res.json({ success: false, message: 'In alid OTP or OTP expired' });
+      return res.json({ success: true, message: 'OTP verified successfully. You can now log in.' });
+    } else {
+      return res.json({ success: false, message: 'Invalid OTP or OTP expired' });
     }
   } catch (error) {
     console.error(error);
@@ -683,12 +707,18 @@ const allCategory = async (req, res) => {
 
     const totalPages = Math.ceil(totalProducts / limit); 
 
+    const newArrival = await products
+    .find({ is_Active: true })
+    .sort({ date: -1 })
+    .limit(5);
+
     res.render("users/homePage", {
       loginData,
       product,
       category: categories,
       currentPage: page,
       totalPages, 
+      newArrivals:newArrival
     });
   } catch (error) {
     console.log(error.message);

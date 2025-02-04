@@ -390,7 +390,9 @@ const orderCancelled=async(req,res)=>{
 }
 
 const loadCoupon = async (req, res) => {
-  const page =  req.query.page || 1;
+
+  const page = parseInt(req.query.page) || 1;
+
   const limit = 4; 
   const skip = (page - 1) * limit; 
 
@@ -412,6 +414,8 @@ const loadCoupon = async (req, res) => {
   }
 };
 
+
+
 const loadSalesReport = async(req, res) => {
   try {
 
@@ -420,7 +424,8 @@ const loadSalesReport = async(req, res) => {
       .sort({ orderDate: -1 })
       .populate('userId');
 
-    res.render('admin/salesReport', { orderList ,start: '', end: ''});
+    res.render('admin/salesReport', 
+      { orderList ,start: '', end: ''});
   } catch (error) {
     console.error(error.message);
   }
@@ -530,7 +535,7 @@ const excelReport = async (req, res) => {
 
     const reportData = orders.map((order) => ({
       OrderID: order.orderId,
-      Name: order.userId.name,
+      Name: order.userId ? order.userId.name : "Guest user",
       PaymentMethod: order.paymentMethod,
       CouponDiscount: order.couponDiscount,
       TotalAmount: order.totalAmount,

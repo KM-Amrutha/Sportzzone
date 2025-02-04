@@ -112,20 +112,6 @@
     color: #15088c;
     font-style: italic;
 }
-#show-all {
-    width: 100; /* Adjusting for border size */
-    box-sizing: border-box;  /* Ensures padding and borders are included in the width */
-    border: 1px solid #230792; /* Same border as the search input */
-    border-top: none;         /* To merge seamlessly with the search bar */
-    border-radius: 30px;
-    padding: 12px 50px 12px 15px; /* Adjust padding for space */
- /* Rounded edges for modern look */
-    background-color: #f9fcff;
-    font-size: 16px;
-    outline: none;
-   
-}
-
 
 .dropdown-suggestions {
     list-style-type: none;
@@ -424,13 +410,13 @@
                                     <button type="submit" id="search-button">
                                         <i class="fa fa-search"></i>
                                     </button>
+                                    <ul id="search-suggestions" class="dropdown-suggestions">
+                                        <li id="show-all">Show All Products</li> <!-- Moved inside -->
+                                    </ul>
                                 </div>
-                            
-                            <ul id="search-suggestions" class="dropdown-suggestions">
-                                <li id="show-all">Show All Products</li>
-                            </ul>
-                        </form>
+                            </form>
                         </div>
+                        
                         
                         
                         
@@ -896,7 +882,7 @@
     <%- include('../layouts/userFooter.ejs') -%>
     
     <!-- Preloader Start -->
-    <div id="preloader-active">
+    <!-- <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
@@ -909,7 +895,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Toastr JS -->

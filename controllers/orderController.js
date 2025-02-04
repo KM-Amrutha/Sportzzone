@@ -1,3 +1,5 @@
+
+const mongoose = require('mongoose'); 
 const { ObjectId } = require('mongodb');
 const  User = require('../models/userModel');
 const Address= require('../models/addressModel');
@@ -118,7 +120,7 @@ const loadOrderPage = async (req, res) => {
         }
         //payment methods check cheyyanum wallet anel cash athil keranum
 
-        if (order.paymentMethod === 'cash on delivery') {
+        if (order.paymentMethod === 'Cash on delivery') {
             console.log('Cash on Delivery order, no refund needed.');
         } else {
           const wallet = await Wallet.findOne({ userId: userId });
@@ -152,7 +154,7 @@ const loadOrderPage = async (req, res) => {
 const returnOrder = async (req, res) => {
   try {
       
-    const userId = req.sessoin.user_id;
+    const userId = req.session.user_id;
 
       const orderId = req.params.orderId;
 
