@@ -525,31 +525,51 @@ const verifyPassword = async(req,res)=>{
 
 const loadshopPage = async (req, res) => {
   try {
-    const limit = 8; 
-    let page = parseInt(req.query.page) || 1; 
 
-    const productData = await products.find({is_Active: true})
+    let searchQuery = req.query.search || "";
+    let page = parseInt(req.query.page) || 1; 
+    const limit = 8; 
+
+    const userId=req.session.user_id ||null;
+const userData=await User.findById(userId)
+// console.log('userdata from shop page:', userData)
+
+const productFilter = searchQuery
+    ? {
+        is_Active: true,
+        $or: [
+          { productName: { $regex: searchQuery, $options: 'i' } },
+          { productDescription: { $regex: searchQuery, $options: 'i' } }
+        ]
+      }
+    : { is_Active: true }; 
+
+    const productData = await products.find(productFilter)
     .populate('productCategory')
       .skip((page - 1) * limit)
       .limit(limit);
+      console.log(productData.length);
 
       // for(let i=0;i<productData.length;i++){
       //   console.log(productData[i].productName)
       // }
 
-    const categories = await category.find({is_Active: true});
-    const count = await products.countDocuments({is_Active: true});
-    const totalPages = Math.ceil(count / limit);
+      const totalProducts = await products.countDocuments(productFilter);
+      const totalPages = Math.ceil(totalProducts / limit);
 
-const userId=req.session.user_id
-const userData=await User.findById(userId)
-console.log('userdata from shop page:', userData)
+    const categories = await category.find({is_Active: true});
+    const noProductsFound = productData.length === 0;
+ 
+    
+
     res.render('users/productShop', {
-      user: userData,
+      user: userData || null,
       product: productData,
       category: categories,
+      noProductsFound,
       totalPages,
-      currentPage: page 
+      currentPage: page,
+      searchQuery
     });
   } catch (error) {
     console.error('Error loading shop page:', error);
@@ -924,175 +944,6 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-const lowtoHigh = async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const loginData = await User.findById(userId);
-    let page = parseInt(req.query.page) || 1;
-    const limit = 8;
-
-    const searchQuery = req.query.search || '';
-
-  
-    let productData = await products
-      .find({
-        is_Active: true,
-        $or: [{ productName: { $regex: searchQuery, $options: 'i' } }]
-      })
-      .populate('productCategory');
-
-    
-    productData.forEach(product => {
-      if (product.productCategory.OfferisActive) {
-        product.effectivePrice = product.offerPrice;
-      } else {
-        product.effectivePrice = product.productPrice;
-      }
-    });
-
-    
-    productData.sort((a, b) => a.effectivePrice - b.effectivePrice);
-
-    const totalPages = Math.ceil(productData.length / limit);
-    const paginatedProducts = productData.slice((page - 1) * limit, page * limit);
-
-    
-    res.render('users/productShop', {
-      product: paginatedProducts,
-      loginData,
-      totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.error('Error in lowToHigh:', error);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-
-const hightoLow = async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const loginData = await User.findById(userId);
-    let page = parseInt(req.query.page) || 1;
-    const limit = 8;
-
-    const searchQuery = req.query.search || '';
-
-  
-    let productData = await products
-      .find({
-        is_Active: true,
-        $or: [{ productName: { $regex: searchQuery, $options: 'i' } }]
-      })
-      .populate('productCategory');
-
-    
-    productData.forEach(product => {
-      if (product.productCategory.OfferisActive) {
-        product.effectivePrice = product.offerPrice;
-      } else {
-        product.effectivePrice = product.productPrice;
-      }
-    });
-
-    
-    productData.sort((a, b) => b.effectivePrice - a.effectivePrice);
-
-    
-    const totalPages = Math.ceil(productData.length / limit);
-    const paginatedProducts = productData.slice((page - 1) * limit, page * limit);
-
-    
-    res.render('users/productShop', {
-      product: paginatedProducts,
-      loginData,
-      totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.error('Error in lowToHigh:', error);
-    res.status(500).send('Internal Server Error');
-  }
-  
-};
-
-const AtoZ = async(req,res)=>{
-
-  try {
-    const userId = req.session.userId;
-    const loginData = await User.findById(userId);
-    const limit = 8;
-    let page = parseInt(req.query.page) || 1;
-
-    const searchQuery = req.query.search || '';
-    const allProducts = await products
-      .find({
-        is_Active: true,
-        $or: [{ productName: { $regex: searchQuery, $options: 'i' } }]
-      })
-      .populate('productCategory')
-      .sort({ productName: 1 }) 
-      .exec();
-
-    const count = allProducts.length;
-    const totalPages = Math.ceil(count / limit);
-    page = Math.max(1, Math.min(totalPages || 1, page));
-
-    
-    const productData = allProducts.slice((page - 1) * limit, page * limit);
-
-    res.render('users/productShop', {
-      product: productData,
-      loginData,
-      totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.error('Error in sortAtoZ:', error);
-    res.status(500).send('Internal Server Error');
-  }
-}
-
-const ZtoA = async(req,res)=>{
-  try {
-    const userId = req.session.userId;
-    const loginData = await User.findById(userId);
-    const limit = 8;
-    let page = parseInt(req.query.page) || 1;
-
-    const searchQuery = req.query.search || '';
-
-    
-    const allProducts = await products
-      .find({
-        is_Active: true,
-        $or: [{ productName: { $regex: searchQuery, $options: 'i' } }]
-      })
-      .populate('productCategory')
-      .sort({ productName: -1 }) 
-      .exec();
-
-  
-    const count = allProducts.length;
-
-  
-    const totalPages = Math.ceil(count / limit);
-    page = Math.max(1, Math.min(totalPages || 1, page));
-    const productData = allProducts.slice((page - 1) * limit, page * limit);
-
-    res.render('users/productShop', {
-      product: productData,
-      loginData,
-      totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.error('Error in sortZtoA:', error);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
 
 const sortProducts = async (req, res) => {
   try {
@@ -1165,6 +1016,88 @@ console.log('login data is: ', loginData);
       product: paginatedProducts,
       user:loginData || null,
       newArrivals: newArrival,
+      category: categories,
+      totalPages,
+      currentPage: page,
+      searchQuery,
+      selectedCategory: categoryId,  // Pass the selected category ID
+      sortType
+    });
+
+  } catch (error) {
+    console.error('Error in sorting:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+const sortShop = async (req, res) => {
+  try {
+  
+    const searchQuery = req.query.search || '';
+    const categoryId = req.query.categoryId || ''; 
+    const sortType = req.query.sort || 'lowtoHigh'; 
+    const categories = await category.find();
+
+    const userId = req.session.user_id;
+    let loginData = null;
+    if (userId) {
+      loginData = await User.findById(userId);
+    }
+console.log('login data is: ', loginData);
+    let page = parseInt(req.query.page) || 1;
+    const limit = 8;
+
+  
+    let filter = { is_Active: true };
+
+    if (searchQuery) {
+      filter.$or = [
+        { productName: { $regex: searchQuery, $options: "i" } },
+        { productDescription: { $regex: searchQuery, $options: "i" } }
+      ];
+    }
+
+    if (categoryId) {
+      filter.productCategory = categoryId;  
+    }
+    let productData = await products.find(filter).populate('productCategory');
+
+    productData.forEach(product => {
+      if (product.productCategory && product.productCategory.OfferisActive) {
+        product.effectivePrice = product.offerPrice;
+      } else {
+        product.effectivePrice = product.productPrice;
+      }
+    });
+
+    switch (sortType) {
+      case 'lowtoHigh':
+        productData.sort((a, b) => a.effectivePrice - b.effectivePrice);
+        break;
+      case 'hightoLow':
+        productData.sort((a, b) => b.effectivePrice - a.effectivePrice);
+        break;
+      case 'AtoZ':
+        productData.sort((a, b) => a.productName.localeCompare(b.productName));
+        break;
+      case 'ZtoA':
+        productData.sort((a, b) => b.productName.localeCompare(a.productName));
+        break;
+      default:
+        break;
+    }
+
+    // Pagination logic
+    const totalPages = Math.ceil(productData.length / limit);
+    const paginatedProducts = productData.slice((page - 1) * limit, page * limit);
+
+  
+
+    // Render the view with sorted and filtered products
+    res.render('users/productShop', {
+      product: paginatedProducts,
+      user:loginData || null,
       category: categories,
       totalPages,
       currentPage: page,
@@ -1382,11 +1315,8 @@ module.exports = {
    updateUserProfile,
 
    homewithoutLogin,
-   lowtoHigh,
-   hightoLow,
-   AtoZ,
-   ZtoA,
    sortProducts,
+   sortShop,
 
    loadWishlist,
    addtoWishlist,

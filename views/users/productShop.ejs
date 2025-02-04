@@ -56,86 +56,101 @@
   color: red; 
 }
 
-/* Container for search bar */
-* {
-    margin: 0;
-    padding: 0;
+#search-form {
+    width: 100%; /* Ensures the form matches the container width */
+    position: relative;
     box-sizing: border-box;
 }
-
-#search-form {
-    display: flex;
-    width: 100%;
-    gap: -30; /* Remove the gap */
+/* Container for search bar */
+.search-container {
+    position: relative;
+    width: 500px; /* Adjust this value for the desired length */
+    margin: 0 auto; 
 }
 
-
-.search-style-2 {
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-/* Search Input */
 #search-input {
-    flex: 1; /* Take all available space */
-    padding: 10px; 
-    border: 1px solid #ccc;
-    border-right: none; 
-    border-radius: 5px 0 0 5px;
+    width: 100%;
+    padding: 12px 50px 12px 15px; /* Adjust padding for space */
+    border: 1px solid #230792;
+    border-radius: 30px; /* Rounded edges for modern look */
     background-color: #f9fcff;
     font-size: 16px;
     outline: none;
+    box-sizing: border-box;
 }
 
-/* Placeholder */
+#search-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #230792;
+    color: #fff;
+    border: none;
+    padding: 12px; /* Equal padding for a circular button */
+    border-radius: 50%; /* Round button */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* Ensure the button is round */
+    height: 40px; /* Ensure the button is round */
+    font-size: 18px; /* Adjust the size of the search icon */
+}
+
+#search-button i {
+    font-size: 18px; /* Make sure the icon size is appropriate */
+}
+
+#search-button:hover {
+    background: #3f07b0;
+    transform: translateY(-50%) scale(1.1);
+}
+
 #search-input::placeholder {
     color: #15088c;
     font-style: italic;
 }
-
-/* Search Button */
-.search-style-2 button[type="submit"] {
-    background-color: #230792;
-    color: #fff;
-    border: 1px solid #ccc;
-    border-left: none;
-    border-radius: 0 5px 5px 0;
-    padding: 10px 15px;
+#show-all {
+    width: 100; /* Adjusting for border size */
+    box-sizing: border-box;  /* Ensures padding and borders are included in the width */
+    border: 1px solid #230792; /* Same border as the search input */
+    border-top: none;         /* To merge seamlessly with the search bar */
+    border-radius: 30px;
+    padding: 12px 50px 12px 15px; /* Adjust padding for space */
+ /* Rounded edges for modern look */
+    background-color: #f9fcff;
     font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    outline: none;
+   
 }
 
-/* Hover */
-.search-style-2 button[type="submit"]:hover {
-    background-color: #3f07b0;
-    transform: scale(1.05);
-}
 
-/* Dropdown suggestions styling */
 .dropdown-suggestions {
     list-style-type: none;
     padding: 0;
     margin: 0;
     border: 1px solid #1804ab;
     background-color: white;
-    width: 100%;
+    width: 100%; /* Matches the input width */
     position: absolute;
     top: 100%;
     left: 0;
     z-index: 100;
     display: none;
+    border-radius: 5px;
+    overflow: hidden;
+    box-sizing: border-box; /* Ensures padding/border don’t expand the width */
 }
 
-/* Dropdown suggestion items */
 .dropdown-suggestions li {
     padding: 10px;
     cursor: pointer;
     color: #000;
+    text-align: center; /* Optional: centers the text if you prefer */
 }
 
-/* Dropdown suggestion hover effect */
 .dropdown-suggestions li:hover {
     background-color: #e7f1ff;
 }
@@ -397,15 +412,25 @@
                     <div class="header-right">
 
                         <div class="search-style-2">
-                            <form action="<%= (typeof user !== 'undefined' && user) ? '/home' : '/' %>" method="get" id="search-form" >
-                                <input type="text" name="search" id="search-input" placeholder="Search for items..." autocomplete="off">
-                                <button type="submit"><i class="fa fa-search"></i> Search</button>
-                            </form>
+                            <form action="/productShopPage" method="get" id="search-form">
+                                <div class="search-container">
+                                    <input 
+                                        type="text" 
+                                        name="search" 
+                                        id="search-input" 
+                                        placeholder="Search for items..." 
+                                        autocomplete="off"
+                                    >
+                                    <button type="submit" id="search-button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            
                             <ul id="search-suggestions" class="dropdown-suggestions">
                                 <li id="show-all">Show All Products</li>
                             </ul>
+                        </form>
                         </div>
-                        
                         
                         
                         
@@ -757,14 +782,16 @@
                                 </div>
                                 <div class="sort-by-dropdown">
                                     <ul>
-                                        <li><a href="/AtoZ">Aa to Zz</a></li>
-                                        <li><a href="/ZtoA">Zz to Aa</a></li>
-                                        <li><a href="/lowtoHigh">Low to High</a></li>
-                                        <li><a href="/hightoLow">High to Low</a></li>
-                                    </ul>
+                                        <li><a href="#" onclick="applySort('AtoZ')">Aa to Zz</a></li>
+                                          <li><a href="#" onclick="applySort('ZtoA')">Zz to Aa</a></li>
+                                          <li><a href="#" onclick="applySort('lowtoHigh')">Low to High</a></li>
+                                          <li><a href="#" onclick="applySort('hightoLow')">High to Low</a></li>
+                                      </ul>
                                 </div>
                             </div>
                         </div>
+
+                        
                     </div>
                 </div>
 
@@ -915,6 +942,19 @@
         });
         
         </script>
+
+<script>
+
+    function applySort(sortType) {
+        console.log("Sort option selected:", sortType);  // Add this log
+         event.preventDefault();
+        const params = new URLSearchParams(window.location.search);
+        params.set('sort', sortType);  // Set the sort parameter
+        window.location.href = `/sortShop?${params.toString()}`;
+    }
+    
+          
+      </script>
             
 
 
@@ -999,11 +1039,7 @@
 
 
 
-<!-- <script>
-    window.onload = function() {
-        toastr.success('Products sorted successfully');
-    };
-</script> -->
+
 
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>

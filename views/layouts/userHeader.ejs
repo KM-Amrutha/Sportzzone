@@ -135,52 +135,57 @@
   background-color: #0f09c2; /* Change color on hover */
 }
 
+/* Main search container */
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-/* Container for search bar */
-.search-style-2 {
+    .search-container {
     position: relative;
-    width: 100%;
+    width: 500px; /* Adjust this value for the desired length */
+    margin: 0 auto; 
 }
 
-/* Search input field styling */
 #search-input {
-    width: calc(100% - 120px);
-    padding: 10px 15px; /* Increased padding for more spacing inside the input */
-    border-right: none;
-    border-radius: 5px 0 0 5px;
-    background-color: #f9fcff; /* Softer light blue background */
-    color: #000;
-    font-size: 16px; /* Larger text size for better readability */
+    width: 100%;
+    padding: 12px 50px 12px 15px; /* Adjust padding for space */
+    border: 1px solid #230792;
+    border-radius: 30px; /* Rounded edges for modern look */
+    background-color: #f9fcff;
+    font-size: 16px;
+    outline: none;
     box-sizing: border-box;
+}
+
+#search-button {
+    position: absolute;
+    right: 0px; /* Adjust this for closer button alignment */
+    top: 50%;
+    transform: translateY(-50%);
+    background: #230792;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 10px; /* Adds spacing between icon and text */
+    justify-content: center;
 }
 
-/* Placeholder text styling */
+#search-button:hover {
+    background: #3f07b0;
+    transform: translateY(-50%) scale(1.1);
+}
+
 #search-input::placeholder {
-    color: #15088c; /* Blue placeholder text */
-    font-style: italic; /* Makes placeholder text more stylish */
+    color: #15088c;
+    font-style: italic;
 }
 
-/* Search button styling */
-.search-style-2 button[type="submit"] {
-    background-color: #230792;
-    color: #fff;
-    border-radius: 0 5px 5px 0;
-    padding: 10px 15px;
-    font-size: 16px; /* Larger text size */
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Adds smooth hover effect and button interaction */
-}
-
-/* Search button hover effect */
-.search-style-2 button[type="submit"]:hover {
-    background-color: #3f07b0;
-    transform: scale(1.05); /* Slightly enlarges button on hover */
-}
-
-/* Dropdown suggestions styling */
 .dropdown-suggestions {
     list-style-type: none;
     padding: 0;
@@ -193,20 +198,19 @@
     left: 0;
     z-index: 100;
     display: none;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-/* Dropdown suggestion items */
 .dropdown-suggestions li {
     padding: 10px;
     cursor: pointer;
     color: #000;
 }
 
-/* Dropdown suggestion hover effect */
 .dropdown-suggestions li:hover {
     background-color: #e7f1ff;
 }
-
 
 /* Style for the login button */
 .header-info a {
@@ -865,8 +869,7 @@ ul.categories .category-item a:hover {
 
                         <div class="search-style-2">
                             <form action="<%= (typeof user !== 'undefined' && user) ? '/home' : '/' %>" method="get" id="search-form">
-
-                                <div style="display: flex; align-items: center; width: 100%;">
+                                <div class="search-container">
                                     <input 
                                         type="text" 
                                         name="search" 
@@ -874,16 +877,18 @@ ul.categories .category-item a:hover {
                                         placeholder="Search for items..." 
                                         autocomplete="off"
                                     >
-                                    <button type="submit">
-                                        <i class="fa fa-search"></i> Search
+                                    <button type="submit" id="search-button">
+                                        <i class="fa fa-search"></i>
                                     </button>
                                 </div>
                             </form>
-                            <!-- Dropdown for "Show All Products" -->
                             <ul id="search-suggestions" class="dropdown-suggestions">
                                 <li id="show-all">Show All Products</li>
                             </ul>
                         </div>
+                        
+                        
+                        
                         
                         
                         

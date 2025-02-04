@@ -116,12 +116,10 @@ user_route.post('/changePassword',auth.isLogin,auth.isBlocked,userController.cha
 user_route.post('/updateProfile', auth.isLogin,auth.isBlocked,userController.updateUserProfile);
 
 //----------------sort & filter---------------------//
-
-user_route.get('/lowtoHigh',userController.lowtoHigh);
-user_route.get('/hightoLow',userController.hightoLow);
-user_route.get('/AtoZ', userController.AtoZ);
-user_route.get('/ZtoA',userController.ZtoA);
 user_route.get('/sort', userController.sortProducts);
+user_route.get('/sortShop', userController.sortShop);
+
+
 
 
 
